@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[145]:
-
 
 import numpy as np
 import os
@@ -1819,11 +1814,16 @@ def cleangeometry(gdf):
     
     #return simply
 
-def importfiles():
-    tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
-    file = filedialog.askopenfilename()
-    #file='/Users/katrina/Documents/Solutions/Stantec/Stantec_Buffered.geojson'
-    print(file)
+def importfiles(file=''):
+    
+    if file == '':
+        tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
+        file = filedialog.askopenfilename()
+        #file='/Users/katrina/Documents/Solutions/Stantec/Stantec_Buffered.geojson'
+        print(file)
+
+    else:
+        pass
    
     gdf=load_file(file)
     projectiongood=projection_check(gdf)
@@ -1834,12 +1834,15 @@ def importfiles():
         print(message)
         return message
 
-def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='Yes'):
+def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='Yes',fileout=''):
+    if fileout=='':
+        tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
+        fileout = filedialog.askdirectory()
+        filepath="{}/{}".format(fileout,filename)
+        print(filepath)
 
-    tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
-    fileout = filedialog.askdirectory()
-    filepath="{}/{}".format(fileout,filename)
-    print(filepath)
+    else:
+        pass
 
     #If you need to output to multiple geojsons, then use this function. 
     #If it's a single feature then it doesn't matter which is used.
