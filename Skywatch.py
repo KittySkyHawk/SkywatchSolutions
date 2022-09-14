@@ -1842,7 +1842,7 @@ def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='Yes',fileout='')
         print(filepath)
 
     else:
-        pass
+        filepath="{}/{}".format(fileout,filename)
 
     #If you need to output to multiple geojsons, then use this function. 
     #If it's a single feature then it doesn't matter which is used.
