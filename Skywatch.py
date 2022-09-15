@@ -27,6 +27,7 @@ import contextily as cx
 import folium
 import fiona
 import pandas as pd
+import alphashape
 
 ### The below section is for the core non iterative functions that are used in more complex functions later.
 
@@ -1842,7 +1843,7 @@ def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='Yes',fileout='')
         print(filepath)
 
     else:
-        filepath="{}/{}".format(fileout,filename)
+        pass
 
     #If you need to output to multiple geojsons, then use this function. 
     #If it's a single feature then it doesn't matter which is used.
@@ -1980,6 +1981,7 @@ def corridor_quote(gdf, quote_type,buffer_type,buffer_amount,):
 
 def optimize_area_report(gdfclean,quote_type,minarea,filepath=''):
     dfquote=pd.DataFrame(columns=['State','Number of Features','Total Area','Average Area per feature','Quote Type'])
+    gdfclean=EAProject_Buffer(gdfclean,10,capstyle=1)
     gdfclean=aoi_areakm(gdfclean,'optimized_area') 
     
     bufferedtext='Area of data after geometry cleaning'
@@ -2132,3 +2134,92 @@ def optimize_area_report(gdfclean,quote_type,minarea,filepath=''):
         print("interval too big")
         
     return [gdfbuff,dfquote]
+
+def concave_optimize(gdfpoints,gdfbuff):
+
+    #gdf_og_points=gpd.GeoDataFrame(columns=['geometry'])
+    pointylist=[]
+    for row in gdfpoints.itertuples():
+        geom=getattr(row,'geometry')
+        for item in geom.exterior.coords:
+            pointylist.append(Point(item))
+    print('creating new geodataframes')
+    gs=gpd.GeoSeries(pointylist)
+    gdf_og_points=gpd.GeoDataFrame(geometry=gs)
+    gdf_og_points=gdf_og_points.set_crs('EPSG:4326')
+    print('points created')
+    
+    #for row in gdfarea.itertuples():
+        #if 
+
+    joingdf=gpd.sjoin(gdf_og_points,gdfbuff,how="left")
+    #print(gdf_og_points.index[0])
+    #print(joingdf.columns)
+    #print(joingdf.index)
+
+    concave_output=gpd.GeoDataFrame(columns=['geometry'])
+
+    if 'index_right' in joingdf.columns:   
+        uniquelist=joingdf['index_right'].unique()
+        print(f'the uniquelist is {uniquelist}')
+        
+    else:
+        print('index column was not created')
+        exit()
+    
+    for unique in uniquelist:
+        print(unique)
+        pointlist=[]
+        subset=joingdf[joingdf['index_right']==unique]
+        print(subset.index)
+        #subset=subset.reset_index(drop=True)
+        #if subset['optimized_area',[0]]>=25.5:
+        #if unique != nan and gdfbuff.at[round(unique),'optimized_area']>=25.5:
+
+        for row in subset.itertuples():
+            #if getattr()
+            point=getattr(row,'geometry')
+            points=point.coords
+            #print (points)
+            #print(points[0])
+            pointlist.append(points[0])
+            #print(len(pointlist))
+        
+        #print(pointlist[0])
+        
+        if len(pointlist)==0:
+            pass
+        elif gdfbuff.at[round(unique),'optimized_area']>=26:
+
+            print(gdfbuff.at[round(unique),'optimized_area'])
+
+            #alpha = 0.95 * alphashape.optimizealpha(pointlist)
+            alpha=100
+            alpha_shape = alphashape.alphashape(pointlist, alpha)
+            print(type(alpha_shape))
+            #print(len(alpha_shape.exterior.coords.xy))
+            try:
+                while len(alpha_shape)!=1:
+                    alpha=alpha/2
+                    alpha_shape = alphashape.alphashape(pointlist, alpha)
+                    #print(len(alpha_shape.exterior.coords.xy))
+                    print(alpha)
+            except:
+                pass
+            while len(alpha_shape.exterior.coords.xy)==0:
+                alpha=alpha/2
+                alpha_shape = alphashape.alphashape(pointlist, alpha)
+                print(len(alpha_shape.exterior.coords.xy))
+                print(alpha)
+
+            concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
+            concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+            concave_output=concave_output.append(concave_gdf,ignore_index=True)
+
+        else:
+            geom=gdfbuff.at[round(unique),'geometry']
+            concave_gs=gpd.GeoSeries(geom)
+            concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+            concave_output=concave_output.append(concave_gdf)
+            
+    return concave_output
