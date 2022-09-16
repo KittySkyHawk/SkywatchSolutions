@@ -2417,16 +2417,6 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
     return
 
 def cleanup(gdfbuff):
-
-    if 'start_area' in gdfbuff.columns:
-        gdfbuff = gdfbuff.drop('start_area', axis=1)
-    else:
-        pass
-    if 'cleaned_area' in gdfbuff.columns:
-        gdfbuff = gdfbuff.drop('cleaned_area', axis=1)
-    else:
-        pass
-
     try:
         gdfsimp=simply_poly(deepcopy(gdfbuff))
         gdfbuffarea=aoi_areakm(deepcopy(gdfsimp),'final_area')
