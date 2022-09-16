@@ -17,10 +17,10 @@ import geojson
 import time
 import sys
 from ipywidgets import Button
-#from tkinter import Tk, filedialog
+from tkinter import Tk, filedialog
 import math
-#from tkinter import Tk, filedialog
-#import tkinter
+from tkinter import Tk, filedialog
+import tkinter
 #For Map Display
 from IPython.display import clear_output, display
 import contextily as cx
@@ -314,9 +314,9 @@ def projection_check(gdf):
 
 def load_file(infile):
     
-    extension=infile.split('.')
+    extension=infile.rsplit('.',1)[-1]
     
-    if extension[-1] in ['geojson','json','shp']:
+    if extension in ['geojson','json','shp']:
         gdf=gpd.read_file(infile)
         gdf=gpd.GeoDataFrame(gdf)
         #print('file type is {}'.format(extension[-1]))
@@ -1863,8 +1863,12 @@ def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='No',fileout='',m
     print(filepath)
 
     if html_map=='Yes':
+        if "Archive" in quote_type:
+            qtype="Archive"
+        else:
+            qtype="Tasking"
         m=create_map(gdf,gdfclean)
-        m.save(f'{fileout}/{map_name}_html_map.html')
+        m.save(f'{fileout}/{qtype}_html_map.html')
 
 
         return filepath, m
@@ -2307,6 +2311,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
     if 'Archive' in quote_type:
         page_title_text=f'Archive Quote for {filename}'
         title_text = f"{quote_type} Quote"
+        qtype="Archive"
         if data_type=="Corridors":
             if buffer_amount <= 50:
                 buffer_amount=50
@@ -2347,7 +2352,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
                 
                 <h1> Output Map Showing Original Vs Quote Polygons <h1>
                 
-                <embed type="text/html" src="{quote_type}_html_map.html" width="1000" height="700">
+                <embed type="text/html" src="{qtype}_html_map.html" width="1000" height="700">
 
                 {dfhtml}
 
@@ -2357,6 +2362,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
     else:
         page_title_text=f'Tasking Quote for {filename}'
         title_text = f"{quote_type} Quote"
+        qtype="Tasking"
         if data_type=="Corridors":
             if "Very" in quote_type:
                 buffer_amount=1
@@ -2401,7 +2407,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
 
                 <h1> Output Map Showing Original Vs Quote Polygons <h1>
 
-                <embed type="text/html" src="{quote_type}_html_map.html" width="1000" height="700">
+                <embed type="text/html" src="{qtype}_html_map.html" width="1000" height="700">
 
                 {dfhtml}
 
@@ -2414,18 +2420,19 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
         #f.write(dfhtml)
         
     exportfiles(gdf,gdfbuff,filename,name_field = '',html_map='Yes',fileout=filepath,map_name=quote_type)
-    return
+
 
 def cleanup(gdfbuff):
+
     try:
-        gdfsimp=simply_poly(deepcopy(gdfbuff))
-        gdfbuffarea=aoi_areakm(deepcopy(gdfsimp),'final_area')
+        gdfsimp=sw.simply_poly(deepcopy(gdfbuff))
+        gdfbuffarea=sw.aoi_areakm(deepcopy(gdfsimp),'final_area')
         totalbuffarea=gdfbuffarea['final_area'].sum()
         totalbuffarea
                                 
     except:
         
-        gdfbuffarea=aoi_areakm(deepcopy(gdfbuff),'final_area')
+        gdfbuffarea=sw.aoi_areakm(deepcopy(gdfbuff),'final_area')
         totalbuffarea=gdfbuffarea['final_area'].sum()
         totalbuffarea
             
