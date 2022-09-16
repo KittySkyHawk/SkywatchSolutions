@@ -2415,3 +2415,28 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
         
     exportfiles(gdf,gdfbuff,filename,name_field = '',html_map='Yes',fileout=filepath,map_name=quote_type)
     return
+
+def cleanup(gdfbuff):
+
+    if 'start_area' in gdfbuff.columns:
+        gdfbuff = gdfbuff.drop('start_area', axis=1)
+    else:
+        pass
+    if 'cleaned_area' in gdfbuff.columns:
+        gdfbuff = gdfbuff.drop('cleaned_area', axis=1)
+    else:
+        pass
+
+    try:
+        gdfsimp=sw.simply_poly(deepcopy(gdfbuff))
+        gdfbuffarea=sw.aoi_areakm(deepcopy(gdfsimp),'final_area')
+        totalbuffarea=gdfbuffarea['final_area'].sum()
+        totalbuffarea
+                                
+    except:
+        
+        gdfbuffarea=sw.aoi_areakm(deepcopy(gdfbuff),'final_area')
+        totalbuffarea=gdfbuffarea['final_area'].sum()
+        totalbuffarea
+            
+    return gdfbuffarea,totalbuffarea
