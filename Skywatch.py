@@ -17,10 +17,10 @@ import geojson
 import time
 import sys
 from ipywidgets import Button
-#from tkinter import Tk, filedialog
+from tkinter import Tk, filedialog
 import math
-#from tkinter import Tk, filedialog
-#import tkinter
+from tkinter import Tk, filedialog
+import tkinter
 #For Map Display
 from IPython.display import clear_output, display
 import contextily as cx
@@ -1835,11 +1835,12 @@ def importfiles(file=''):
         print(message)
         return message
 
-def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='Yes',fileout=''):
+def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='No',fileout='',map_name="archive"):
     if fileout=='':
         tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
         fileout = filedialog.askdirectory()
-        filepath="{}/{}".format(fileout,filename)
+        filename=filename.rsplit('.',1)[0]
+        filepath="{}/{}".format(fileout,f'{map_name}_{filename}')
         print(filepath)
 
     else:
@@ -1857,15 +1858,19 @@ def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='Yes',fileout='')
     #If it's a single feature, then it doesn't matter which is used.
 
     #No Inputs
+    filepath=f"{fileout}/{map_name}_{filename}"
     output_FeatureCollection(gdfclean,f'{filepath}')
     print(filepath)
 
     if html_map=='Yes':
         m=create_map(gdf,gdfclean)
-        m.save(f'{fileout}/html_map.html')
+        m.save(f'{fileout}/{map_name}_html_map.html')
 
 
-    return m,filepath
+        return filepath, m
+
+    else:
+        return filepath,'nomap'
 
 
 def create_map(orig_gdf,clean_gdf,popup_column=''):
@@ -2063,51 +2068,52 @@ def optimize_area_report(gdfclean,quote_type,minarea,filepath=''):
         #while buffer_interval < minarea:
         print(f'interval buffer is {buffer_interval}')
         print(f'minimum area is {min(gdfbuff["optimized_area"].values)}')
-
-        gdfbuff=EAProject_BuffersSubset(deepcopy(gdfbuff),radius,buffer_interval,minarea)
-        gdfbuff=gdfbuff.dissolve()
-        gdfbuff=gdfbuff.explode()
-        gdfbuff=gdfbuff.reset_index(drop=True)
-        if quote_type != 'Corridors':
+        if min(gdfbuff["optimized_area"].values) < buffer_interval:
+            gdfbuff=EAProject_BuffersSubset(deepcopy(gdfbuff),radius,buffer_interval,minarea)
+            gdfbuff=gdfbuff.dissolve()
+            gdfbuff=gdfbuff.explode()
+            gdfbuff=gdfbuff.reset_index(drop=True)
+            if quote_type != 'Corridors':
+                
+                gdfbuff=remove_donuts(deepcopy(gdfbuff))
+            else:
+                pass
             
-            gdfbuff=remove_donuts(deepcopy(gdfbuff))
-        else:
-            pass
-        
-        #gdfbuff=sw.aoi_areakm(gdfbuff,'tasking_area')
-        print('subset done')
-        if "Tasking" in quote_type:
-    #         if max(gdfbuff['area'].values) >=20:
-    #             radius=100
-    #             buffer_interval=buffer_interval+2
-    #         if max(gdfbuff['area'].values) >=24:
-    #             radius=50
-    #             buffer_interval=buffer_interval+1
-            buffer_interval=buffer_interval+start_interval
+            #gdfbuff=sw.aoi_areakm(gdfbuff,'tasking_area')
+            print('subset done')
+            if "Tasking" in quote_type:
+        #         if max(gdfbuff['area'].values) >=20:
+        #             radius=100
+        #             buffer_interval=buffer_interval+2
+        #         if max(gdfbuff['area'].values) >=24:
+        #             radius=50
+        #             buffer_interval=buffer_interval+1
+                buffer_interval=buffer_interval+start_interval
 
-        elif "Archive" in quote_type:
-            print('archive')
+            elif "Archive" in quote_type:
+                print('archive')
 
 
-    #             if min(gdfbuff['area'].values) >=0.95:
-    #                 radius=10
-    #                 buffer_interval=buffer_interval+0.025
-    #                 print('0.95')
-    #             elif min(gdfbuff['area'].values) >=0.8:
+        #             if min(gdfbuff['area'].values) >=0.95:
+        #                 radius=10
+        #                 buffer_interval=buffer_interval+0.025
+        #                 print('0.95')
+        #             elif min(gdfbuff['area'].values) >=0.8:
 
-    #                 radius=25
-    #                 buffer_interval=buffer_interval+0.1
-    #                 print('0.8')
-            #else:
-            buffer_interval=buffer_interval+start_interval
+        #                 radius=25
+        #                 buffer_interval=buffer_interval+0.1
+        #                 print('0.8')
+                #else:
+                buffer_interval=buffer_interval+start_interval
 
-            print(f'new interval is {buffer_interval}')
+                print(f'new interval is {buffer_interval}')
 
         else: 
+            print('no area smaller than interval')
             buffer_interval=buffer_interval+start_interval
-
-        gdfbuff=aoi_areakm(gdfbuff,'optimized_area') 
-        
+            print(f'new interval is {buffer_interval}')
+            gdfbuff=aoi_areakm(gdfbuff,'optimized_area') 
+            
         bufferedtext=f'Each feature buffered to {round(buffer_interval-start_interval,1)}km2'
         try:
             len_features=gdfbuff.index.stop
@@ -2128,6 +2134,8 @@ def optimize_area_report(gdfclean,quote_type,minarea,filepath=''):
             print(files)
         else:
             pass
+        
+        
 
     else:
     
@@ -2171,7 +2179,7 @@ def concave_optimize(gdfpoints,gdfbuff):
         print(unique)
         pointlist=[]
         subset=joingdf[joingdf['index_right']==unique]
-        print(subset.index)
+        #print(subset.index)
         #subset=subset.reset_index(drop=True)
         #if subset['optimized_area',[0]]>=25.5:
         #if unique != nan and gdfbuff.at[round(unique),'optimized_area']>=25.5:
@@ -2223,3 +2231,178 @@ def concave_optimize(gdfpoints,gdfbuff):
             concave_output=concave_output.append(concave_gdf)
             
     return concave_output
+
+
+
+def optimize_area_group(gdfclean,quote_type,minarea,filepath=''):
+    
+    #New one that buffers automatically to 100km2 and makes groupings (tasking) and 5km2 (archive) and then goes straight to concave
+    
+    #gdfclean=EAProject_Buffer(gdfclean,10,capstyle=1)
+    gdfclean=aoi_areakm(gdfclean,'optimized_area') 
+    
+    if quote_type == "Tasking High Res" or quote_type == "Tasking Very High Res":
+        radius=200  #radius to buffer in iteration (in m)
+        print(f'Tasking')
+        minarea=50
+        radius=250  #radius to buffer in iteration (in m)
+        buffer_interval=25
+        start_interval=buffer_interval
+        print(f'Tasking buff int is {buffer_interval}')
+    
+        
+    elif quote_type == "Archive High Res" or quote_type == "Archive Med Res":
+        radius=50
+        #minarea=1
+        print("Archive High Res")
+       
+        minarea=5
+        radius=50  #radius to buffer in iteration (in m)
+        buffer_interval=1
+        start_interval=buffer_interval
+        print(buffer_interval)
+       
+    
+
+    else: 
+        print('quote type does not match options.')
+        sys.exit('quote type does not exist')
+
+    print(f'buffer_interval is {buffer_interval}')        
+    gdfbuff=gpd.GeoDataFrame(deepcopy(gdfclean))
+
+
+    while buffer_interval <= minarea: # while 0.4 <= 1
+        print(f'minimum area value is {min(gdfbuff["optimized_area"].values)}')
+        #while (min(gdfbuff['area'].values))<= buffer_interval: # if min gdf area < 1
+        #while buffer_interval < minarea:
+        print(f'interval buffer is {buffer_interval}')
+        print(f'minimum area is {min(gdfbuff["optimized_area"].values)}')
+        if min(gdfbuff["optimized_area"].values) < buffer_interval:
+            gdfbuff=EAProject_BuffersSubset(deepcopy(gdfbuff),radius,buffer_interval,minarea)
+            gdfbuff=gdfbuff.dissolve()
+            gdfbuff=gdfbuff.explode()
+            gdfbuff=gdfbuff.reset_index(drop=True)
+            if quote_type != 'Corridors':
+                
+                gdfbuff=remove_donuts(deepcopy(gdfbuff))
+            else:
+                pass
+            gdfbuff=aoi_areakm(gdfbuff,'optimized_area') 
+           
+        else:
+            print('no area smaller than interval')
+
+            buffer_interval=buffer_interval+start_interval
+
+            print(f'new interval is {buffer_interval}')
+
+    else:
+    
+        print("interval too big")
+        
+    return gdfbuff
+
+def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer_amount,totalorigarea,output_chart,final_area):
+    if 'archive' in quote_type:
+        page_title_text=f'Archive Quote for {filename}'
+        title_text = "{quote_type} Quote"
+        if data_type=="Corridors":
+            if buffer_amount <= 50:
+                buffer_amount=50
+            else:
+                pass
+            text = f'This report quotes for Archive Data at a buffer of {buffer_amount}'
+            prices_text = round(final_area,2)
+            #stats_text = round(customer_price*totalbuffarea,2)
+
+        if 'start_area'in gdfbuff.columns:
+            areatext=f'The original area was {totalorigarea}'
+            
+        else:
+            areatext='no original area as points or lines were provided'
+
+        df2=gdfbuff[['final_area']].copy()
+        df=pd.DataFrame(output_chart)
+        pd.set_option('display.max_colwidth', 40)
+        dfhtml = df.style.set_table_attributes('class="table-style"').to_html()
+        df2html=df2.style.set_table_attributes('class="table-style"').to_html()
+        #dfhtml=dfarea.to_html()
+
+        html = f'''
+        <html>
+            <head>
+
+                <title>{page_title_text}</title>
+            </head>
+            <body>
+                <h1>{title_text} for {data_type}</h1>
+                <p>{text}</p>
+                <h2>{areatext}<h2>
+                <h2>The quote area is {prices_text}km2</h2>
+                <br>
+                
+                <h1> Output Map Showing Original Vs Quote Polygons <h1>
+                
+                <embed type="text/html" src="{quote_type}_html_map.html" width="1000" height="700">
+
+                {dfhtml}
+
+            </body>
+        </html>
+        '''
+    else:
+        page_title_text=f'Tasking Quote for {filename}'
+        title_text = f"{quote_type} Quote"
+        if data_type=="Corridors":
+            if "Very" in quote_type:
+                buffer_amount=1
+            else:
+                buffer_amount=250
+
+            text = f'This report quotes for Tasking Data at a buffer of {buffer_amount}'
+            prices_text = round(gdfbuff,2)
+            #stats_text = round(customer_price*totalbuffarea,2)
+
+        if 'start_area'in gdfbuff.columns:
+            areatext=f'The original area was {totalorigarea}'
+            
+        else:
+            areatext='no original area as points or lines were provided'
+
+        df2=gdfbuff[['final_area']].copy()
+        df=pd.DataFrame(output_chart)
+        pd.set_option('display.max_colwidth', 40)
+        dfhtml = df.style.set_table_attributes('class="table-style"').to_html()
+        df2html=df2.style.set_table_attributes('class="table-style"').to_html()
+        #dfhtml=dfarea.to_html()
+
+        html = f'''
+        <html>
+            <head>
+
+                <title>{page_title_text}</title>
+            </head>
+            <body>
+                <h1>{title_text} for {data_type}</h1>
+                <p>{text}</p>
+                <h2>{areatext}<h2>
+                <h2>The quote area is {prices_text}km2</h2>
+                <br>
+                
+                <h1> Output Map Showing Original Vs Quote Polygons <h1>
+                
+                <embed type="text/html" src="{quote_type}_html_map.html" width="1000" height="700">
+
+                {dfhtml}
+
+            </body>
+        </html>
+        '''
+
+    with open(f'{filepath}/{quote_type}_html_report.html', 'w') as f:
+        f.write(html)
+        #f.write(dfhtml)
+
+    exportdata=exportfiles(gdf,gdfbuff,filename,name_field = '',html_map='No',fileout=filepath,map_name=quote_type)
+    return
