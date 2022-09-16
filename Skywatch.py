@@ -2347,7 +2347,6 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
             </head>
             <body>
                 <h1>{title_text} for {data_type}</h1>
-                <p>{text}</p>
                 <h2>{areatext}<h2>
                 <h2>The quote area is {prices_text}km2</h2>
                 <br>
@@ -2402,7 +2401,6 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
             </head>
             <body>
                 <h1>{title_text} for {data_type}</h1>
-                <p>{text}</p>
                 <h2>{areatext}<h2>
                 <h2>The quote area is {prices_text}km2</h2>
                 <br>
