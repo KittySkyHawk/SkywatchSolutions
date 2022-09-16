@@ -2208,7 +2208,7 @@ def concave_optimize(gdfpoints,gdfbuff):
             print(gdfbuff.at[round(unique),'optimized_area'])
 
             #alpha = 0.95 * alphashape.optimizealpha(pointlist)
-            alpha=100
+            alpha=250
             alpha_shape = alphashape.alphashape(pointlist, alpha)
             print(type(alpha_shape))
             #print(len(alpha_shape.exterior.coords.xy))
