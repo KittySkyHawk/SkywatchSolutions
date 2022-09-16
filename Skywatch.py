@@ -2428,14 +2428,14 @@ def cleanup(gdfbuff):
         pass
 
     try:
-        gdfsimp=sw.simply_poly(deepcopy(gdfbuff))
-        gdfbuffarea=sw.aoi_areakm(deepcopy(gdfsimp),'final_area')
+        gdfsimp=simply_poly(deepcopy(gdfbuff))
+        gdfbuffarea=aoi_areakm(deepcopy(gdfsimp),'final_area')
         totalbuffarea=gdfbuffarea['final_area'].sum()
         totalbuffarea
                                 
     except:
         
-        gdfbuffarea=sw.aoi_areakm(deepcopy(gdfbuff),'final_area')
+        gdfbuffarea=aoi_areakm(deepcopy(gdfbuff),'final_area')
         totalbuffarea=gdfbuffarea['final_area'].sum()
         totalbuffarea
             
