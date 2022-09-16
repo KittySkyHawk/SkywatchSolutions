@@ -2304,17 +2304,20 @@ def optimize_area_group(gdfclean,quote_type,minarea,filepath=''):
     return gdfbuff
 
 def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer_amount,totalorigarea,output_chart,final_area):
-    if 'archive' in quote_type:
+    if 'Archive' in quote_type:
         page_title_text=f'Archive Quote for {filename}'
-        title_text = "{quote_type} Quote"
+        title_text = f"{quote_type} Quote"
         if data_type=="Corridors":
             if buffer_amount <= 50:
                 buffer_amount=50
             else:
                 pass
-            text = f'This report quotes for Archive Data at a buffer of {buffer_amount}'
-            prices_text = round(final_area,2)
-            #stats_text = round(customer_price*totalbuffarea,2)
+        else:
+            pass
+            
+        text = f'This report quotes for Archive Data at a buffer of {buffer_amount}'
+        prices_text = round(final_area,2)
+        #stats_text = round(customer_price*totalbuffarea,2)
 
         if 'start_area'in gdfbuff.columns:
             areatext=f'The original area was {totalorigarea}'
@@ -2359,14 +2362,20 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
                 buffer_amount=1
             else:
                 buffer_amount=250
+                
+        else:
+            pass
+        text = f'This report quotes for Archive Data at a buffer of {buffer_amount}'
+        prices_text = round(final_area,2)
+        #stats_text = round(customer_price*totalbuffarea,2)
 
-            text = f'This report quotes for Tasking Data at a buffer of {buffer_amount}'
-            prices_text = round(gdfbuff,2)
-            #stats_text = round(customer_price*totalbuffarea,2)
+        text = f'This report quotes for Tasking Data at a buffer of {buffer_amount}'
+        prices_text = round(final_area,2)
+        #stats_text = round(customer_price*totalbuffarea,2)
 
         if 'start_area'in gdfbuff.columns:
             areatext=f'The original area was {totalorigarea}'
-            
+
         else:
             areatext='no original area as points or lines were provided'
 
@@ -2389,9 +2398,9 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
                 <h2>{areatext}<h2>
                 <h2>The quote area is {prices_text}km2</h2>
                 <br>
-                
+
                 <h1> Output Map Showing Original Vs Quote Polygons <h1>
-                
+
                 <embed type="text/html" src="{quote_type}_html_map.html" width="1000" height="700">
 
                 {dfhtml}
@@ -2403,6 +2412,6 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
     with open(f'{filepath}/{quote_type}_html_report.html', 'w') as f:
         f.write(html)
         #f.write(dfhtml)
-
-    exportdata=exportfiles(gdf,gdfbuff,filename,name_field = '',html_map='No',fileout=filepath,map_name=quote_type)
+        
+    exportfiles(gdf,gdfbuff,filename,name_field = '',html_map='Yes',fileout=filepath,map_name=quote_type)
     return
