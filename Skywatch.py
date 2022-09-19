@@ -496,9 +496,7 @@ def optimize_area(gdfclean,quote_type,minarea,data_type='Large AOI'):
     else:
         print("interval too big")
 
-    return gdfbuff
-
-    #gdfbuff=sw.simply_poly(deepcopy(gdfclean))
+       
 
 def EAProject_BuffersSubset(gdf,radius,buffer_interval,minimum_area):
     for row in gdf.itertuples():
@@ -1984,7 +1982,7 @@ def corridor_quote(gdf, quote_type,buffer_type,buffer_amount,):
     elif buffer_type== 'area':
         print('cannot buffer corridors using area. Please set a radius.')
 
-    #gdfbuff=optimize_area(deepcopy(gdfbuff), quote_type,1000000)
+    gdfbuff=optimize_area(deepcopy(gdfbuff), quote_type,1000000)
 
     return gdfbuff
 
@@ -2425,18 +2423,25 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
     exportfiles(gdf,gdfbuff,filename,name_field = '',html_map='Yes',fileout=filepath,map_name=quote_type)
 
 
-def cleanup(gdfbuff):
+def cleanup(gdfbuff,data_type):
 
-    try:
-        gdfsimp=simply_poly(deepcopy(gdfbuff))
-        gdfbuffarea=aoi_areakm(deepcopy(gdfsimp),'final_area')
-        totalbuffarea=gdfbuffarea['final_area'].sum()
-        totalbuffarea
-                                
-    except:
-        
+    if data_type!="Corridors":
+        try:
+            gdfsimp=simply_poly(deepcopy(gdfbuff))
+            gdfbuffarea=aoi_areakm(deepcopy(gdfsimp),'final_area')
+            totalbuffarea=gdfbuffarea['final_area'].sum()
+            totalbuffarea
+
+        except:
+
+            gdfbuffarea=aoi_areakm(deepcopy(gdfbuff),'final_area')
+            totalbuffarea=gdfbuffarea['final_area'].sum()
+            totalbuffarea
+            
+    else:
         gdfbuffarea=aoi_areakm(deepcopy(gdfbuff),'final_area')
         totalbuffarea=gdfbuffarea['final_area'].sum()
         totalbuffarea
+        
             
     return gdfbuffarea,totalbuffarea
