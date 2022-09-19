@@ -496,7 +496,7 @@ def optimize_area(gdfclean,quote_type,minarea,data_type='Large AOI'):
     else:
         print("interval too big")
 
-       
+    return gdfbuff   
 
 def EAProject_BuffersSubset(gdf,radius,buffer_interval,minimum_area):
     for row in gdf.itertuples():
