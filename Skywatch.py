@@ -1834,7 +1834,7 @@ def importfiles(file=''):
         print(message)
         return message
 
-def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='No',fileout='',map_name="archive"):
+def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='No',fileout='',map_name="Archive"):
     if fileout=='':
         tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
         fileout = filedialog.askdirectory()
@@ -1862,7 +1862,7 @@ def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='No',fileout='',m
     print(filepath)
 
     if html_map=='Yes':
-        if "Archive" in quote_type:
+        if "Archive" in map_name:
             qtype="Archive"
         else:
             qtype="Tasking"
