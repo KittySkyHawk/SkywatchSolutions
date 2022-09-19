@@ -17,10 +17,10 @@ import geojson
 import time
 import sys
 from ipywidgets import Button
-#from tkinter import Tk, filedialog
+from tkinter import Tk, filedialog
 import math
-#from tkinter import Tk, filedialog
-#import tkinter
+from tkinter import Tk, filedialog
+import tkinter
 #For Map Display
 from IPython.display import clear_output, display
 import contextily as cx
@@ -1835,7 +1835,7 @@ def importfiles(file=''):
         print(message)
         return message
 
-def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='No',fileout='',map_name="Archive"):
+def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='No',fileout='',map_name="archive"):
     if fileout=='':
         tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
         fileout = filedialog.askdirectory()
@@ -1863,7 +1863,7 @@ def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='No',fileout='',m
     print(filepath)
 
     if html_map=='Yes':
-        if "Archive" in map_name:
+        if "Archive" in quote_type:
             qtype="Archive"
         else:
             qtype="Tasking"
@@ -1980,6 +1980,7 @@ def corridor_quote(gdf, quote_type,buffer_type,buffer_amount,):
         gdfbuff=gdfbuff.dissolve()
         gdfbuff=gdfbuff.explode()
         gdfbuff=gdfbuff.reset_index(drop=True)
+        gdfbuff=aoi_areakm(gdfbuff,'optimized_area')
         #gdfbuffclean=cleangeometry(gdfbuff)
     elif buffer_type== 'area':
         print('cannot buffer corridors using area. Please set a radius.')
@@ -2111,7 +2112,7 @@ def optimize_area_report(gdfclean,quote_type,minarea,filepath=''):
                 buffer_interval=buffer_interval+start_interval
 
                 print(f'new interval is {buffer_interval}')
-            
+
             gdfbuff=aoi_areakm(gdfbuff,'optimized_area') 
 
         else: 
@@ -2208,7 +2209,7 @@ def concave_optimize(gdfpoints,gdfbuff):
             print(gdfbuff.at[round(unique),'optimized_area'])
 
             #alpha = 0.95 * alphashape.optimizealpha(pointlist)
-            alpha=250
+            alpha=100
             alpha_shape = alphashape.alphashape(pointlist, alpha)
             print(type(alpha_shape))
             #print(len(alpha_shape.exterior.coords.xy))
@@ -2326,7 +2327,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
         prices_text = round(final_area,2)
         #stats_text = round(customer_price*totalbuffarea,2)
 
-        if 'start_area'in gdfbuff.columns:
+        if totalorigarea != 0:
             areatext=f'The original area was {totalorigarea}'
             
         else:
@@ -2347,6 +2348,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
             </head>
             <body>
                 <h1>{title_text} for {data_type}</h1>
+                <p>{text}</p>
                 <h2>{areatext}<h2>
                 <h2>The quote area is {prices_text}km2</h2>
                 <br>
@@ -2401,6 +2403,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
             </head>
             <body>
                 <h1>{title_text} for {data_type}</h1>
+                <p>{text}</p>
                 <h2>{areatext}<h2>
                 <h2>The quote area is {prices_text}km2</h2>
                 <br>
