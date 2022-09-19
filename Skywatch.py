@@ -8,7 +8,6 @@ import pyproj
 from shapely.geometry import MultiPolygon, Polygon, MultiLineString, LineString
 from shapely.ops import transform as sh_transform
 from functools import partial
-import contextily as cx
 import fiona
 from copy import deepcopy
 from shapely import wkt
@@ -17,10 +16,10 @@ import geojson
 import time
 import sys
 from ipywidgets import Button
-from tkinter import Tk, filedialog
+#from tkinter import Tk, filedialog
 import math
-from tkinter import Tk, filedialog
-import tkinter
+#from tkinter import Tk, filedialog
+#import tkinter
 #For Map Display
 from IPython.display import clear_output, display
 import contextily as cx
