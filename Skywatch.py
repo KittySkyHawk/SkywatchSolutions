@@ -388,7 +388,7 @@ def EAProject_Buffer(gdf,radius,capstyle=1):
     # outgdf=output.set_crs(4326)
     # return outgdf
 
-def optimize_area(gdfclean,quote_type,minarea,data_type='Large AOI'):
+def optimize_area(gdfclean,quote_type,minarea,data_type='Corridors'):
     ### Need to find a way to check min area in the file and only start buffer interval there. I.e if min area is 0.65, start buffer_interval at 0.8.
     if quote_type == "Tasking High Res" or quote_type == "Tasking Very High Res":
         radius=200  #radius to buffer in iteration (in m)
