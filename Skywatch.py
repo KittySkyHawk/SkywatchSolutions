@@ -2315,14 +2315,15 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
         title_text = f"{quote_type} Quote"
         qtype="Archive"
         if data_type=="Corridors":
+            text = f'This report quotes for Archive Data at a buffer of {buffer_amount}'
             if buffer_amount <= 50:
                 buffer_amount=50
             else:
                 pass
         else:
+            text=f''
             pass
             
-        text = f'This report quotes for Archive Data at a buffer of {buffer_amount}'
         prices_text = round(final_area,2)
         #stats_text = round(customer_price*totalbuffarea,2)
 
