@@ -2312,14 +2312,20 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
         page_title_text=f'Archive Quote for {filename}'
         title_text = f"{quote_type} Quote"
         qtype="Archive"
+        df2=gdfbuff[['final_area']].copy()
+        df=pd.DataFrame(output_chart)
+        pd.set_option('display.max_colwidth', 40)       
+        df2html=df2.style.set_table_attributes('class="table-style"').to_html()
         if data_type=="Corridors":
             text = f'This report quotes for Archive Data at a buffer of {buffer_amount}'
+            dfhtml=''
             if buffer_amount <= 50:
                 buffer_amount=50
             else:
                 pass
         else:
             text=f''
+            dfhtml = df.style.set_table_attributes('class="table-style"').to_html()
             pass
             
         prices_text = round(final_area,2)
@@ -2331,11 +2337,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
         else:
             areatext='no original area as points or lines were provided'
 
-        df2=gdfbuff[['final_area']].copy()
-        df=pd.DataFrame(output_chart)
-        pd.set_option('display.max_colwidth', 40)
-        dfhtml = df.style.set_table_attributes('class="table-style"').to_html()
-        df2html=df2.style.set_table_attributes('class="table-style"').to_html()
+
         #dfhtml=dfarea.to_html()
 
         html = f'''
@@ -2364,7 +2366,13 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
         page_title_text=f'Tasking Quote for {filename}'
         title_text = f"{quote_type} Quote"
         qtype="Tasking"
+        df2=gdfbuff[['final_area']].copy()
+        df=pd.DataFrame(output_chart)
+        pd.set_option('display.max_colwidth', 40)
+        dfhtml = ''
+        df2html=df2.style.set_table_attributes('class="table-style"').to_html()
         if data_type=="Corridors":
+            text = f'This report quotes for Archive Data at a buffer of {buffer_amount}'
             if "Very" in quote_type:
                 buffer_amount=1
             else:
@@ -2372,25 +2380,19 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
                 
         else:
             pass
-        text = f'This report quotes for Archive Data at a buffer of {buffer_amount}'
+        
+       
+        #text = f'This report quotes for Tasking Data at a buffer of {buffer_amount}'
         prices_text = round(final_area,2)
         #stats_text = round(customer_price*totalbuffarea,2)
 
-        text = f'This report quotes for Tasking Data at a buffer of {buffer_amount}'
-        prices_text = round(final_area,2)
-        #stats_text = round(customer_price*totalbuffarea,2)
-
-        if 'start_area'in gdfbuff.columns:
+        if  totalorigarea != 0:
             areatext=f'The original area was {totalorigarea}'
 
         else:
             areatext='no original area as points or lines were provided'
 
-        df2=gdfbuff[['final_area']].copy()
-        df=pd.DataFrame(output_chart)
-        pd.set_option('display.max_colwidth', 40)
-        dfhtml = df.style.set_table_attributes('class="table-style"').to_html()
-        df2html=df2.style.set_table_attributes('class="table-style"').to_html()
+       
         #dfhtml=dfarea.to_html()
 
         html = f'''
