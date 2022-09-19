@@ -1984,7 +1984,7 @@ def corridor_quote(gdf, quote_type,buffer_type,buffer_amount,):
     elif buffer_type== 'area':
         print('cannot buffer corridors using area. Please set a radius.')
 
-    gdfbuff=optimize_area(deepcopy(gdfbuff), quote_type,1000000)
+    #gdfbuff=optimize_area(deepcopy(gdfbuff), quote_type,1000000)
 
     return gdfbuff
 
