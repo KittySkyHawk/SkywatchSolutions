@@ -442,11 +442,11 @@ def optimize_area(gdfclean,quote_type,minarea,data_type='Large AOI'):
 
 
     while buffer_interval <= minarea: # while 0.4 <= 1
-        print(f'minimum area value is {min(gdfbuff["area"].values)}')
+        print(f'minimum area value is {min(gdfbuff["optimized_area"].values)}')
         #while (min(gdfbuff['area'].values))<= buffer_interval: # if min gdf area < 1
         #while buffer_interval < minarea:
         print(f'interval buffer is {buffer_interval}')
-        print(f'minimum area is {min(gdfbuff["area"].values)}')
+        print(f'minimum area is {min(gdfbuff["optimized_area"].values)}')
 
         gdfbuff=EAProject_BuffersSubset(deepcopy(gdfbuff),radius,buffer_interval,minarea)
         gdfbuff=gdfbuff.dissolve()
