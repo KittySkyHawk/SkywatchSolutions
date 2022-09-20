@@ -2328,13 +2328,14 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
             text=f''
             dfhtml = df.style.set_table_attributes('class="table-style"').to_html()
             pass
+        
         if coverage_map=='Yes':
-            coverage_map =  '<embed type="text/html" src="archive_coverage_html_map.html" width="1000" height="700">'
+            coverage_map = '<embed type="text/html" src="archive_coverage_html_map.html" width="1000" height="700">'
             coverage_title='<h1> Coverage Map for Archive Quote <h1>'
             
-        else:
+        elif coverage_map=='No':
             coverage_map=''
-            coverage_title=''
+            coverage_title='No Coverage Request'
             
         prices_text = round(final_area,2)
         #stats_text = round(customer_price*totalbuffarea,2)
