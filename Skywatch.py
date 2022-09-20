@@ -2307,7 +2307,7 @@ def optimize_area_group(gdfclean,quote_type,minarea,filepath=''):
         
     return gdfbuff
 
-def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer_amount,totalorigarea,output_chart,final_area,coverage_map):
+def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer_amount,totalorigarea,output_chart,final_area,coverage_map,coverage_area):
     if 'Archive' in quote_type:
         page_title_text=f'Archive Quote for {filename}'
         title_text = f"{quote_type} Quote"
@@ -2332,6 +2332,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
         if coverage_map=='Yes':
             coverage_map = '<embed type="text/html" src="archive_coverage_html_map.html" width="1000" height="700">'
             coverage_title='<h1> Coverage Map for Archive Quote <h1>'
+            coveragearea=f'<h2> Area of Archive Coverage is {coverage_area}<h2>'
             
         elif coverage_map=='No':
             coverage_map=''
@@ -2367,6 +2368,8 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
                 <embed type="text/html" src="{qtype}_html_map.html" width="1000" height="700">
 
                 {coverage_title}
+                
+                {coverage_area}
                 
                 {coverage_map}
 
