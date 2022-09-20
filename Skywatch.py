@@ -1855,6 +1855,7 @@ def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='No',fileout='',m
     #If it's a single feature, then it doesn't matter which is used.
 
     #No Inputs
+    filename=filename.rsplit('.',1)[0]
     filepath=f"{fileout}/{map_name}_{filename}"
     output_FeatureCollection(gdfclean,f'{filepath}')
     print(filepath)
