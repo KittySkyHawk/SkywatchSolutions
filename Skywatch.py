@@ -2316,7 +2316,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
         df=pd.DataFrame(output_chart)
         pd.set_option('display.max_colwidth', 40)       
         df2html=df2.style.set_table_attributes('class="table-style"').to_html()
-        coverage_map =  '<embed type="text/html" src="archive_coverage_html_map.html" width="1000" height="700">'
+        #coverage_map =  '<embed type="text/html" src="archive_coverage_html_map.html" width="1000" height="700">'
         if data_type=="Corridors":
             text = f'This report quotes for Archive Data at a buffer of {buffer_amount}'
             dfhtml=''
