@@ -2307,7 +2307,7 @@ def optimize_area_group(gdfclean,quote_type,minarea,filepath=''):
         
     return gdfbuff
 
-def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer_amount,totalorigarea,output_chart,final_area):
+def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer_amount,totalorigarea,output_chart,final_area,coverage_map):
     if 'Archive' in quote_type:
         page_title_text=f'Archive Quote for {filename}'
         title_text = f"{quote_type} Quote"
@@ -2316,6 +2316,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
         df=pd.DataFrame(output_chart)
         pd.set_option('display.max_colwidth', 40)       
         df2html=df2.style.set_table_attributes('class="table-style"').to_html()
+        coverage_map =  '<embed type="text/html" src="archive_coverage_html_map.html" width="1000" height="700">'
         if data_type=="Corridors":
             text = f'This report quotes for Archive Data at a buffer of {buffer_amount}'
             dfhtml=''
@@ -2327,6 +2328,13 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
             text=f''
             dfhtml = df.style.set_table_attributes('class="table-style"').to_html()
             pass
+        if coverage_map=='Yes':
+            coverage_map =  '<embed type="text/html" src="archive_coverage_html_map.html" width="1000" height="700">'
+            coverage_title='<h1> Coverage Map for Archive Quote <h1>'
+            
+        else:
+            coverage_map=''
+            coverage_title=''
             
         prices_text = round(final_area,2)
         #stats_text = round(customer_price*totalbuffarea,2)
@@ -2356,6 +2364,10 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
                 <h1> Output Map Showing Original Vs Quote Polygons <h1>
                 
                 <embed type="text/html" src="{qtype}_html_map.html" width="1000" height="700">
+
+                {coverage_title}
+                
+                {coverage_map}
 
                 {dfhtml}
 
