@@ -2331,8 +2331,8 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
         
         if coverage_map=='Yes':
             coverage_map = '<embed type="text/html" src="archive_coverage_html_map.html" width="1000" height="700">'
-            coverage_title='<h1> Coverage Map for Archive Quote <h1>'
-            coveragearea=f'<h2> Area of Archive Coverage is {coverage_area}<h2>'
+            coverage_title='<h1> Coverage Map for Archive Quote </h1>'
+            coveragearea=f'<h2> Area of Archive Coverage is {coverage_area}</h2>'
             
         elif coverage_map=='No':
             coverage_map=''
@@ -2363,7 +2363,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
                 <h2>The quote area is {prices_text}km2</h2>
                 <br>
                 
-                <h1> Output Map Showing Original Vs Quote Polygons <h1>
+                <h1> Output Map Showing Original Vs Quote Polygons </h1>
                 
                 <embed type="text/html" src="{qtype}_html_map.html" width="1000" height="700">
 
