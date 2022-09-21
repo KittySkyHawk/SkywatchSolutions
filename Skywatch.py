@@ -1907,7 +1907,7 @@ def create_map(orig_gdf,clean_gdf,popup_column=''):
 
     try:
     # #Background Vector Layer
-        Quote=folium.Feature(name="Quote Polygons",show=True)
+        Quote=folium.FeatureGroup(name="Quote Polygons",show=True)
         data3=clean_gdf.to_json()
         data4 = json.loads(data3)
         folium.GeoJson(data4, style_function=styleback).add_to(Quote)
