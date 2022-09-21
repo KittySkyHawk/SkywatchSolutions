@@ -2240,10 +2240,17 @@ def concave_optimize(gdfpoints,gdfbuff):
 #                 else
             if len(alpha_shape) ==1:   
                 concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
+                concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+                concave_output=concave_output.append(concave_gdf,ignore_index=True)
             elif len(alpha_shape)>=2:
                 concave_gs=gpd.GeoSeries(alphalist)
-            concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-            concave_output=concave_output.append(concave_gdf,ignore_index=True)
+                concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+                concave_output=concave_output.append(concave_gdf,ignore_index=True)
+      
+            else:
+                exit()
+                #eventually intersect the unique group with original GDF and run the old optimize on it.
+                #concave_gdf=optimize_area_report(gdfclean,'Archive High Res',100))
 
         else:
             geom=gdfbuff.at[round(unique),'geometry']
