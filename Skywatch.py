@@ -2217,7 +2217,7 @@ def concave_optimize(gdfpoints,gdfbuff):
                     alpha=alpha/2
                     alpha_shape = alphashape.alphashape(pointlist, alpha)
                     #print(len(alpha_shape.exterior.coords.xy))
-                    print(f'alpha is {alpha} and count is {count})
+                    print(f'alpha is {alpha} and count is {count}')
                     count=count+1
                 else:
                     print('alpha shape is not working')
