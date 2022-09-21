@@ -2506,7 +2506,7 @@ def cleanup(gdfbuff,data_type):
             
     return gdfbuffarea,totalbuffarea
 
-def archive_coverage(gdf,start,end,api_key,data_type,coverage_resolution,percent_coverage,filepath,alpha=12):
+def archive_coverage(gdf,start_date,end_date,api_key,data_type,coverage_resolution,percent_coverage,filepath,alpha=12):
     searchlist=[]
     faillist=[]
     productidlist=[]
