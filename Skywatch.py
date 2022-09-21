@@ -1905,15 +1905,15 @@ def create_map(orig_gdf,clean_gdf,popup_column=''):
                 'weight': 4
             }
 
-    try:
-    # #Background Vector Layer
-        Quote=folium.FeatureGroup(name="Quote Polygons",show=True)
-        data3=clean_gdf.to_json()
-        data4 = json.loads(data3)
-        folium.GeoJson(data4, style_function=styleback).add_to(Quote)
-        m.add_child(Quote)
-    except:
-        pass
+#     try:
+#     # #Background Vector Layer
+    
+    data3=clean_gdf.to_json()
+    data4 = json.loads(data3)
+    Quote=folium.FeatureGroup(name="Quote Polygons",show=True)
+    folium.GeoJson(data4, style_function=styleback).add_to(Quote)
+    m.add_child(Quote)
+
 
     data=orig_gdf.to_json()
     data2 = json.loads(data)
