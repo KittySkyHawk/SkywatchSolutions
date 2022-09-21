@@ -1907,14 +1907,7 @@ def create_map(orig_gdf,clean_gdf,popup_column=''):
 
     try:
     # #Background Vector Layer
-        Quote=folium.Feature
-        
-        
-        
-        
-        
-        
-        (name="Quote Polygons",show=True)
+        Quote=folium.Feature(name="Quote Polygons",show=True)
         data3=clean_gdf.to_json()
         data4 = json.loads(data3)
         folium.GeoJson(data4, style_function=styleback).add_to(Quote)
@@ -2230,7 +2223,7 @@ def concave_optimize(gdfpoints,gdfbuff):
                 alpha=100
                 count=0
                 alpha_shape = alphashape.alphashape(pointlist, alpha)
-                while len(alpha_shape.exterior.coords.xy)==0 and count <=15
+                while len(alpha_shape.exterior.coords.xy)==0 and count <=15:
                     alpha=alpha/2
                     alpha_shape = alphashape.alphashape(pointlist, alpha)
                     count=count+1
