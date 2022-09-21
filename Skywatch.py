@@ -2205,54 +2205,127 @@ def concave_optimize(gdfpoints,gdfbuff):
         elif gdfbuff.at[round(unique),'optimized_area']>=26:
 
             print(gdfbuff.at[round(unique),'optimized_area'])
-
+            alphalist=[]
             #alpha = 0.95 * alphashape.optimizealpha(pointlist)
             alpha=200
             alpha_shape = alphashape.alphashape(pointlist, alpha)
-            print(type(alpha_shape))
+            print(type(alpha_shape.geom))
             #print(len(alpha_shape.exterior.coords.xy))
             count=0
-            try:
-                while len(alpha_shape) >=2 and count <= 15:
-                    alpha=alpha/2
-                    alpha_shape = alphashape.alphashape(pointlist, alpha)
-                    #print(len(alpha_shape.exterior.coords.xy))
-                    print(f'alpha is {alpha} and count is {count}')
-                    count=count+1
-                else:
-                    print('alpha shape is not working')
-            except:
-                pass
-            if count ==15:
-                print('could not make 1 polygon')
-                alpha=50
-                alpha_shape = alphashape.alphashape(pointlist, alpha)
-                alphalist=[]
+            ## len(alpha_shape) only works if it is multipart - this is why it is in a try except. This reduces alpha trying to get a single polygon.
+            if type(alpha_shape.geom)=='Polygon':
                 for shape in alpha_shape:
                     alphalist.append(Polygon(alpha_shape))
-                concave_gs=gpd.GeoSeries(alphalist)
-                concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-                concave_output=concave_output.append(concave_gdf,ignore_index=True)
 
-            elif count ==0:
-                try:
-            
-                    while len(alpha_shape.exterior.coords.xy)==0 and count <=15:
-                        alpha=alpha/2
+                #print(type(alpha_shape.geom)
+            elif type(alpha_shape.geom)=='MultiPolygon':
+
+                while type(alpha_shape.geom)=='MultiPolygon' and count <= 15:
+                    print(type(alpha_shape.geom)
+                    alpha=alpha/2
+                    alpha_shape = alphashape.alphashape(pointlist, alpha)
+                    count=count+1
+                else:
+                    if count ==16:
+                        print(f'submitting as multipolygon')
+                        alpha=100
                         alpha_shape = alphashape.alphashape(pointlist, alpha)
-                        count=count+1
-                    else:
-                        print('getting 0 results')
-                        pass
-                except:
-                    pass
+                        alphalist=[]
+                        for shape in alpha_shape:
+                            alphalist.append(Polygon(alpha_shape))
+                        
+                        
+                    else:    
+                        print(f'shape is no longer a multipolygon. it is {type(alpha_shape)}')
+                        for shape in alpha_shape:
+                            alphalist.append(Polygon(alpha_shape))
+            else:
+                          
+                print(f'type of alpha shape is {type(alpha_shape)}. The concave hull optimization did not succeed. Try the older optimize method and then concave'}
+                exit()
+                
+            concave_gs=gpd.GeoSeries(alphalist)
+            concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+            concave_output=concave_output.append(concave_gdf,ignore_index=True)  
+#             if len(alpha_shape.exterior.coords.xy)>=1:
+#                 concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
+#                 concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+#                 concave_output=concave_output.append(concave_gdf,ignore_index=True)
+#             elif len(alpha_shape.exterior.coords.xy)==0 and count <=15:
+#                 alpha=alpha/2
+#                 alpha_shape = alphashape.alphashape(pointlist, alpha)
+#                 print(f'alpha is {alpha} and count is {count}')
+#                 count=count+1
+#                 else:
+#                     print('alpha shape is not working')
+                
+#                 try:
+#                     while len(alpha_shape) >=2 and count <= 15:
+#                         alpha=alpha/2
+#                         alpha_shape = alphashape.alphashape(pointlist, alpha)
+#                         count=count+1
+#                     else:
+#                         print(f'shape is no longer a multipolygon. it is {type(alpha_shape)}')
+#                         concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
+#                         concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+#                         concave_output=concave_output.append(concave_gdf,ignore_index=True)
+#                 except:
+
+                        
+                    
+#                 elif len(alpha_shape)>=2
+                        
+                
+#             try:
+                
+#                     alpha=alpha/2
+#                     alpha_shape = alphashape.alphashape(pointlist, alpha)
+#                     #print(len(alpha_shape.exterior.coords.xy))
+#                     print(f'alpha is {alpha} and count is {count}')
+#                     count=count+1
+#                 else:
+#                     print('alpha shape is not working')
+#             except:
+#                 pass
+#             ## If it goes through 15 alpha reductions and is still multipolygon, it accepts the multipolygon and moves forward
+#             if count ==15:
+#                 print('could not make 1 polygon')
+#                 alpha=50
+#                 alpha_shape = alphashape.alphashape(pointlist, alpha)
+#                 alphalist=[]
+#                 for shape in alpha_shape:
+#                     alphalist.append(Polygon(alpha_shape))
+#                 concave_gs=gpd.GeoSeries(alphalist)
+#                 concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+#                 concave_output=concave_output.append(concave_gdf,ignore_index=True)
+#             ## If count is 0, meaning there is no length, 
+#             elif count ==0:
+#                 try:
+#                     alpha=250
+            
+#                     while len(alpha_shape.exterior.coords.xy)==0 and count <=15:
+#                         alpha=alpha/2
+#                         alpha_shape = alphashape.alphashape(pointlist, alpha)
+#                         count=count+1
+                        
+#                     else:
+#                         alphalist=[]
+#                         for shape in alpha_shape:
+#                             alphalist.append(Polygon(alpha_shape))
+#                         concave_gs=gpd.GeoSeries(alphalist)
+#                         concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+#                         concave_output=concave_output.append(concave_gdf,ignore_index=True)
+#                         print('getting 0 results')
+#                         pass
+#                 except:
+#                     pass
                 
                 
                 
 
-                concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
-                concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-                concave_output=concave_output.append(concave_gdf,ignore_index=True) 
+                #concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
+                #concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+                #concave_output=concave_output.append(concave_gdf,ignore_index=True) 
 
                 
 
