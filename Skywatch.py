@@ -2188,183 +2188,77 @@ def concave_optimize(gdfpoints,gdfbuff):
         #subset=subset.reset_index(drop=True)
         #if subset['optimized_area',[0]]>=25.5:
         #if unique != nan and gdfbuff.at[round(unique),'optimized_area']>=25.5:
-
+        
         for row in subset.itertuples():
+            #print(row)
             #if getattr()
             point=getattr(row,'geometry')
             points=point.coords
             #print (points)
             #print(points[0])
             pointlist.append(points[0])
-            #print(len(pointlist))
+            
+        print(len(pointlist))
         
         #print(pointlist[0])
         
         if len(pointlist)==0:
             pass
-        elif gdfbuff.at[round(unique),'optimized_area']>=26:
+        #elif gdfbuff.at[round(unique),'optimized_area']>=26:
+        else:
 
             print(gdfbuff.at[round(unique),'optimized_area'])
             alphalist=[]
             #alpha = 0.95 * alphashape.optimizealpha(pointlist)
-            alpha=200
+            alpha=500
             alpha_shape = alphashape.alphashape(pointlist, alpha)
-            print(type(alpha_shape.geom))
+            print(alpha_shape)
+            print(alpha_shape.geom_type)
             #print(len(alpha_shape.exterior.coords.xy))
             count=0
             ## len(alpha_shape) only works if it is multipart - this is why it is in a try except. This reduces alpha trying to get a single polygon.
-            if type(alpha_shape.geom)=='Polygon':
-                for shape in alpha_shape:
-                    alphalist.append(Polygon(alpha_shape))
+            #for shape in 
+            
+            
+            if alpha_shape.geom_type=='Polygon':
+                alphalist.append(alpha_shape)
 
                 #print(type(alpha_shape.geom)
-            elif type(alpha_shape.geom)=='MultiPolygon':
+            elif alpha_shape.geom_type=='MultiPolygon':
 
-                while type(alpha_shape.geom)=='MultiPolygon' and count <= 15:
-                    print(type(alpha_shape.geom))
+                while alpha_shape.geom_type=='MultiPolygon' and count <= 10:
+                    print(type(alpha_shape.geom_type))
                     alpha=alpha/2
                     alpha_shape = alphashape.alphashape(pointlist, alpha)
                     count=count+1
                 else:
-                    if count ==16:
+                    if count >=11:
                         print(f'submitting as multipolygon')
                         alpha=100
                         alpha_shape = alphashape.alphashape(pointlist, alpha)
                         alphalist=[]
                         for shape in alpha_shape:
-                            alphalist.append(Polygon(alpha_shape))
+                            alphalist.append(Polygon(shape))
                         
                         
                     else:    
-                        print(f'shape is no longer a multipolygon. it is {type(alpha_shape)}')
-                        for shape in alpha_shape:
-                            alphalist.append(Polygon(alpha_shape))
+                        print(f'shape is no longer a multipolygon. it is {alpha_shape.geom_type}')
+                        alphalist.append(alpha_shape)
             else:
-                          
+                            
                 print(f'type of alpha shape is {type(alpha_shape)}. The concave hull optimization did not succeed. Try the older optimize method and then concave')
                 exit()
                 
             concave_gs=gpd.GeoSeries(alphalist)
             concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
             concave_output=concave_output.append(concave_gdf,ignore_index=True)  
-#             if len(alpha_shape.exterior.coords.xy)>=1:
-#                 concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
-#                 concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-#                 concave_output=concave_output.append(concave_gdf,ignore_index=True)
-#             elif len(alpha_shape.exterior.coords.xy)==0 and count <=15:
-#                 alpha=alpha/2
-#                 alpha_shape = alphashape.alphashape(pointlist, alpha)
-#                 print(f'alpha is {alpha} and count is {count}')
-#                 count=count+1
-#                 else:
-#                     print('alpha shape is not working')
-                
-#                 try:
-#                     while len(alpha_shape) >=2 and count <= 15:
-#                         alpha=alpha/2
-#                         alpha_shape = alphashape.alphashape(pointlist, alpha)
-#                         count=count+1
-#                     else:
-#                         print(f'shape is no longer a multipolygon. it is {type(alpha_shape)}')
-#                         concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
-#                         concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-#                         concave_output=concave_output.append(concave_gdf,ignore_index=True)
-#                 except:
+#             
 
-                        
-                    
-#                 elif len(alpha_shape)>=2
-                        
-                
-#             try:
-                
-#                     alpha=alpha/2
-#                     alpha_shape = alphashape.alphashape(pointlist, alpha)
-#                     #print(len(alpha_shape.exterior.coords.xy))
-#                     print(f'alpha is {alpha} and count is {count}')
-#                     count=count+1
-#                 else:
-#                     print('alpha shape is not working')
-#             except:
-#                 pass
-#             ## If it goes through 15 alpha reductions and is still multipolygon, it accepts the multipolygon and moves forward
-#             if count ==15:
-#                 print('could not make 1 polygon')
-#                 alpha=50
-#                 alpha_shape = alphashape.alphashape(pointlist, alpha)
-#                 alphalist=[]
-#                 for shape in alpha_shape:
-#                     alphalist.append(Polygon(alpha_shape))
-#                 concave_gs=gpd.GeoSeries(alphalist)
-#                 concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-#                 concave_output=concave_output.append(concave_gdf,ignore_index=True)
-#             ## If count is 0, meaning there is no length, 
-#             elif count ==0:
-#                 try:
-#                     alpha=250
-            
-#                     while len(alpha_shape.exterior.coords.xy)==0 and count <=15:
-#                         alpha=alpha/2
-#                         alpha_shape = alphashape.alphashape(pointlist, alpha)
-#                         count=count+1
-                        
-#                     else:
-#                         alphalist=[]
-#                         for shape in alpha_shape:
-#                             alphalist.append(Polygon(alpha_shape))
-#                         concave_gs=gpd.GeoSeries(alphalist)
-#                         concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-#                         concave_output=concave_output.append(concave_gdf,ignore_index=True)
-#                         print('getting 0 results')
-#                         pass
-#                 except:
-#                     pass
-                
-                
-                
-
-                #concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
-                #concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-                #concave_output=concave_output.append(concave_gdf,ignore_index=True) 
-
-                
-
-#             print('could not optimize using alpha shape of {alpha} up to 250 with 1 polygon. Allowing it to use multipart')
-#             alpha=50
-#             count=0
-#             alpha_shape = alphashape.alphashape(pointlist, alpha)
-#             try:
-                
-#                 else:
-#                     alphalist=[]
-#                     for shape in alpha_shape:
-#                         alphalist.append(Polygon(alpha_shape))
-# #                     
-# #                 while len(alpha_shape.exterior.coords.xy)==0:
-# #                     alpha=alpha/2
-# #                     alpha_shape = alphashape.alphashape(pointlist, alpha)
-# #                     print(len(alpha_shape.exterior.coords.xy))
-# #                     print('no resulting shape')
-# #                 else
-#             if len(alpha_shape) ==1:   
-#                 concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
-#                 concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-#                 concave_output=concave_output.append(concave_gdf,ignore_index=True)
-#             elif len(alpha_shape)>=2:
-#                 concave_gs=gpd.GeoSeries(alphalist)
-#                 concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-#                 concave_output=concave_output.append(concave_gdf,ignore_index=True)
-      
-#             else:
-#                 exit()
-#                 #eventually intersect the unique group with original GDF and run the old optimize on it.
-#                 #concave_gdf=optimize_area_report(gdfclean,'Archive High Res',100))
-
-        else:
-            geom=gdfbuff.at[round(unique),'geometry']
-            concave_gs=gpd.GeoSeries(geom)
-            concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-            concave_output=concave_output.append(concave_gdf)
+        # else:
+        #     geom=gdfbuff.at[round(unique),'geometry']
+        #     concave_gs=gpd.GeoSeries(geom)
+        #     concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+        #     concave_output=concave_output.append(concave_gdf)
             
     return concave_output
 
@@ -2542,6 +2436,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
                 buffer_amount=250
                 
         else:
+            text=f''
             pass
         
        
@@ -2610,3 +2505,230 @@ def cleanup(gdfbuff,data_type):
         
             
     return gdfbuffarea,totalbuffarea
+
+def archive_coverage(gdf,start,end,api_key,data_type,coverage_resolution,percent_coverage,filepath,alpha=12):
+    searchlist=[]
+    faillist=[]
+    productidlist=[]
+    if data_type!='Corridors':
+        try:
+            gdfclean=cleangeometry(gdf)
+            pointylist=[]
+            for row in gdfclean.itertuples():
+                geom=getattr(row,'geometry')
+                for item in geom.exterior.coords:
+                    #print (item)
+                    pointylist.append(item)
+            #gs=gpd.GeoSeries(pointylist)
+            #gdf_og_points=gpd.GeoDataFrame(geometry=gs)
+            #gdf_og_points=gdf_og_points.set_crs('EPSG:4326')
+            #alpha = 0.95 * alphashape.optimizealpha(points)
+            hull = alphashape.alphashape(pointylist, alpha)
+            #for item in hull
+                
+            concave_gs=gpd.GeoSeries(hull)
+            concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+            concave_gdf=cleangeometry(concave_gdf)
+        except:
+            print('Could not generate a concave hull. This search may take awhile.')
+            concave_gdf=deepcopy(gdf)
+
+    else:
+        concave_gdf=deepcopy(gdf)
+        pass
+    
+
+    fulfilled=0
+    unfulfilled=0
+
+    searchlist=[]
+    #gdf=gdfclean.set_crs('EPSG:4326')
+    #gdfsearch=gdfclean.dissolve()
+    #gdfsearch=gdfsearch.explode()
+    #gdfsearch=gdfsearch.reset_index(drop=True)
+
+
+    for idx,cur_row in enumerate(range(len(concave_gdf))):
+        print(f'this is loop {idx}')
+        cur_row_gdf=concave_gdf.iloc[[cur_row]]
+        new = cur_row_gdf.to_json()
+        data=json.loads(new).get('features')
+        data=data[0]['geometry']
+        coords=data['coordinates']
+        if cur_row_gdf.geometry[cur_row].is_valid:
+            for idx,start in enumerate(start_date):
+                end = end_date[idx]
+            
+                search=create_search(coords,start,end,api_key,coverage_resolution,percent_coverage)
+                if 'errors' in search:
+                    print('search failed on record {}'.format(cur_row))
+                    print(search.get('errors'))
+                    exit()
+                else:
+                    ########## Add resolution filter################
+                    searchdata=search.get('data')
+                    searchid=searchdata.get('id')
+                    time.sleep(3)
+                    print(f'searchid is {searchid}')
+                    searchresults=get_search_results(api_key,searchid)
+
+                if len(searchresults)>0:
+                    if searchresults[0]!=1:
+
+                        print('there are search results')
+                        datacount=0
+
+                        for data in searchresults:
+                        # try:
+                            
+                            #if data.get('source') == '' and data.get('result_cloud_cover_percentage') <=50:
+                            if data.get('result_cloud_cover_percentage') <=15:
+                                #if data.get('result_cloud_cover_percentage')<=10 and data.get('resolution')<=5:
+
+                                coords=data.get('location').get('coordinates')
+                                #print(f'the length of the coordinates is {len(coords)}')
+                                if len(coords)==1:
+                                    print(data.get('source'))
+                                    searchlist.append(data)
+                                    print(f'the length of the searchlist is {len(searchlist)}')
+
+
+                                elif len(coords)!=1:
+                                    print(f'too many coordinates, {len(coords)}')
+                                    #for shape in coords:
+                                    pass
+
+                                else:
+                                    faillist.append(data)
+                                    print(f'this had results but they were multipolygon')
+
+
+                            else:
+                                print('does not meet requirements')
+                                    
+    #                         except:
+    #                             print(f'{data.get('source')},{type(data)}')
+
+
+                    else:
+                        print('searchresult returned a value of 1')
+
+                        unfulfilled=unfulfilled+1
+
+                else:
+                    print('search results not >0')
+                    pass  
+                    
+        else:
+            print(f'not valid geometry for record {cur_row}')
+            pass
+        
+    featlist=[]
+
+    if len(searchlist)>=1:
+        print(len(searchlist))
+        for data in searchlist:
+            #print(data.get('geometry'))
+            
+    #         for item in fc.get('features'):
+    #         item=item.get('geometry')
+    #         for coord in item.get('coordinates'):
+    #         print(len(coord))
+    #         if len(coord)<5:
+    #             print(item)
+            date=data.get('start_time')
+            collectiontime=date.split('T')[-1]
+            date=date.split('T')[0]
+            tpoly=geojson.Polygon(data['location']['coordinates'])
+            feat = geojson.Feature(geometry=tpoly,properties={"id":data['product_name'],"cc":data['location_coverage_percentage'],"preview":data['preview_uri'],"clouds":data['result_cloud_cover_percentage'],"date":date, "resolution":data['resolution'], "source":data['source'],"bbox":data['location']['bbox']})
+            featlist.append(feat)
+        
+            #feat['feature'].
+
+            #gdfout=gdp.read_file(data2)
+            
+        fc = geojson.FeatureCollection(featlist)
+
+        gdfout=gpd.GeoDataFrame.from_features(fc['features'])
+        gdfout=gdfout.set_crs('EPSG:4326')
+    else:
+        pass
+        #del cloudjoin
+    gdfout=gdfout.set_crs('EPSG:4326')
+    gdf=gdf.set_crs('EPSG:4326')
+    cloudsortgdf=gdfout.sort_values('clouds', axis=0, ascending=False)
+    cloudsortgdf=cloudsortgdf.reset_index(drop=True)
+
+    aoiintersect=gpd.overlay(gdf, gdfout, how='intersection')
+    aoiintersect=aoiintersect.dissolve()
+    aoiintersect=aoiintersect.reset_index(drop=True)
+    aoiintersect=aoiintersect.explode()
+    aoiintersect=aoiintersect.reset_index(drop=True)
+    aoiintersect=aoi_areakm(aoiintersect,'intersect_area')
+
+    exportfiles(gdf,aoiintersect,"archive_coverage",name_field='',html_map='No',fileout=filepath,map_name='Archive Coverage')
+
+    totalarea=aoiintersect['intersect_area'].sum()
+
+
+    start=list(gdf.geometry[0].centroid.coords)
+
+    area=start[0][1],start[0][0]
+    #print(start[0][1],start[0][0])
+
+
+    m = folium.Map((area), zoom_start=10)
+
+    def styleback(feature):
+            return {
+                'color': '',
+                'weight': 1
+                }
+    def stylefront(feature):
+            return {
+                'color': 'Red',
+                'weight': 4
+                }
+    def styleintersect(feature):
+        return {
+            'color': 'Blue',
+            'weight': 2
+            }
+
+    # aoi = folium.FeatureGroup(name="AOITop")
+    # data=gdfclean.to_json()
+    # data2 = json.loads(data)
+    # aoi.add_child(folium.GeoJson(data2,style_function=stylefront))
+    aoi = folium.FeatureGroup(name="AOI")
+    data=gdfclean.to_json()
+    data2 = json.loads(data)
+    aoi.add_child(folium.GeoJson(data2,style_function=stylefront))
+    aoi.add_to(m)
+    # m.add_child(aoi)
+
+    #imagery_group=folium.FeatureGroup('Imagery Coverage',show=True)
+    
+    for idx,cur_row in enumerate(range(len(cloudsortgdf))):
+        cur_row_gdf=cloudsortgdf.iloc[[cur_row]]
+        #print(cur_row)
+        name=f'{idx}_{cur_row_gdf["id"][cur_row]}'
+        fg2=folium.FeatureGroup(name,show=True)
+        url=cur_row_gdf['preview'][cur_row]
+        boundary=cur_row_gdf.bounds
+        #print(boundary)
+        minbounds = boundary['miny'][cur_row],boundary['minx'][cur_row]
+        maxbounds= boundary['maxy'][cur_row],boundary['maxx'][cur_row]
+        raster=folium.raster_layers.ImageOverlay(image=url,bounds=([minbounds,maxbounds]),opacity=1,interactive=True)
+        raster.add_to(fg2)
+        fg2.add_to(m)
+
+    #m.add_child(imagery_group)
+
+
+    #m.add_child(aoi)
+    m.keep_in_front(aoi)
+    folium.LayerControl().add_to(m)
+
+    m.save(f'{filepath}/archive_coverage_html_map.html')
+    
+    return concave_gdf,totalarea
