@@ -1907,7 +1907,14 @@ def create_map(orig_gdf,clean_gdf,popup_column=''):
 
     try:
     # #Background Vector Layer
-        Quote=folium.FeatureGroup(name="Quote Polygons",show=True)
+        Quote=folium.Feature
+        
+        
+        
+        
+        
+        
+        (name="Quote Polygons",show=True)
         data3=clean_gdf.to_json()
         data4 = json.loads(data3)
         folium.GeoJson(data4, style_function=styleback).add_to(Quote)
@@ -2249,8 +2256,8 @@ def optimize_area_group(gdfclean,quote_type,minarea,filepath=''):
     if quote_type == "Tasking High Res" or quote_type == "Tasking Very High Res":
         radius=200  #radius to buffer in iteration (in m)
         print(f'Tasking')
-        minarea=50
-        radius=250  #radius to buffer in iteration (in m)
+        minarea=75
+        radius=300  #radius to buffer in iteration (in m)
         buffer_interval=25
         start_interval=buffer_interval
         print(f'Tasking buff int is {buffer_interval}')
