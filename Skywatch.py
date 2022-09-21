@@ -2236,6 +2236,7 @@ def concave_optimize(gdfpoints,gdfbuff):
 
             elif count ==0:
                 try:
+            
                     while len(alpha_shape.exterior.coords.xy)==0 and count <=15:
                         alpha=alpha/2
                         alpha_shape = alphashape.alphashape(pointlist, alpha)
@@ -2244,10 +2245,14 @@ def concave_optimize(gdfpoints,gdfbuff):
                         print('getting 0 results')
                         pass
                 except:
+                    pass
+                
+                
+                
 
-                    concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
-                    concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-                    concave_output=concave_output.append(concave_gdf,ignore_index=True) 
+                concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
+                concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+                concave_output=concave_output.append(concave_gdf,ignore_index=True) 
 
                 
 
