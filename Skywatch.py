@@ -2237,7 +2237,7 @@ def concave_optimize(gdfpoints,gdfbuff):
                 else:
                     alphalist=[]
                     for shape in alpha_shape:
-                        alphalist.append(Polygon(alpha_shape)
+                        alphalist.append(Polygon(alpha_shape))
 #                     
 #                 while len(alpha_shape.exterior.coords.xy)==0:
 #                     alpha=alpha/2
