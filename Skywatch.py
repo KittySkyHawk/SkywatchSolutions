@@ -2280,7 +2280,7 @@ def optimize_area_group(gdfclean,quote_type,minarea,filepath=''):
     if quote_type == "Tasking High Res" or quote_type == "Tasking Very High Res":
         radius=200  #radius to buffer in iteration (in m)
         #print(f'Tasking')
-        minarea=140
+        minarea=40
         #radius=300  #radius to buffer in iteration (in m)
         buffer_interval=4
         start_interval=buffer_interval
