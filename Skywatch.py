@@ -2166,12 +2166,13 @@ def concave_optimize(gdfpoints,gdfbuff):
         #if 
 
     joingdf=gpd.sjoin(gdf_og_points,gdfbuff,how="left")
+    print('join created')
     #print(gdf_og_points.index[0])
     #print(joingdf.columns)
     #print(joingdf.index)
 
     concave_output=gpd.GeoDataFrame(columns=['geometry'])
-
+    print('concave output started')
     if 'index_right' in joingdf.columns:   
         uniquelist=joingdf['index_right'].unique()
         print(f'the uniquelist is {uniquelist}')
