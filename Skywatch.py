@@ -2368,7 +2368,13 @@ def concave_optimize(gdfpoints,gdfbuff):
             
     return concave_output
 
-
+def area_group(gdfclean,quote_type,minarea,filepath=''):
+    #gdfclean=aoi_areakm(gdfclean,'optimized_area')
+    if quote_type == "Tasking High Res" or quote_type == "Tasking Very High Res":
+        gdfclean=EAProject_Buffer(gdfclean,5000,capstyle=1)
+    elif quote_type == "Archive High Res" or quote_type == "Archive Med Res": 
+        gdfclean=EAProject_Buffer(gdfclean,1000,capstyle=1)
+    return gdfclean
 
 def optimize_area_group(gdfclean,quote_type,minarea,filepath=''):
     
