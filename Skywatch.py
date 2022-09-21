@@ -2214,25 +2214,41 @@ def concave_optimize(gdfpoints,gdfbuff):
             print(gdfbuff.at[round(unique),'optimized_area'])
 
             #alpha = 0.95 * alphashape.optimizealpha(pointlist)
-            alpha=100
+            alpha=200
             alpha_shape = alphashape.alphashape(pointlist, alpha)
             print(type(alpha_shape))
             #print(len(alpha_shape.exterior.coords.xy))
-            try:
-                while len(alpha_shape)!=1:
-                    alpha=alpha/2
-                    alpha_shape = alphashape.alphashape(pointlist, alpha)
-                    #print(len(alpha_shape.exterior.coords.xy))
-                    print(alpha)
-            except:
-                pass
-            while len(alpha_shape.exterior.coords.xy)==0:
+            count=0
+            while len(alpha_shape) >=2 or len(alpha_shape.exterior.coords.xy)==0 and count <= 15:
                 alpha=alpha/2
                 alpha_shape = alphashape.alphashape(pointlist, alpha)
-                print(len(alpha_shape.exterior.coords.xy))
+                #print(len(alpha_shape.exterior.coords.xy))
                 print(alpha)
-
-            concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
+                count=count+1
+            else:
+                print('could not optimize using alpha shape of {alpha} up to 250 with 1 polygon. Allowing it to use multipart')
+                alpha=100
+                count=0
+                alpha_shape = alphashape.alphashape(pointlist, alpha)
+                while len(alpha_shape.exterior.coords.xy)==0 and count <=15
+                    alpha=alpha/2
+                    alpha_shape = alphashape.alphashape(pointlist, alpha)
+                    count=count+1
+                else:
+                    alphalist=[]
+                    for shape in alpha_shape:
+                        alphalist.append(Polygon(alpha_shape)
+#                     
+#                 while len(alpha_shape.exterior.coords.xy)==0:
+#                     alpha=alpha/2
+#                     alpha_shape = alphashape.alphashape(pointlist, alpha)
+#                     print(len(alpha_shape.exterior.coords.xy))
+#                     print('no resulting shape')
+#                 else
+            if len(alpha_shape) ==1:   
+                concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
+            elif len(alpha_shape)>=2:
+                concave_gs=gpd.GeoSeries(alphalist)
             concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
             concave_output=concave_output.append(concave_gdf,ignore_index=True)
 
