@@ -2221,7 +2221,7 @@ def concave_optimize(gdfpoints,gdfbuff):
             elif type(alpha_shape.geom)=='MultiPolygon':
 
                 while type(alpha_shape.geom)=='MultiPolygon' and count <= 15:
-                    print(type(alpha_shape.geom)
+                    print(type(alpha_shape.geom))
                     alpha=alpha/2
                     alpha_shape = alphashape.alphashape(pointlist, alpha)
                     count=count+1
@@ -2241,7 +2241,7 @@ def concave_optimize(gdfpoints,gdfbuff):
                             alphalist.append(Polygon(alpha_shape))
             else:
                           
-                print(f'type of alpha shape is {type(alpha_shape)}. The concave hull optimization did not succeed. Try the older optimize method and then concave'}
+                print(f'type of alpha shape is {type(alpha_shape)}. The concave hull optimization did not succeed. Try the older optimize method and then concave')
                 exit()
                 
             concave_gs=gpd.GeoSeries(alphalist)
