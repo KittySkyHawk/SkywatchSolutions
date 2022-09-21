@@ -2354,6 +2354,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
         elif coverage_map=='No':
             coverage_map=''
             coverage_title='<h2>No Coverage Request</h2>'
+            coveragearea=''
             
         prices_text = round(final_area,2)
         #stats_text = round(customer_price*totalbuffarea,2)
