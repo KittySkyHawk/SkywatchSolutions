@@ -2212,25 +2212,31 @@ def concave_optimize(gdfpoints,gdfbuff):
             print(type(alpha_shape))
             #print(len(alpha_shape.exterior.coords.xy))
             count=0
-            while len(alpha_shape) >=2 or len(alpha_shape.exterior.coords.xy)==0 and count <= 15:
-                alpha=alpha/2
-                alpha_shape = alphashape.alphashape(pointlist, alpha)
-                #print(len(alpha_shape.exterior.coords.xy))
-                print(alpha)
-                count=count+1
-            else:
-                print('could not optimize using alpha shape of {alpha} up to 250 with 1 polygon. Allowing it to use multipart')
-                alpha=100
-                count=0
-                alpha_shape = alphashape.alphashape(pointlist, alpha)
-                while len(alpha_shape.exterior.coords.xy)==0 and count <=15:
+            try:
+                while len(alpha_shape) >=2 and count <= 15:
                     alpha=alpha/2
                     alpha_shape = alphashape.alphashape(pointlist, alpha)
+                    #print(len(alpha_shape.exterior.coords.xy))
+                    print(alpha)
                     count=count+1
                 else:
-                    alphalist=[]
-                    for shape in alpha_shape:
-                        alphalist.append(Polygon(alpha_shape))
+                    print('no longer a multipolygon')
+            except:
+                pass
+                
+
+            print('could not optimize using alpha shape of {alpha} up to 250 with 1 polygon. Allowing it to use multipart')
+            alpha=50
+            count=0
+            alpha_shape = alphashape.alphashape(pointlist, alpha)
+            while len(alpha_shape.exterior.coords.xy)==0 and count <=15:
+                alpha=alpha/2
+                alpha_shape = alphashape.alphashape(pointlist, alpha)
+                count=count+1
+            else:
+                alphalist=[]
+                for shape in alpha_shape:
+                    alphalist.append(Polygon(alpha_shape))
 #                     
 #                 while len(alpha_shape.exterior.coords.xy)==0:
 #                     alpha=alpha/2
