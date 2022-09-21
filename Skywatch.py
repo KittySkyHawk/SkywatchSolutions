@@ -2217,46 +2217,70 @@ def concave_optimize(gdfpoints,gdfbuff):
                     alpha=alpha/2
                     alpha_shape = alphashape.alphashape(pointlist, alpha)
                     #print(len(alpha_shape.exterior.coords.xy))
-                    print(alpha)
+                    print(f'alpha is {alpha} and count is {count})
                     count=count+1
                 else:
-                    print('no longer a multipolygon')
+                    print('alpha shape is not working')
             except:
                 pass
-                
-
-            print('could not optimize using alpha shape of {alpha} up to 250 with 1 polygon. Allowing it to use multipart')
-            alpha=50
-            count=0
-            alpha_shape = alphashape.alphashape(pointlist, alpha)
-            while len(alpha_shape.exterior.coords.xy)==0 and count <=15:
-                alpha=alpha/2
+            if count ==15:
+                print('could not make 1 polygon')
+                alpha=50
                 alpha_shape = alphashape.alphashape(pointlist, alpha)
-                count=count+1
-            else:
                 alphalist=[]
                 for shape in alpha_shape:
                     alphalist.append(Polygon(alpha_shape))
-#                     
-#                 while len(alpha_shape.exterior.coords.xy)==0:
-#                     alpha=alpha/2
-#                     alpha_shape = alphashape.alphashape(pointlist, alpha)
-#                     print(len(alpha_shape.exterior.coords.xy))
-#                     print('no resulting shape')
-#                 else
-            if len(alpha_shape) ==1:   
-                concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
-                concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-                concave_output=concave_output.append(concave_gdf,ignore_index=True)
-            elif len(alpha_shape)>=2:
                 concave_gs=gpd.GeoSeries(alphalist)
                 concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
                 concave_output=concave_output.append(concave_gdf,ignore_index=True)
+
+            elif count ==0:
+                try:
+                    while len(alpha_shape.exterior.coords.xy)==0 and count <=15:
+                        alpha=alpha/2
+                        alpha_shape = alphashape.alphashape(pointlist, alpha)
+                        count=count+1
+                    else:
+                        print('getting 0 results')
+                        pass
+                except:
+
+                    concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
+                    concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+                    concave_output=concave_output.append(concave_gdf,ignore_index=True) 
+
+                
+
+#             print('could not optimize using alpha shape of {alpha} up to 250 with 1 polygon. Allowing it to use multipart')
+#             alpha=50
+#             count=0
+#             alpha_shape = alphashape.alphashape(pointlist, alpha)
+#             try:
+                
+#                 else:
+#                     alphalist=[]
+#                     for shape in alpha_shape:
+#                         alphalist.append(Polygon(alpha_shape))
+# #                     
+# #                 while len(alpha_shape.exterior.coords.xy)==0:
+# #                     alpha=alpha/2
+# #                     alpha_shape = alphashape.alphashape(pointlist, alpha)
+# #                     print(len(alpha_shape.exterior.coords.xy))
+# #                     print('no resulting shape')
+# #                 else
+#             if len(alpha_shape) ==1:   
+#                 concave_gs=gpd.GeoSeries(Polygon(alpha_shape))
+#                 concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+#                 concave_output=concave_output.append(concave_gdf,ignore_index=True)
+#             elif len(alpha_shape)>=2:
+#                 concave_gs=gpd.GeoSeries(alphalist)
+#                 concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+#                 concave_output=concave_output.append(concave_gdf,ignore_index=True)
       
-            else:
-                exit()
-                #eventually intersect the unique group with original GDF and run the old optimize on it.
-                #concave_gdf=optimize_area_report(gdfclean,'Archive High Res',100))
+#             else:
+#                 exit()
+#                 #eventually intersect the unique group with original GDF and run the old optimize on it.
+#                 #concave_gdf=optimize_area_report(gdfclean,'Archive High Res',100))
 
         else:
             geom=gdfbuff.at[round(unique),'geometry']
