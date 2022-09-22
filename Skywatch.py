@@ -2704,7 +2704,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,data_type,coverage_resoluti
     data=gdfclean.to_json()
     data2 = json.loads(data)
     aoi.add_child(folium.GeoJson(data2,style_function=stylefront))
-    aoi.add_to(m)
+   # aoi.add_to(m)
     # m.add_child(aoi)
 
     #imagery_group=folium.FeatureGroup('Imagery Coverage',show=True)
@@ -2725,8 +2725,8 @@ def archive_coverage(gdf,start_date,end_date,api_key,data_type,coverage_resoluti
 
     #m.add_child(imagery_group)
 
-
-    #m.add_child(aoi)
+    aoi.add_to(m)
+   # m.add_child(aoi)
     m.keep_in_front(aoi)
     folium.LayerControl().add_to(m)
 
