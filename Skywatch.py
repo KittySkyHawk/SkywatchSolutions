@@ -2148,11 +2148,10 @@ def optimize_area_report(gdfclean,quote_type,minarea,filepath=''):
         
     return [gdfbuff,dfquote]
 
-def concave_optimize(gdfpoints,gdfbuff):
-
-    #gdf_og_points=gpd.GeoDataFrame(columns=['geometry'])
+def concave_optimize(gdfbuffarea,gdfgroupfinal):
+#gdf_og_points=gpd.GeoDataFrame(columns=['geometry'])
     pointylist=[]
-    for row in gdfpoints.itertuples():
+    for row in gdfbuffarea.itertuples():
         geom=getattr(row,'geometry')
         for item in geom.exterior.coords:
             pointylist.append(Point(item))
@@ -2161,26 +2160,25 @@ def concave_optimize(gdfpoints,gdfbuff):
     gdf_og_points=gpd.GeoDataFrame(geometry=gs)
     gdf_og_points=gdf_og_points.set_crs('EPSG:4326')
     print('points created')
-    
+
     #for row in gdfarea.itertuples():
         #if 
 
-    joingdf=gpd.sjoin(gdf_og_points,gdfbuff,how="left")
-    print('join created')
+    joingdf=gpd.sjoin(gdf_og_points,gdfgroupfinal,how="left")
     #print(gdf_og_points.index[0])
     #print(joingdf.columns)
     #print(joingdf.index)
 
     concave_output=gpd.GeoDataFrame(columns=['geometry'])
-    print('concave output started')
+
     if 'index_right' in joingdf.columns:   
         uniquelist=joingdf['index_right'].unique()
         print(f'the uniquelist is {uniquelist}')
         
     else:
         print('index column was not created')
-        exit()
-    
+        sys.exit()
+
     for unique in uniquelist:
         print(unique)
         pointlist=[]
@@ -2208,7 +2206,7 @@ def concave_optimize(gdfpoints,gdfbuff):
         #elif gdfbuff.at[round(unique),'optimized_area']>=26:
         else:
 
-            print(gdfbuff.at[round(unique),'optimized_area'])
+            #print(gdfbuffarea.at[round(unique),'optimized_area'])
             alphalist=[]
             #alpha = 0.95 * alphashape.optimizealpha(pointlist)
             alpha=500
@@ -2220,47 +2218,41 @@ def concave_optimize(gdfpoints,gdfbuff):
             ## len(alpha_shape) only works if it is multipart - this is why it is in a try except. This reduces alpha trying to get a single polygon.
             #for shape in 
             
-            
-            if alpha_shape.geom_type=='Polygon':
-                alphalist.append(alpha_shape)
-
-                #print(type(alpha_shape.geom)
-            elif alpha_shape.geom_type=='MultiPolygon':
-
-                while alpha_shape.geom_type=='MultiPolygon' and count <= 10:
-                    print(type(alpha_shape.geom_type))
-                    alpha=alpha/2
-                    alpha_shape = alphashape.alphashape(pointlist, alpha)
-                    count=count+1
-                else:
-                    if count >=11:
-                        print(f'submitting as multipolygon')
-                        alpha=100
+            while alpha_shape.geom_type!= 'Polygon' and alpha_shape.geom_type!='MultiPolygon':
+                print(type(alpha_shape.geom_type))
+                alpha=alpha/2
+                alpha_shape = alphashape.alphashape(pointlist, alpha)
+                count=count+1
+            else:
+                count=0
+                while alpha_shape.geom_type=='MultiPolygon' and count <= 3:
+                        print(type(alpha_shape.geom_type))
+                        alpha=alpha/2
                         alpha_shape = alphashape.alphashape(pointlist, alpha)
+                        count=count+1
+                else:
+                    if alpha_shape.geom_type=='MultiPolygon':
+                        print(f'submitting as multipolygon')
                         alphalist=[]
                         for shape in alpha_shape:
                             alphalist.append(Polygon(shape))
-                        
-                        
-                    else:    
-                        print(f'shape is no longer a multipolygon. it is {alpha_shape.geom_type}')
-                        alphalist.append(alpha_shape)
-            else:
-                            
-                print(f'type of alpha shape is {type(alpha_shape)}. The concave hull optimization did not succeed. Try the older optimize method and then concave')
-                exit()
+                    else:
+                        print(f'geom type is {alpha_shape.geom_type}')
+                        pass
+                    
+                if alpha_shape.geom_type=='Polygon':
+                    alphalist.append(alpha_shape)
+
+                if alpha_shape.geom_type!= 'Polygon' and alpha_shape.geom_type!='MultiPolygon':
+                    print('concave hull failed')
+
+                else:
+                    print('concave_hull succeeded')
+
                 
             concave_gs=gpd.GeoSeries(alphalist)
             concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-            concave_output=concave_output.append(concave_gdf,ignore_index=True)  
-#             
-
-        # else:
-        #     geom=gdfbuff.at[round(unique),'geometry']
-        #     concave_gs=gpd.GeoSeries(geom)
-        #     concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-        #     concave_output=concave_output.append(concave_gdf)
-            
+            concave_output=concave_output.append(concave_gdf,ignore_index=True)
     return concave_output
 
 def area_group(gdfclean,quote_type,minarea,filepath=''):
