@@ -1848,6 +1848,8 @@ def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='No',fileout='',m
 
     if len(gdfclean)<10 and len(gdfclean)!= 1:
     #No Inputs
+        #filename=filename.rsplit('.',1)[0]
+        filepath=f"{fileout}/{map_name}_{filename}"
         output_multiAOI(gdfclean,filepath,name_field)
     else:
         pass
