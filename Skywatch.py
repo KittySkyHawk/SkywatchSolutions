@@ -115,11 +115,12 @@ def simply_poly(gdf):
                 geom=cur_row_gdf.geometry
                 points=geom.iloc[0].exterior.coords
                 #simplify_return = (f'vertices reduced to {len(points)} with a simplified amount of {simplify_amount} degrees after {count} iterations. 1 degree is roughtly 111km. 0.0001 degree is 11.1m roughly')
-                simplify_amount=simplify_amount+0.00001
+                simplify_amount=simplify_amount+0.000005
                 #print(simplify_amount)
                 count=count+1
-                            
-                if simplify_amount > 0.0001 or count==50:
+                
+                # This could be increased to 0.0001 as it used to be.
+                if simplify_amount > 0.00005 or count==50:
                     simplify_return=('geometery could not be simplified')
                     pass                
                     
