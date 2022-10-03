@@ -2292,9 +2292,9 @@ def optimize_area_group(gdfclean,quote_type,minarea,filepath=''):
         #minarea=1
         print("Archive High Res")
        
-        minarea=5
+        minarea=1
         radius=50  #radius to buffer in iteration (in m)
-        buffer_interval=1
+        buffer_interval=0.1
         start_interval=buffer_interval
         print(buffer_interval)
        
