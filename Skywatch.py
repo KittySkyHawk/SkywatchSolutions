@@ -322,11 +322,11 @@ def load_file(infile):
         #print('file type is {}'.format(extension[-1]))
         #gdf
         #return gdf
-    elif extension[-1]=='kml':
+    elif extension=='kml':
         gdf=load_kml(infile)
         return gdf
 
-    elif extension[-1]=='csv':
+    elif extension=='csv':
         gdf = gpd.read_file(infile)
         gdf = gpd.GeoDataFrame(gdf, geometry=gpd.points_from_xy(gdf['Long'], gdf['Lat']))
         gdf.set_crs(4326)
