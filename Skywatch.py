@@ -2035,8 +2035,8 @@ def optimize_area_report(gdfclean,quote_type,minarea,filepath=''):
             start_interval=buffer_interval
         #minarea=25# minimum area to hit (in km2)
         
-    else:    
-    #elif quote_type == "Archive High Res" or quote_type == "Archive Med Res" or quote_type == "Archive Very High Res":
+    #else:    
+    elif 'Archive' in quote_type:
         radius=50
         #minarea=1
         print("Archive High Res")
