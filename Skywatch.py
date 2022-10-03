@@ -2651,84 +2651,87 @@ def archive_coverage(gdf,start_date,end_date,api_key,data_type,coverage_resoluti
 
         gdfout=gpd.GeoDataFrame.from_features(fc['features'])
         gdfout=gdfout.set_crs('EPSG:4326')
-    else:
-        pass
+    
         #del cloudjoin
-    gdfout=gdfout.set_crs('EPSG:4326')
-    gdf=gdf.set_crs('EPSG:4326')
-    cloudsortgdf=gdfout.sort_values('clouds', axis=0, ascending=False)
-    cloudsortgdf=cloudsortgdf.reset_index(drop=True)
+        gdfout=gdfout.set_crs('EPSG:4326')
+        gdf=gdf.set_crs('EPSG:4326')
+        cloudsortgdf=gdfout.sort_values('clouds', axis=0, ascending=False)
+        cloudsortgdf=cloudsortgdf.reset_index(drop=True)
 
-    aoiintersect=gpd.overlay(gdf, gdfout, how='intersection')
-    aoiintersect=aoiintersect.dissolve()
-    aoiintersect=aoiintersect.reset_index(drop=True)
-    aoiintersect=aoiintersect.explode()
-    aoiintersect=aoiintersect.reset_index(drop=True)
-    aoiintersect=aoi_areakm(aoiintersect,'intersect_area')
+        aoiintersect=gpd.overlay(gdf, gdfout, how='intersection')
+        aoiintersect=aoiintersect.dissolve()
+        aoiintersect=aoiintersect.reset_index(drop=True)
+        aoiintersect=aoiintersect.explode()
+        aoiintersect=aoiintersect.reset_index(drop=True)
+        aoiintersect=aoi_areakm(aoiintersect,'intersect_area')
 
-    exportfiles(gdf,aoiintersect,"archive_coverage",name_field='',html_map='No',fileout=filepath,map_name='Archive Coverage')
+        exportfiles(gdf,aoiintersect,"archive_coverage",name_field='',html_map='No',fileout=filepath,map_name='Archive Coverage')
 
-    totalarea=aoiintersect['intersect_area'].sum()
-
-
-    start=list(gdf.geometry[0].centroid.coords)
-
-    area=start[0][1],start[0][0]
-    #print(start[0][1],start[0][0])
+        totalarea=aoiintersect['intersect_area'].sum()
 
 
-    m = folium.Map((area), zoom_start=10)
+        start=list(gdf.geometry[0].centroid.coords)
 
-    def styleback(feature):
+        area=start[0][1],start[0][0]
+        #print(start[0][1],start[0][0])
+
+
+        m = folium.Map((area), zoom_start=10)
+
+        def styleback(feature):
+                return {
+                    'color': '',
+                    'weight': 1
+                    }
+        def stylefront(feature):
+                return {
+                    'color': 'Red',
+                    'weight': 4
+                    }
+        def styleintersect(feature):
             return {
-                'color': '',
-                'weight': 1
+                'color': 'Blue',
+                'weight': 2
                 }
-    def stylefront(feature):
-            return {
-                'color': 'Red',
-                'weight': 4
-                }
-    def styleintersect(feature):
-        return {
-            'color': 'Blue',
-            'weight': 2
-            }
 
-    # aoi = folium.FeatureGroup(name="AOITop")
-    # data=gdfclean.to_json()
-    # data2 = json.loads(data)
-    # aoi.add_child(folium.GeoJson(data2,style_function=stylefront))
-    aoi = folium.FeatureGroup(name="AOI")
-    data=gdfclean.to_json()
-    data2 = json.loads(data)
-    aoi.add_child(folium.GeoJson(data2,style_function=stylefront))
-   # aoi.add_to(m)
-    # m.add_child(aoi)
+        # aoi = folium.FeatureGroup(name="AOITop")
+        # data=gdfclean.to_json()
+        # data2 = json.loads(data)
+        # aoi.add_child(folium.GeoJson(data2,style_function=stylefront))
+        aoi = folium.FeatureGroup(name="AOI")
+        data=gdfclean.to_json()
+        data2 = json.loads(data)
+        aoi.add_child(folium.GeoJson(data2,style_function=stylefront))
+       # aoi.add_to(m)
+        # m.add_child(aoi)
 
-    #imagery_group=folium.FeatureGroup('Imagery Coverage',show=True)
-    
-    for idx,cur_row in enumerate(range(len(cloudsortgdf))):
-        cur_row_gdf=cloudsortgdf.iloc[[cur_row]]
-        #print(cur_row)
-        name=f'{idx}_{cur_row_gdf["id"][cur_row]}'
-        fg2=folium.FeatureGroup(name,show=True)
-        url=cur_row_gdf['preview'][cur_row]
-        boundary=cur_row_gdf.bounds
-        #print(boundary)
-        minbounds = boundary['miny'][cur_row],boundary['minx'][cur_row]
-        maxbounds= boundary['maxy'][cur_row],boundary['maxx'][cur_row]
-        raster=folium.raster_layers.ImageOverlay(image=url,bounds=([minbounds,maxbounds]),opacity=1,interactive=True)
-        raster.add_to(fg2)
-        fg2.add_to(m)
+        #imagery_group=folium.FeatureGroup('Imagery Coverage',show=True)
 
-    #m.add_child(imagery_group)
+        for idx,cur_row in enumerate(range(len(cloudsortgdf))):
+            cur_row_gdf=cloudsortgdf.iloc[[cur_row]]
+            #print(cur_row)
+            name=f'{idx}_{cur_row_gdf["id"][cur_row]}'
+            fg2=folium.FeatureGroup(name,show=True)
+            url=cur_row_gdf['preview'][cur_row]
+            boundary=cur_row_gdf.bounds
+            #print(boundary)
+            minbounds = boundary['miny'][cur_row],boundary['minx'][cur_row]
+            maxbounds= boundary['maxy'][cur_row],boundary['maxx'][cur_row]
+            raster=folium.raster_layers.ImageOverlay(image=url,bounds=([minbounds,maxbounds]),opacity=1,interactive=True)
+            raster.add_to(fg2)
+            fg2.add_to(m)
 
-    aoi.add_to(m)
-   # m.add_child(aoi)
-    m.keep_in_front(aoi)
-    folium.LayerControl().add_to(m)
+        #m.add_child(imagery_group)
 
-    m.save(f'{filepath}/archive_coverage_html_map.html')
-    
-    return concave_gdf,totalarea
+        aoi.add_to(m)
+       # m.add_child(aoi)
+        m.keep_in_front(aoi)
+        folium.LayerControl().add_to(m)
+
+        m.save(f'{filepath}/archive_coverage_html_map.html')
+
+        return concave_gdf,totalarea
+
+    else:
+        no_results='the search did not work'
+        return no_results
