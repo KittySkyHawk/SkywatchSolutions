@@ -2035,8 +2035,8 @@ def optimize_area_report(gdfclean,quote_type,minarea,filepath=''):
             start_interval=buffer_interval
         #minarea=25# minimum area to hit (in km2)
         
-        
-    elif quote_type == "Archive High Res" or quote_type == "Archive Med Res" or quote_type == "Archive Very High Res":
+    else:    
+    #elif quote_type == "Archive High Res" or quote_type == "Archive Med Res" or quote_type == "Archive Very High Res":
         radius=50
         #minarea=1
         print("Archive High Res")
@@ -2286,8 +2286,8 @@ def optimize_area_group(gdfclean,quote_type,minarea,filepath=''):
         start_interval=buffer_interval
         print(f'Tasking buff int is {buffer_interval}')
     
-        
-    elif quote_type == "Archive High Res" or quote_type == "Archive Med Res":
+    else:    
+    #elif quote_type == "Archive High Res" or quote_type == "Archive Med Res":
         radius=50
         #minarea=1
         print("Archive High Res")
@@ -2300,9 +2300,9 @@ def optimize_area_group(gdfclean,quote_type,minarea,filepath=''):
        
     
 
-    else: 
-        print('quote type does not match options.')
-        sys.exit('quote type does not exist')
+#     else: 
+#         print('quote type does not match options.')
+#         sys.exit('quote type does not exist')
 
     print(f'buffer_interval is {buffer_interval}')        
     gdfbuff=gpd.GeoDataFrame(deepcopy(gdfclean))
