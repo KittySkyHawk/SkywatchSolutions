@@ -296,7 +296,7 @@ def load_kml(infile):
     
 
 
-    return gdf
+   # return gdf
 
 #Check Projection
 def projection_check(gdf):
@@ -318,27 +318,31 @@ def load_file(infile):
     if extension in ['geojson','json','shp']:
         gdf=gpd.read_file(infile)
         gdf=gpd.GeoDataFrame(gdf)
-        #print('file type is {}'.format(extension[-1]))
-        gdf
         return gdf
+        #print('file type is {}'.format(extension[-1]))
+        #gdf
+        #return gdf
     elif extension[-1]=='kml':
         gdf=load_kml(infile)
+        return gdf
 
     elif extension[-1]=='csv':
         gdf = gpd.read_file(infile)
         gdf = gpd.GeoDataFrame(gdf, geometry=gpd.points_from_xy(gdf['Long'], gdf['Lat']))
         gdf.set_crs(4326)
+        return gdf
 
-    elif extension[-1]=='':
-        files = os.listdir(infile)
+    #elif extension[-1]=='':
+        #files = os.listdir(infile)
 
-        for f in files:
-            load_file(f)
+        #for f in files:
+            #load_file(f)
+            
     else:
         print('File type not recognized. Please provide geojson, csv or kml')
 
 
-    return gdf
+    
 
 
 # This function will create a projection for a single polygon. Can be used in an iterator
