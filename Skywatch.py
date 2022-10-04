@@ -2216,7 +2216,7 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal):
             #print(gdfbuffarea.at[round(unique),'optimized_area'])
             alphalist=[]
             #alpha = 0.95 * alphashape.optimizealpha(pointlist)
-            alpha=500
+            alpha=1000
             alpha_shape = alphashape.alphashape(pointlist, alpha)
             print(alpha_shape)
             print(alpha_shape.geom_type)
