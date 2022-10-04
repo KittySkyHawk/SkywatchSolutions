@@ -1870,8 +1870,10 @@ def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='No',fileout='',m
     if html_map=='Yes':
         if "Archive" in map_name:
             qtype="Archive"
-        else:
+        elif "Tasking" in map_name:
             qtype="Tasking"
+        else:
+            qtype=map_name
         m=create_map(gdf,gdfclean)
         m.save(f'{fileout}/{qtype}_html_map.html')
 
