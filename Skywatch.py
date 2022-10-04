@@ -2037,13 +2037,13 @@ def optimize_area_report(gdfclean,quote_type,minarea,filepath=''):
         
     #else:    
     elif 'Archive' in quote_type:
-        radius=50
+        radius=25
         #minarea=1
         print("Archive High Res")
         if minarea <=1000000:
             minarea=1
-            radius=50  #radius to buffer in iteration (in m)
-            buffer_interval=0.2
+            radius=25  #radius to buffer in iteration (in m)
+            buffer_interval=0.1
             start_interval=buffer_interval
             print(buffer_interval)
         else:
