@@ -2045,7 +2045,7 @@ def optimize_area_report(gdfclean,quote_type,resolution,minarea,filepath=''):
         if minarea <=1000000:
             minarea=1
             radius=25  #radius to buffer in iteration (in m)
-            buffer_interval=0.1
+            buffer_interval=0.2
             start_interval=buffer_interval
             print(buffer_interval)
         else:
@@ -2515,7 +2515,7 @@ def cleanup(gdfbuff,data_type):
             
     return gdfbuffarea,totalbuffarea
 
-def archive_coverage(gdf,start_date,end_date,api_key,cloud,data_type,coverage_resolution,percent_coverage,filepath,alpha=12):
+def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,coverage_resolution,percent_coverage,filepath,alpha=12):
     searchlist=[]
     faillist=[]
     productidlist=[]
