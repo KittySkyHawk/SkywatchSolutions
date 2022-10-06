@@ -2549,7 +2549,8 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
             concave_gdf=deepcopy(gdf)
 
     else:
-        concave_gdf=deepcopy(gdf)
+        gdfclean=cleangeometry(deepcopy(gdf))
+        concave_gdf=deepcopy(gdfclean)
 
     
     #concave_gdf=deepcopy(gdf)
