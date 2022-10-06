@@ -2525,34 +2525,34 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
     searchlist=[]
     faillist=[]
     productidlist=[]
-#     if data_type!=('Corridors','Large AOI'):
-#         try:
-#             gdfclean=cleangeometry(gdf)
-#             pointylist=[]
-#             for row in gdfclean.itertuples():
-#                 geom=getattr(row,'geometry')
-#                 for item in geom.exterior.coords:
-#                     #print (item)
-#                     pointylist.append(item)
-#             #gs=gpd.GeoSeries(pointylist)
-#             #gdf_og_points=gpd.GeoDataFrame(geometry=gs)
-#             #gdf_og_points=gdf_og_points.set_crs('EPSG:4326')
-#             #alpha = 0.95 * alphashape.optimizealpha(points)
-#             hull = alphashape.alphashape(pointylist, alpha)
-#             #for item in hull
+    if data_type!='Corridors' and data_type != 'Large AOI':
+        try:
+            gdfclean=cleangeometry(deepcopy(gdf))
+            pointylist=[]
+            for row in gdfclean.itertuples():
+                geom=getattr(row,'geometry')
+                for item in geom.exterior.coords:
+                    #print (item)
+                    pointylist.append(item)
+            #gs=gpd.GeoSeries(pointylist)
+            #gdf_og_points=gpd.GeoDataFrame(geometry=gs)
+            #gdf_og_points=gdf_og_points.set_crs('EPSG:4326')
+            #alpha = 0.95 * alphashape.optimizealpha(points)
+            hull = alphashape.alphashape(pointylist, alpha)
+            #for item in hull
                 
-#             concave_gs=gpd.GeoSeries(hull)
-#             concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
-#             concave_gdf=cleangeometry(concave_gdf)
-#         except:
-#             print(f'Could not generate a concave hull. This search may take awhile. GDF length is {len(gdf)}')
-#             concave_gdf=deepcopy(gdf)
+            concave_gs=gpd.GeoSeries(hull)
+            concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
+            concave_gdf=cleangeometry(concave_gdf)
+        except:
+            print(f'Could not generate a concave hull. This search may take awhile. GDF length is {len(gdfclean)}')
+            concave_gdf=deepcopy(gdf)
 
-#     else:
-#         concave_gdf=deepcopy(gdf)
-#         pass
+    else:
+        concave_gdf=deepcopy(gdf)
+
     
-    concave_gdf=deepcopy(gdf)
+    #concave_gdf=deepcopy(gdf)
     fulfilled=0
     unfulfilled=0
 
