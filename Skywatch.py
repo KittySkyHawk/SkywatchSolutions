@@ -2721,7 +2721,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
        # aoi.add_to(m)
         # m.add_child(aoi)
 
-        imagery_group=folium.FeatureGroup('Imagery Coverage',show=True)
+        #imagery_group=folium.FeatureGroup('Imagery Coverage',show=True)
 
         for idx,cur_row in enumerate(range(len(cloudsortgdf))):
             cur_row_gdf=cloudsortgdf.iloc[[cur_row]]
@@ -2735,11 +2735,11 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
             maxbounds= boundary['maxy'][cur_row],boundary['maxx'][cur_row]
             raster=folium.raster_layers.ImageOverlay(image=url,bounds=([minbounds,maxbounds]),opacity=1,interactive=True)
             raster.add_to(fg2)
-            raster.add_to(imagery_group)
+            #raster.add_to(imagery_group)
             fg2.add_to(m)
 
         #m.add_child(imagery_group)
-        imagery_group.add_to(m)
+        #magery_group.add_to(m)
         aoi.add_to(m)
        # m.add_child(aoi)
         m.keep_in_front(aoi)
