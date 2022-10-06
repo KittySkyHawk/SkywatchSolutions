@@ -1099,9 +1099,9 @@ def get_search_results(api_key,searchid):
         time.sleep(2)
         search_results = requests.request("GET", get_url, headers=headers, data = get_payload).json()
     
-    else KeyError: # The status is gone
-        time.sleep(0.5)
-        pass
+    else:
+        print('search failed')
+        sys.exit('search failed')
     #print(search_results)
     if search_results.get('data'):
         resultslist=[]  
