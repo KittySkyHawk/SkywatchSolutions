@@ -2047,7 +2047,7 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,filepa
             radius=25  #radius to buffer in iteration (in m)
             if data_type == 'Large AOI':
                 buffer_interval=1
-            elif data_type == 'Disparate AOI':
+            else:
                 buffer_interval=0.2
             start_interval=buffer_interval
             print(buffer_interval)
