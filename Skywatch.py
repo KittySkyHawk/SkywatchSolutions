@@ -2543,7 +2543,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
             concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
             concave_gdf=cleangeometry(concave_gdf)
         except:
-            print(f'Could not generate a concave hull. This search may take awhile. GDF length is {len(gdf}')
+            print(f'Could not generate a concave hull. This search may take awhile. GDF length is {len(gdf)}')
             concave_gdf=deepcopy(gdf)
 
     else:
