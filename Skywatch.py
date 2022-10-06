@@ -2525,7 +2525,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
     searchlist=[]
     faillist=[]
     productidlist=[]
-    if data_type!='Corridors':
+    if data_type!=('Corridors','Large AOI'):
         try:
             gdfclean=cleangeometry(gdf)
             pointylist=[]
