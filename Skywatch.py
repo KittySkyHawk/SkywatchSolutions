@@ -1996,7 +1996,7 @@ def corridor_quote(gdf, quote_type,resolution, buffer_type,buffer_amount,):
 
     return gdfbuff
 
-def optimize_area_report(gdfclean,quote_type,resolution,minarea,filepath=''):
+def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,filepath=''):
     dfquote=pd.DataFrame(columns=['State','Number of Features','Total Area','Average Area per feature','Quote Type'])
     #gdfclean=EAProject_Buffer(gdfclean,10,capstyle=1)
     gdfclean=aoi_areakm(gdfclean,'optimized_area') 
@@ -2045,7 +2045,10 @@ def optimize_area_report(gdfclean,quote_type,resolution,minarea,filepath=''):
         if minarea <=1000000:
             minarea=1
             radius=25  #radius to buffer in iteration (in m)
-            buffer_interval=0.2
+            if data_type == 'Large AOI':
+                buffer_interval=1
+            elif data_type == 'Disparate AOI':
+                buffer_interval=0.2
             start_interval=buffer_interval
             print(buffer_interval)
         else:
@@ -2718,13 +2721,13 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
        # aoi.add_to(m)
         # m.add_child(aoi)
 
-        #imagery_group=folium.FeatureGroup('Imagery Coverage',show=True)
+        imagery_group=folium.FeatureGroup('Imagery Coverage',show=True)
 
         for idx,cur_row in enumerate(range(len(cloudsortgdf))):
             cur_row_gdf=cloudsortgdf.iloc[[cur_row]]
             #print(cur_row)
             name=f'{idx}_{cur_row_gdf["id"][cur_row]}'
-            fg2=folium.FeatureGroup(name,show=True)
+            fg2=folium.FeatureGroup(name,show=False)
             url=cur_row_gdf['preview'][cur_row]
             boundary=cur_row_gdf.bounds
             #print(boundary)
@@ -2732,10 +2735,11 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
             maxbounds= boundary['maxy'][cur_row],boundary['maxx'][cur_row]
             raster=folium.raster_layers.ImageOverlay(image=url,bounds=([minbounds,maxbounds]),opacity=1,interactive=True)
             raster.add_to(fg2)
+            raster.add_to(imagery_group)
             fg2.add_to(m)
 
         #m.add_child(imagery_group)
-
+        imagery_group.add_to(m)
         aoi.add_to(m)
        # m.add_child(aoi)
         m.keep_in_front(aoi)
