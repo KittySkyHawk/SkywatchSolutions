@@ -1094,12 +1094,12 @@ def get_search_results(api_key,searchid):
     
     search_results = requests.request("GET", get_url, headers=headers,data = get_payload).json() # GET the results
     
-    try:
-        while search_results["status"] == [{'message': 'Search is still running. Check back later for results'}] or search_results.status_code == "429": # if results aren't ready or getting throttled
-            time.sleep(2)
-            search_results = requests.request("GET", get_url, headers=headers, data = get_payload).json()
+
+    while search_results["status"] == [{'message': 'Search is still running. Check back later for results'}] or search_results.status_code == "429": # if results aren't ready or getting throttled
+        time.sleep(2)
+        search_results = requests.request("GET", get_url, headers=headers, data = get_payload).json()
     
-    except KeyError: # The status is gone
+    else KeyError: # The status is gone
         time.sleep(0.5)
         pass
     #print(search_results)
