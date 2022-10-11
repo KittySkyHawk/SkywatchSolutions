@@ -814,122 +814,122 @@ def EAProject_BuffersSubset_old(gdf,radius,minimum_area=0.1):
 
     return gdf
     
-def EAPGrid(gdf,area):
+# def EAPGrid(gdf,area):
     
 
-    #Create Centroid for projection - this assumes that the index of the item is 0 and there is only 1 AOI polygon is being added OR it is being passed a new iloc gdf.
-    if gdf.geom_type[0] in ['Point','Polygon', 'MultiPolygon']:
-        pol2=gdf.centroid[0]
-        pass
-    else:
-        print("not valid geometry")
+#     #Create Centroid for projection - this assumes that the index of the item is 0 and there is only 1 AOI polygon is being added OR it is being passed a new iloc gdf.
+#     if gdf.geom_type[0] in ['Point','Polygon', 'MultiPolygon']:
+#         pol2=gdf.centroid[0]
+#         pass
+#     else:
+#         print("not valid geometry")
 
-    #print(pol2)
-    wgs84_globe = pyproj.Proj(proj='longlat', ellps='WGS84')
+#     #print(pol2)
+#     wgs84_globe = pyproj.Proj(proj='longlat', ellps='WGS84')
 
-    aeqd = pyproj.Proj(proj='aeqd', ellps='WGS84', datum='WGS84', lat_0=pol2.y, lon_0=pol2.x)
+#     aeqd = pyproj.Proj(proj='aeqd', ellps='WGS84', datum='WGS84', lat_0=pol2.y, lon_0=pol2.x)
 
-    projpol = sh_transform(partial(pyproj.transform, wgs84_globe, aeqd), gdf['geometry'][0])    
-    temp=gpd.GeoSeries(projpol)
-    boundary=temp.bounds
+#     projpol = sh_transform(partial(pyproj.transform, wgs84_globe, aeqd), gdf['geometry'][0])    
+#     temp=gpd.GeoSeries(projpol)
+#     boundary=temp.bounds
       
-    poly_geometry = [
-                (boundary['minx'][0], boundary['miny'][0]),
-                (boundary['minx'][0], boundary['maxy'][0]),
-                (boundary['maxx'][0], boundary['maxy'][0]),
-                (boundary['maxx'][0], boundary['miny'][0]),
-                (boundary['minx'][0], boundary['miny'][0]),
-                ]
+#     poly_geometry = [
+#                 (boundary['minx'][0], boundary['miny'][0]),
+#                 (boundary['minx'][0], boundary['maxy'][0]),
+#                 (boundary['maxx'][0], boundary['maxy'][0]),
+#                 (boundary['maxx'][0], boundary['miny'][0]),
+#                 (boundary['minx'][0], boundary['miny'][0]),
+#                 ]
       
 
-    #gridx=['maxx'][0]-['minx'][0]
-    #gridy=['maxy'][0]-['miny'][0]
+#     #gridx=['maxx'][0]-['minx'][0]
+#     #gridy=['maxy'][0]-['miny'][0]
 
-    val_range = range(0,12)
-    polygons = []
+#     val_range = range(0,12)
+#     polygons = []
     
-    area = area
-    step=1000
+#     area = area
+#     step=1000
 
-    for idx in val_range:
-        print(idx)
-        width = (math.sqrt(area))
-        height = (math.sqrt(area)-width)
-        height = area/width
-        print(f"x: {width} y: {height} area: {width*height}")
+#     for idx in val_range:
+#         print(idx)
+#         width = (math.sqrt(area))
+#         height = (math.sqrt(area)-width)
+#         height = area/width
+#         print(f"x: {width} y: {height} area: {width*height}")
 
 
 
-    #height = resolution
-    #width = resolution
+#     #height = resolution
+#     #width = resolution
 
-        cols = list(np.arange(boundary['minx'][0], boundary['maxx'][0] + width, width))
-        rows = list(np.arange(boundary['miny'][0], boundary['maxy'][0] + height, height))
-        polyproj=[]
-        for x in cols[:-1]:
-            for y in rows[:-1]:
+#         cols = list(np.arange(boundary['minx'][0], boundary['maxx'][0] + width, width))
+#         rows = list(np.arange(boundary['miny'][0], boundary['maxy'][0] + height, height))
+#         polyproj=[]
+#         for x in cols[:-1]:
+#             for y in rows[:-1]:
                 
-                newpoly=(Polygon([(x,y), (x+width, y), (x+width, y+height), (x, y+height)]))
-                newpolypro=(sh_transform(partial(pyproj.transform, aeqd, wgs84_globe), newpoly))
-                polyproj.append(newpolypro)
+#                 newpoly=(Polygon([(x,y), (x+width, y), (x+width, y+height), (x, y+height)]))
+#                 newpolypro=(sh_transform(partial(pyproj.transform, aeqd, wgs84_globe), newpoly))
+#                 polyproj.append(newpolypro)
                         
-                #print(polyproj)
-        gdfname=gpd.GeoDataFrame(geometry=polyproj)
-        print(gdfname)                
-        polygons.append(gdfname)
+#                 #print(polyproj)
+#         gdfname=gpd.GeoDataFrame(geometry=polyproj)
+#         print(gdfname)                
+#         polygons.append(gdfname)
             
-    #polyGS[x]=gpd.GeoDataFrame(geometry=polygons)
+#     #polyGS[x]=gpd.GeoDataFrame(geometry=polygons)
 
-    return polygons
-    #return polyGS
+#     return polygons
+#     #return polyGS
 
-def EAPGrid_Overlap(gdf,resolution):
-    points=[]
+# def EAPGrid_Overlap(gdf,resolution):
+#     points=[]
 
-    #Create Centroid for projection - this assumes that the index of the item is 0 and there is only 1 AOI polygon is being added
-    if gdf.geom_type[0] in ['Point','Polygon', 'MultiPolygon']:
-        pol2=gdf.centroid[0]
-        pass
-    else:
-        print("not valid geometry")
+#     #Create Centroid for projection - this assumes that the index of the item is 0 and there is only 1 AOI polygon is being added
+#     if gdf.geom_type[0] in ['Point','Polygon', 'MultiPolygon']:
+#         pol2=gdf.centroid[0]
+#         pass
+#     else:
+#         print("not valid geometry")
 
-    #print(pol2)
-    wgs84_globe = pyproj.Proj(proj='longlat', ellps='WGS84')
+#     #print(pol2)
+#     wgs84_globe = pyproj.Proj(proj='longlat', ellps='WGS84')
 
-    aeqd = pyproj.Proj(proj='aeqd', ellps='WGS84', datum='WGS84', lat_0=pol2.y, lon_0=pol2.x)
+#     aeqd = pyproj.Proj(proj='aeqd', ellps='WGS84', datum='WGS84', lat_0=pol2.y, lon_0=pol2.x)
 
-    projpol = sh_transform(partial(pyproj.transform, wgs84_globe, aeqd), gdf['geometry'][0])    
-    temp=gpd.GeoSeries(projpol)
-    boundary=temp.bounds
+#     projpol = sh_transform(partial(pyproj.transform, wgs84_globe, aeqd), gdf['geometry'][0])    
+#     temp=gpd.GeoSeries(projpol)
+#     boundary=temp.bounds
       
-    poly_geometry = [
-                (boundary['minx'][0], boundary['miny'][0]),
-                (boundary['minx'][0], boundary['maxy'][0]),
-                (boundary['maxx'][0], boundary['maxy'][0]),
-                (boundary['maxx'][0], boundary['miny'][0]),
-                (boundary['minx'][0], boundary['miny'][0]),
-                ]
+#     poly_geometry = [
+#                 (boundary['minx'][0], boundary['miny'][0]),
+#                 (boundary['minx'][0], boundary['maxy'][0]),
+#                 (boundary['maxx'][0], boundary['maxy'][0]),
+#                 (boundary['maxx'][0], boundary['miny'][0]),
+#                 (boundary['minx'][0], boundary['miny'][0]),
+#                 ]
       
 
-    length = resolution
-    wide = resolution
+#     length = resolution
+#     wide = resolution
 
-    cols = list(np.arange(boundary['minx'][0], boundary['maxx'][0] + wide, wide))
-    rows = list(np.arange(boundary['miny'][0], boundary['maxy'][0] + length, length))
+#     cols = list(np.arange(boundary['minx'][0], boundary['maxx'][0] + wide, wide))
+#     rows = list(np.arange(boundary['miny'][0], boundary['maxy'][0] + length, length))
 
-    polygons = []
+#     polygons = []
 
 
-    for x in cols[:-1]:
-        for y in rows[:-1]:
-            newpoly=(Polygon([(x,y), (x+wide, y), (x+wide, y+length), (x, y+length)]))
-            newpolypro=(sh_transform(partial(pyproj.transform, aeqd, wgs84_globe), newpoly))
-            polygons.append(newpolypro)
+#     for x in cols[:-1]:
+#         for y in rows[:-1]:
+#             newpoly=(Polygon([(x,y), (x+wide, y), (x+wide, y+length), (x, y+length)]))
+#             newpolypro=(sh_transform(partial(pyproj.transform, aeqd, wgs84_globe), newpoly))
+#             polygons.append(newpolypro)
             
-    polyGS=gpd.GeoDataFrame(geometry=polygons)
+#     polyGS=gpd.GeoDataFrame(geometry=polygons)
 
-    return polyGS
-# In[217]:
+#     return polyGS
+# # In[217]:
 
 
 def get_boundary(geodataframe):
@@ -1325,6 +1325,7 @@ def calc_price(coords,api_key,start,end,interval,resolution,tasking=False):
     }
     response = requests.request("POST", url, headers=headers, data = payload)
     #if response.status_code == 200:
+    print(response)
     return response.json()["data"]["max_cost"]
    # else:
         #return response.json() 
@@ -1369,6 +1370,7 @@ def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2, reso
         "resolution_low": 0.5,
         "resolution_high": 0.5,
         "tags": [],
+        "interval":"999d"
         "sources": {
             "include": []
             }   
@@ -1380,6 +1382,7 @@ def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2, reso
     
     updated["aoi"]["coordinates"] = coords
     updated["tags"] = [] # reset tags in the template
+    updated=["interval"]=interval
     if not tag1:
         pass
     else:
@@ -2725,23 +2728,27 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
        # aoi.add_to(m)
         # m.add_child(aoi)
 
-        #imagery_group=folium.FeatureGroup('Imagery Coverage',show=True)
+        imagery_group=folium.FeatureGroup('Imagery Coverage',show=True)
 
         for idx,cur_row in enumerate(range(len(cloudsortgdf))):
             cur_row_gdf=cloudsortgdf.iloc[[cur_row]]
             #print(cur_row)
             name=f'{idx}_{cur_row_gdf["id"][cur_row]}'
-            fg2=folium.FeatureGroup(name,show=True)
+            fg2=folium.FeatureGroup(name,show=False)
             url=cur_row_gdf['preview'][cur_row]
             boundary=cur_row_gdf.bounds
             #print(boundary)
             minbounds = boundary['miny'][cur_row],boundary['minx'][cur_row]
             maxbounds= boundary['maxy'][cur_row],boundary['maxx'][cur_row]
+
             raster=folium.raster_layers.ImageOverlay(image=url,bounds=([minbounds,maxbounds]),opacity=1,interactive=True)
             raster.add_to(fg2)
+
             #raster.add_to(imagery_group)
+
             fg2.add_to(m)
 
+        imagery_group.add_to(m)
         #m.add_child(imagery_group)
         #magery_group.add_to(m)
         aoi.add_to(m)
@@ -2756,3 +2763,305 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
     else:
         no_results='the search did not work'
         return no_results
+    
+def divider(factorlist,divideby,maxwidth,maxheight):        
+    
+    ### IF REALLY TALL just divide height up
+    
+    if maxwidth/maxheight <= 0.125:
+        print('<0.125')
+        height = maxheight/divideby
+        width = maxwidth
+
+    ### IF pretty tall increase the factorlist
+    
+    elif maxwidth/maxheight <0.33:
+        print('<0.33')
+        while len(factorlist)==2:
+            factorlist=[]
+            for i in range(1, divideby+2):
+                #print(f'i is {i}')
+                divide=divideby+1
+                if divide%i==0:
+                    print(f'divideby+1 is {divideby+1}')
+                    print((divideby)%i)
+                    factorlist.append(i)
+            divideby=divide
+            
+        else:
+            factorsplit=[]
+            factorsplit.append(factorlist[1])
+            factorsplit.append(factorlist[-2])
+
+        height=maxheight/factorsplit[1]
+        width=maxwidth/factorsplit[0]
+
+    elif maxwidth/maxheight <=1:
+        print('<1')
+        while len(factorlist)<=4:
+            factorlist=[]
+            for i in range(1, divideby+2):
+                #print(f'i is {i}')
+                divide=divideby+1
+                if divide%i==0:
+                    print(f'divideby+1 is {divideby+1}')
+                    print((divideby)%i)
+                    factorlist.append(i)
+            divideby=divide
+        if len(factorlist)==6:
+            factorsplit=[]
+            factorsplit.append(factorlist[2])
+            factorsplit.append(factorlist[3])
+
+        elif len(factorlist)==8:
+            factorsplit=[]
+            factorsplit.append(factorlist[3])
+            factorsplit.append(factorlist[4])
+        elif len(factorlist)==10:
+            factorsplit=[]
+            factorsplit.append(factorlist[4])
+            factorsplit.append(factorlist[5])
+            
+        else:
+            factorsplit=[]
+            factorsplit.append(factorlist[1])
+            factorsplit.append(factorlist[-2])
+
+        height=maxheight/factorsplit[1]
+        width=maxwidth/factorsplit[0]
+        
+
+    elif maxwidth/maxheight <2:
+        print('<2')
+        while len(factorlist)<=3:
+            factorlist=[]
+            for i in range(1, divideby+2):
+                #print(f'i is {i}')
+                divide=divideby+1
+                if divide%i==0:
+                    print(f'divideby+1 is {divideby+1}')
+                    print((divideby)%i)
+                    factorlist.append(i)
+            divideby=divide
+        if len(factorlist)==6:
+            factorsplit=[]
+            factorsplit.append(factorlist[3])
+            factorsplit.append(factorlist[2])
+
+        elif len(factorlist)==8:
+            factorsplit=[]
+            factorsplit.append(factorlist[3])
+            factorsplit.append(factorlist[4])
+        elif len(factorlist)==10:
+            factorsplit=[]
+            factorsplit.append(factorlist[4])
+            factorsplit.append(factorlist[5])
+        elif len(factorlist)==12:
+            factorsplit=[]
+            factorsplit.append(factorlist[5])
+            factorsplit.append(factorlist[6])
+            
+            
+        else:
+            factorsplit=[]
+            factorsplit.append(factorlist[1])
+            factorsplit.append(factorlist[-2])
+
+
+        height=maxheight/factorsplit[0]
+        width=maxwidth/factorsplit[1]
+
+
+    elif maxwidth/maxheight <6:
+        print('<6')
+        print(factorlist)
+        while len(factorlist)==2:
+            factorlist=[]
+            for i in range(1, divideby+2):
+                #print(f'i is {i}')
+                divide=divideby+1
+                if divide%i==0:
+                    print(f'divideby+1 is {divideby+1}')
+                    print((divideby)%i)
+                    factorlist.append(i)
+            divideby=divide
+        if len(factorlist)==4:
+            print(f'factorlist4 {factorlist}')
+            factorsplit=[]
+            factorsplit.append(factorlist[2])
+            factorsplit.append(factorlist[1])
+            print(factorsplit)
+
+        elif len(factorlist)==6:
+            print('factorlist6')
+            factorsplit=[]
+            factorsplit.append(factorlist[3])
+            factorsplit.append(factorlist[2])
+            
+        else:
+            factorsplit=[]
+            factorsplit.append(factorlist[1])
+            factorsplit.append(factorlist[-1])
+
+        print(factorsplit) # 4,3
+        height=maxheight/factorsplit[1]
+        print(height)
+        width=maxwidth/factorsplit[0]
+        print(width)
+
+    #elif maxwidth/maxheight <= 12:
+    else:
+        print(divideby)
+        height = maxheight
+        width = maxwidth/(divideby)
+        
+    return [width,height]
+
+def EAPGrid_new(gdf):
+    
+    #Check the area of the input and if it's >600 split it.
+    gdfarea=sw.aoi_areakm(gdf,'area')
+    gdfarea_area=gdfarea['area'][0]
+        
+    
+    
+    #Iterate through gdf 
+    
+    outgdf=gpd.GeoDataFrame()
+    for cur_row in gdf:
+        cur_row_gdf=gdf.iloc[[0]]
+        #Create Centroid for projection - this assumes that the index of the item is 0 and there is only 1 AOI polygon is being added OR it is being passed a new iloc gdf.
+        if cur_row_gdf.geom_type[0] in ['Point','Polygon', 'MultiPolygon']:
+            pol2=gdf.centroid[0]
+            print(gdf.centroid[0])
+            pass
+        else:
+            print("not valid geometry")
+
+        #print(pol2)
+        wgs84_globe = pyproj.Proj(proj='longlat', ellps='WGS84')
+
+        aeqd = pyproj.Proj(proj='aeqd', ellps='WGS84', datum='WGS84', lat_0=pol2.y, lon_0=pol2.x)
+
+        projpol = sh_transform(partial(pyproj.transform, wgs84_globe, aeqd), cur_row_gdf['geometry'][0]) 
+        print(projpol)
+        temp=gpd.GeoSeries(projpol)
+        boundary=temp.bounds
+
+        # get length of bounding box edges
+        edge_width = (Point(boundary['minx'][0],boundary['miny'][0])).distance(Point(boundary['maxx'][0],boundary['miny'][0]))
+        edge_height =(Point(boundary['minx'][0],boundary['miny'][0])).distance(Point(boundary['minx'][0],boundary['maxy'][0]))
+
+        print(f'max width is = {edge_width}, max height is = {edge_height}')
+
+        poly_geometry = [
+                    (boundary['minx'][0], boundary['miny'][0]),
+                    (boundary['minx'][0], boundary['maxy'][0]),
+                    (boundary['maxx'][0], boundary['maxy'][0]),
+                    (boundary['maxx'][0], boundary['miny'][0]),
+                    (boundary['minx'][0], boundary['miny'][0]),
+                    ]
+
+
+        
+        newppp=(sh_transform(partial(pyproj.transform, aeqd, wgs84_globe), Polygon(poly_geometry)))
+        print(newppp)
+        #poly_geometry=Polygon(newppp)
+        #print(poly_geometry)
+        gs=gpd.GeoSeries(newppp)
+        polygdf=gpd.GeoDataFrame(geometry=gs)
+        #print(polygdf.crs)
+        polygdf=sw.aoi_areakm(deepcopy(polygdf),'area')
+        gdf_area=sw.aoi_areakm(deepcopy(gdf),'area')
+        area=gdf_area['area'][0]
+        bbarea=polygdf['area'][0]
+
+
+
+        print(f'bounding area = {bbarea}')
+
+        divideby=int(math.ceil(bbarea/50)) 
+
+        print(f'divideby is {divideby}')
+
+        boundsarea=bbarea/divideby
+        area=boundsarea*1000000
+        print(area)
+
+        minwidth = 1000
+        maxwidth=edge_width
+        maxheight=edge_height
+
+        #print(f'area is {area}')
+        print(f'maxwidth is {maxwidth}')
+
+
+        val_range = range(0,100)
+
+
+        
+
+        factorlist=[]
+        if divideby >3:
+            #Add if maxwidth/maxheight factor for option of single row
+            print('divide by >3')
+            for i in range(1, divideby+1):
+                if divideby % i == 0:
+                    factorlist.append(i)
+            print(factorlist)
+            division=divider(factorlist,divideby,maxwidth,maxheight)        
+            width=division[0]
+            height=division[1]
+
+
+
+            # Python Program to find the factors of a number
+        elif divideby<4 or maxwidth/maxheight <=0.5 or maxwidth/maxheight >=5:
+            print('divideby <4 or high ratio')
+            if maxwidth/maxheight <=1:
+                height = maxheight/divideby
+                width = maxwidth
+            elif maxwidth/maxheight >1:
+                height=maxheight
+                width=maxwidth/divideby
+                print(f'width is {width}')
+#Edited to remove branching logic
+        #else: #divideby <= 12:
+            #print('divideby <= 12')
+            else:
+
+                division=divider(factorlist,divideby,maxwidth,maxheight)        
+                width=division[0]
+                height=division[1]
+      
+
+
+        cols = list(np.arange(boundary['minx'][0], boundary['maxx'][0]+int(math.ceil(width)), int(math.ceil(width))))
+        print(cols)
+        rows = list(np.arange(boundary['miny'][0], boundary['maxy'][0]+int(math.ceil(height)), int(math.ceil(height))))
+        print(rows)
+        polyproj=[]
+        for x in cols[:-1]:
+            #print(x)
+            for y in rows[:-1]:
+                #print(y)
+                newpoly=(Polygon([(x,y), (x+width, y), (x+width, y+height), (x, y+height)]))
+                newpolypro=(sh_transform(partial(pyproj.transform, aeqd, wgs84_globe), newpoly))
+                polyproj.append(newpolypro)  
+
+        gdfname=gpd.GeoDataFrame(geometry=polyproj)
+        gdfname=sw.aoi_areakm(deepcopy(gdfname),'area')
+        #Totalarea = gdfname['area'].sum()
+        #print(Totalarea)
+        print(len(gdfname))
+        #print(type(gdfname))  
+        #if len(gdfname)==divideby:
+            #if Totalarea < area:
+        polygons=outgdf.append(gdfname)
+        print(type(polygons))
+    
+        
+
+
+    return polygons
+    #return polyGS
