@@ -393,9 +393,9 @@ def EAProject_Buffer(gdf,radius,capstyle=1):
     # outgdf=output.set_crs(4326)
     # return outgdf
 
-def optimize_area(gdfclean,quote_type,minarea,data_type='Corridors'):
+def optimize_area(gdfclean,quote_type,resolution,minarea,data_type='Corridors'):
     ### Need to find a way to check min area in the file and only start buffer interval there. I.e if min area is 0.65, start buffer_interval at 0.8.
-    if quote_type == "Tasking High Res" or quote_type == "Tasking Very High Res":
+    if quote_type == "Tasking":
         radius=200  #radius to buffer in iteration (in m)
         if minarea <25000000:
             minarea=25
@@ -417,7 +417,7 @@ def optimize_area(gdfclean,quote_type,minarea,data_type='Corridors'):
         #minarea=25# minimum area to hit (in km2)
         
         
-    elif quote_type == "Archive High Res":
+    elif quote_type == "Archive" and (resolution=="high" or resolution == "very_high"):
         radius=50
         #minarea=1
         if minarea <=1000000:
@@ -428,7 +428,7 @@ def optimize_area(gdfclean,quote_type,minarea,data_type='Corridors'):
             minarea=minarea/1000000
             buffer_interval=minarea/5
     
-    elif quote_type == "Archive Med Res":
+    elif quote_type == "Archive" and resolution=="medium":
         if minarea <1000:
             minarea=0.1
             radius=50  #radius to buffer in iteration (in m)
@@ -1094,13 +1094,15 @@ def get_search_results(api_key,searchid):
     
     search_results = requests.request("GET", get_url, headers=headers,data = get_payload).json() # GET the results
     
+
     try:
         while search_results["status"] == [{'message': 'Search is still running. Check back later for results'}] or search_results.status_code == "429": # if results aren't ready or getting throttled
-            time.sleep(2)
+            
             search_results = requests.request("GET", get_url, headers=headers, data = get_payload).json()
+            time.sleep(0.5)
     
     except KeyError: # The status is gone
-        time.sleep(0.5)
+        time.sleep(1)
         pass
     #print(search_results)
     if search_results.get('data'):
@@ -1946,7 +1948,7 @@ def create_map(orig_gdf,clean_gdf,popup_column=''):
     return m
 
 
-def corridor_quote(gdf, quote_type,buffer_type,buffer_amount,):
+def corridor_quote(gdf, quote_type,resolution, buffer_type,buffer_amount,):
     uniquelist=gdf['geometry'].geom_type.unique()
     if['MultiLineString', 'LineString'] in uniquelist:
         print(f'The file contains datatypes {uniquelist}')
@@ -1955,34 +1957,34 @@ def corridor_quote(gdf, quote_type,buffer_type,buffer_amount,):
         print(f'To proceed, get Line data from the customer')
               
     gdfclean=cleangeometry(deepcopy(gdf))
-    if quote_type == "Archive Med Res":
+    if quote_type == "Archive" and resolution == "medium":
         if buffer_type == 'radius'and buffer_amount >=50:
             pass
         else:
             buffer_amount=50
             print(f'buffer amount was set to 50 as this is the minimum for this quote')
         
-    elif quote_type == "Archive High Res":
+    elif quote_type == "Archive" and (resolution == "high" or resolution == "very_high"):
         if buffer_type == 'radius'and buffer_amount >=50:
             pass
         else:
             buffer_amount=50
             print(f'buffer amount was set to 50 as this is the minimum for this quote')
                      
-    elif quote_type == "Tasking High Res":
+    elif quote_type == "Tasking" and resolution == "high":
         if buffer_type == 'radius'and buffer_amount >=250:
             pass
         else:
             buffer_amount=250
             print(f'buffer amount was set to {buffer_amount} as this is the minimum for this quote')
-    elif quote_type == "Tasking Very High Res":
+    elif quote_type == "Tasking" and resolution == "very_high":
         if buffer_type == 'radius'and buffer_amount >=1000:
             pass
         else:
             buffer_amount=1000
             print(f'buffer amount was set to 250 as this is the minimum for this quote')
     else:
-        print('quote type not valide')
+        print('quote type not valid')
         exit()
 
     if buffer_type == 'radius':
@@ -1995,11 +1997,11 @@ def corridor_quote(gdf, quote_type,buffer_type,buffer_amount,):
     elif buffer_type== 'area':
         print('cannot buffer corridors using area. Please set a radius.')
 
-    gdfbuff=optimize_area(deepcopy(gdfbuff), quote_type,1000000)
+    gdfbuff=optimize_area(deepcopy(gdfbuff), quote_type, resolution, 1000000)
 
     return gdfbuff
 
-def optimize_area_report(gdfclean,quote_type,minarea,filepath=''):
+def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,filepath=''):
     dfquote=pd.DataFrame(columns=['State','Number of Features','Total Area','Average Area per feature','Quote Type'])
     #gdfclean=EAProject_Buffer(gdfclean,10,capstyle=1)
     gdfclean=aoi_areakm(gdfclean,'optimized_area') 
@@ -2014,7 +2016,7 @@ def optimize_area_report(gdfclean,quote_type,minarea,filepath=''):
     dfquote=dfquote.append(dfquote2)
     print(dfquote)
     print(dfquote.columns)
-    if quote_type == "Tasking High Res" or quote_type == "Tasking Very High Res":
+    if quote_type == "Tasking":
         radius=200  #radius to buffer in iteration (in m)
         print(f'Tasking')
         if minarea <25000000:
@@ -2044,11 +2046,15 @@ def optimize_area_report(gdfclean,quote_type,minarea,filepath=''):
     elif 'Archive' in quote_type:
         radius=25
         #minarea=1
-        print("Archive High Res")
+        print(f"Archive optimization beginning for {resolution}")
         if minarea <=1000000:
             minarea=1
             radius=25  #radius to buffer in iteration (in m)
-            buffer_interval=0.1
+            if data_type == 'Large AOI':
+                buffer_interval=1
+                radius=75
+            else:
+                buffer_interval=0.2
             start_interval=buffer_interval
             print(buffer_interval)
         else:
@@ -2139,7 +2145,7 @@ def optimize_area_report(gdfclean,quote_type,minarea,filepath=''):
         avgarea=int(gdfbuff['optimized_area'].sum())/int(len_features)
         newdfquote=pd.DataFrame([[bufferedtext,len_features,gdfbuff['optimized_area'].sum(),avgarea,quote_type]],columns=dfquote.columns)
         dfquote=dfquote.append(newdfquote,ignore_index=True)
-        if quote_type == "Tasking High Res" or quote_type == "Tasking Very High Res":
+        if quote_type == "Tasking":
             files=f'{filepath}/tasking_areaoutput{round(buffer_interval-start_interval,2)}'
         else:
             files=files=f'{filepath}/archive_areaoutput{round(buffer_interval-start_interval,2)}'
@@ -2275,14 +2281,14 @@ def area_group(gdfclean,quote_type,minarea,filepath=''):
         gdfclean=EAProject_Buffer(gdfclean,1000,capstyle=1)
     return gdfclean
 
-def optimize_area_group(gdfclean,quote_type,minarea,filepath=''):
+def optimize_area_group(gdfclean,quote_type,resolution, minarea,filepath=''):
     
     #New one that buffers automatically to 100km2 and makes groupings (tasking) and 5km2 (archive) and then goes straight to concave
     
     #gdfclean=EAProject_Buffer(gdfclean,10,capstyle=1)
     gdfclean=aoi_areakm(gdfclean,'optimized_area') 
     
-    if quote_type == "Tasking High Res" or quote_type == "Tasking Very High Res":
+    if quote_type == "Tasking":
         radius=200  #radius to buffer in iteration (in m)
         #print(f'Tasking')
         minarea=40
@@ -2295,7 +2301,7 @@ def optimize_area_group(gdfclean,quote_type,minarea,filepath=''):
     #elif quote_type == "Archive High Res" or quote_type == "Archive Med Res":
         radius=50
         #minarea=1
-        print("Archive High Res")
+        print("Archive optimization submitted")
        
         minarea=1
         radius=50  #radius to buffer in iteration (in m)
@@ -2344,10 +2350,17 @@ def optimize_area_group(gdfclean,quote_type,minarea,filepath=''):
         
     return gdfbuff
 
-def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer_amount,totalorigarea,output_chart,final_area,coverage_map,coverage_area):
+def create_html_report(gdf,gdfbuff,quote_type,resolution,data_type,filepath,filename,buffer_amount,totalorigarea,output_chart,final_area,coverage_map,coverage_area):
+    if resolution == "high":
+        printres="High Resolution"
+    if resolution == "very_high":
+        printres="Very High Resolution"
+    if resolution == "medium":
+        printres="Medium Resolution"
+    
     if 'Archive' in quote_type:
         page_title_text=f'Archive Quote for {filename}'
-        title_text = f"{quote_type} Quote"
+        title_text = f"{printres} Quote for {quote_type}"
         qtype="Archive"
         df2=gdfbuff[['final_area']].copy()
         df=pd.DataFrame(output_chart)
@@ -2367,7 +2380,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
             pass
         
         if coverage_map=='Yes':
-            coverage_map = '<embed type="text/html" src="archive_coverage_html_map.html" width="1000" height="700">'
+            coverage_map = f'<embed type="text/html" src="{resolution}_archive_coverage_html_map.html" width="1000" height="700">'
             coverage_title='<h1> Coverage Map for Archive Quote </h1>'
             coveragearea=f'<h2> Area of Archive Coverage is {coverage_area}</h2>'
             
@@ -2426,7 +2439,7 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
         '''
     else:
         page_title_text=f'Tasking Quote for {filename}'
-        title_text = f"{quote_type} Quote"
+        title_text = f"{printres} Quote for {quote_type}"
         qtype="Tasking"
         df2=gdfbuff[['final_area']].copy()
         df=pd.DataFrame(output_chart)
@@ -2481,11 +2494,11 @@ def create_html_report(gdf,gdfbuff,quote_type,data_type,filepath,filename,buffer
         </html>
         '''
 
-    with open(f'{filepath}/{quote_type}_html_report.html', 'w') as f:
+    with open(f'{filepath}/{printres}_{quote_type}_html_report.html', 'w') as f:
         f.write(html)
         #f.write(dfhtml)
         
-    exportfiles(gdf,gdfbuff,filename,name_field = '',html_map='Yes',fileout=filepath,map_name=quote_type)
+    exportfiles(gdf,gdfbuff,filename,name_field = '',html_map='Yes',fileout=filepath,map_name=f'{printres}_{quote_type}')
 
 
 def cleanup(gdfbuff,data_type):
@@ -2511,13 +2524,13 @@ def cleanup(gdfbuff,data_type):
             
     return gdfbuffarea,totalbuffarea
 
-def archive_coverage(gdf,start_date,end_date,api_key,data_type,coverage_resolution,percent_coverage,filepath,alpha=12):
+def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,coverage_resolution,percent_coverage,filepath,alpha=12):
     searchlist=[]
     faillist=[]
     productidlist=[]
-    if data_type!='Corridors':
+    if data_type!='Corridors' and data_type != 'Large AOI':
         try:
-            gdfclean=cleangeometry(gdf)
+            gdfclean=cleangeometry(deepcopy(gdf))
             pointylist=[]
             for row in gdfclean.itertuples():
                 geom=getattr(row,'geometry')
@@ -2535,14 +2548,15 @@ def archive_coverage(gdf,start_date,end_date,api_key,data_type,coverage_resoluti
             concave_gdf=gpd.GeoDataFrame(geometry=concave_gs)
             concave_gdf=cleangeometry(concave_gdf)
         except:
-            print('Could not generate a concave hull. This search may take awhile.')
+            print(f'Could not generate a concave hull. This search may take awhile. GDF length is {len(gdfclean)}')
             concave_gdf=deepcopy(gdf)
 
     else:
-        concave_gdf=deepcopy(gdf)
-        pass
-    
+        gdfclean=cleangeometry(deepcopy(gdf))
+        concave_gdf=deepcopy(gdfclean)
 
+    
+    #concave_gdf=deepcopy(gdf)
     fulfilled=0
     unfulfilled=0
 
@@ -2585,9 +2599,13 @@ def archive_coverage(gdf,start_date,end_date,api_key,data_type,coverage_resoluti
 
                         for data in searchresults:
                         # try:
+                            if low_res == 0:
+                                low_res=30
                             
                             #if data.get('source') == '' and data.get('result_cloud_cover_percentage') <=50:
-                            if data.get('result_cloud_cover_percentage') <=15:
+                            if data.get('result_cloud_cover_percentage') <= cloud and data.get('resolution')<= low_res:
+
+
                                 #if data.get('result_cloud_cover_percentage')<=10 and data.get('resolution')<=5:
 
                                 coords=data.get('location').get('coordinates')
@@ -2725,18 +2743,20 @@ def archive_coverage(gdf,start_date,end_date,api_key,data_type,coverage_resoluti
 
             raster=folium.raster_layers.ImageOverlay(image=url,bounds=([minbounds,maxbounds]),opacity=1,interactive=True)
             raster.add_to(fg2)
-            raster.add_to(imagery_group)
+
+            #raster.add_to(imagery_group)
+
             fg2.add_to(m)
 
         imagery_group.add_to(m)
         #m.add_child(imagery_group)
-
+        #magery_group.add_to(m)
         aoi.add_to(m)
        # m.add_child(aoi)
         m.keep_in_front(aoi)
         folium.LayerControl().add_to(m)
 
-        m.save(f'{filepath}/archive_coverage_html_map.html')
+        m.save(f'{filepath}/{coverage_resolution}_archive_coverage_html_map.html')
 
         return concave_gdf,totalarea
 
