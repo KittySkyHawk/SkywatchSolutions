@@ -1368,7 +1368,7 @@ def run_pipe_task(coords,api_key,cadence,start,end,gdf, cur_row,tag1,tag2, resol
         "resolution_low": 0.5,
         "resolution_high": 0.5,
         "tags": [],
-        "interval":"999d"
+        "interval":"999d",
         "sources": {
             "include": []
             }   
