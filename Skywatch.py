@@ -814,122 +814,122 @@ def EAProject_BuffersSubset_old(gdf,radius,minimum_area=0.1):
 
     return gdf
     
-def EAPGrid(gdf,area):
+# def EAPGrid(gdf,area):
     
 
-    #Create Centroid for projection - this assumes that the index of the item is 0 and there is only 1 AOI polygon is being added OR it is being passed a new iloc gdf.
-    if gdf.geom_type[0] in ['Point','Polygon', 'MultiPolygon']:
-        pol2=gdf.centroid[0]
-        pass
-    else:
-        print("not valid geometry")
+#     #Create Centroid for projection - this assumes that the index of the item is 0 and there is only 1 AOI polygon is being added OR it is being passed a new iloc gdf.
+#     if gdf.geom_type[0] in ['Point','Polygon', 'MultiPolygon']:
+#         pol2=gdf.centroid[0]
+#         pass
+#     else:
+#         print("not valid geometry")
 
-    #print(pol2)
-    wgs84_globe = pyproj.Proj(proj='longlat', ellps='WGS84')
+#     #print(pol2)
+#     wgs84_globe = pyproj.Proj(proj='longlat', ellps='WGS84')
 
-    aeqd = pyproj.Proj(proj='aeqd', ellps='WGS84', datum='WGS84', lat_0=pol2.y, lon_0=pol2.x)
+#     aeqd = pyproj.Proj(proj='aeqd', ellps='WGS84', datum='WGS84', lat_0=pol2.y, lon_0=pol2.x)
 
-    projpol = sh_transform(partial(pyproj.transform, wgs84_globe, aeqd), gdf['geometry'][0])    
-    temp=gpd.GeoSeries(projpol)
-    boundary=temp.bounds
+#     projpol = sh_transform(partial(pyproj.transform, wgs84_globe, aeqd), gdf['geometry'][0])    
+#     temp=gpd.GeoSeries(projpol)
+#     boundary=temp.bounds
       
-    poly_geometry = [
-                (boundary['minx'][0], boundary['miny'][0]),
-                (boundary['minx'][0], boundary['maxy'][0]),
-                (boundary['maxx'][0], boundary['maxy'][0]),
-                (boundary['maxx'][0], boundary['miny'][0]),
-                (boundary['minx'][0], boundary['miny'][0]),
-                ]
+#     poly_geometry = [
+#                 (boundary['minx'][0], boundary['miny'][0]),
+#                 (boundary['minx'][0], boundary['maxy'][0]),
+#                 (boundary['maxx'][0], boundary['maxy'][0]),
+#                 (boundary['maxx'][0], boundary['miny'][0]),
+#                 (boundary['minx'][0], boundary['miny'][0]),
+#                 ]
       
 
-    #gridx=['maxx'][0]-['minx'][0]
-    #gridy=['maxy'][0]-['miny'][0]
+#     #gridx=['maxx'][0]-['minx'][0]
+#     #gridy=['maxy'][0]-['miny'][0]
 
-    val_range = range(0,12)
-    polygons = []
+#     val_range = range(0,12)
+#     polygons = []
     
-    area = area
-    step=1000
+#     area = area
+#     step=1000
 
-    for idx in val_range:
-        print(idx)
-        width = (math.sqrt(area))
-        height = (math.sqrt(area)-width)
-        height = area/width
-        print(f"x: {width} y: {height} area: {width*height}")
+#     for idx in val_range:
+#         print(idx)
+#         width = (math.sqrt(area))
+#         height = (math.sqrt(area)-width)
+#         height = area/width
+#         print(f"x: {width} y: {height} area: {width*height}")
 
 
 
-    #height = resolution
-    #width = resolution
+#     #height = resolution
+#     #width = resolution
 
-        cols = list(np.arange(boundary['minx'][0], boundary['maxx'][0] + width, width))
-        rows = list(np.arange(boundary['miny'][0], boundary['maxy'][0] + height, height))
-        polyproj=[]
-        for x in cols[:-1]:
-            for y in rows[:-1]:
+#         cols = list(np.arange(boundary['minx'][0], boundary['maxx'][0] + width, width))
+#         rows = list(np.arange(boundary['miny'][0], boundary['maxy'][0] + height, height))
+#         polyproj=[]
+#         for x in cols[:-1]:
+#             for y in rows[:-1]:
                 
-                newpoly=(Polygon([(x,y), (x+width, y), (x+width, y+height), (x, y+height)]))
-                newpolypro=(sh_transform(partial(pyproj.transform, aeqd, wgs84_globe), newpoly))
-                polyproj.append(newpolypro)
+#                 newpoly=(Polygon([(x,y), (x+width, y), (x+width, y+height), (x, y+height)]))
+#                 newpolypro=(sh_transform(partial(pyproj.transform, aeqd, wgs84_globe), newpoly))
+#                 polyproj.append(newpolypro)
                         
-                #print(polyproj)
-        gdfname=gpd.GeoDataFrame(geometry=polyproj)
-        print(gdfname)                
-        polygons.append(gdfname)
+#                 #print(polyproj)
+#         gdfname=gpd.GeoDataFrame(geometry=polyproj)
+#         print(gdfname)                
+#         polygons.append(gdfname)
             
-    #polyGS[x]=gpd.GeoDataFrame(geometry=polygons)
+#     #polyGS[x]=gpd.GeoDataFrame(geometry=polygons)
 
-    return polygons
-    #return polyGS
+#     return polygons
+#     #return polyGS
 
-def EAPGrid_Overlap(gdf,resolution):
-    points=[]
+# def EAPGrid_Overlap(gdf,resolution):
+#     points=[]
 
-    #Create Centroid for projection - this assumes that the index of the item is 0 and there is only 1 AOI polygon is being added
-    if gdf.geom_type[0] in ['Point','Polygon', 'MultiPolygon']:
-        pol2=gdf.centroid[0]
-        pass
-    else:
-        print("not valid geometry")
+#     #Create Centroid for projection - this assumes that the index of the item is 0 and there is only 1 AOI polygon is being added
+#     if gdf.geom_type[0] in ['Point','Polygon', 'MultiPolygon']:
+#         pol2=gdf.centroid[0]
+#         pass
+#     else:
+#         print("not valid geometry")
 
-    #print(pol2)
-    wgs84_globe = pyproj.Proj(proj='longlat', ellps='WGS84')
+#     #print(pol2)
+#     wgs84_globe = pyproj.Proj(proj='longlat', ellps='WGS84')
 
-    aeqd = pyproj.Proj(proj='aeqd', ellps='WGS84', datum='WGS84', lat_0=pol2.y, lon_0=pol2.x)
+#     aeqd = pyproj.Proj(proj='aeqd', ellps='WGS84', datum='WGS84', lat_0=pol2.y, lon_0=pol2.x)
 
-    projpol = sh_transform(partial(pyproj.transform, wgs84_globe, aeqd), gdf['geometry'][0])    
-    temp=gpd.GeoSeries(projpol)
-    boundary=temp.bounds
+#     projpol = sh_transform(partial(pyproj.transform, wgs84_globe, aeqd), gdf['geometry'][0])    
+#     temp=gpd.GeoSeries(projpol)
+#     boundary=temp.bounds
       
-    poly_geometry = [
-                (boundary['minx'][0], boundary['miny'][0]),
-                (boundary['minx'][0], boundary['maxy'][0]),
-                (boundary['maxx'][0], boundary['maxy'][0]),
-                (boundary['maxx'][0], boundary['miny'][0]),
-                (boundary['minx'][0], boundary['miny'][0]),
-                ]
+#     poly_geometry = [
+#                 (boundary['minx'][0], boundary['miny'][0]),
+#                 (boundary['minx'][0], boundary['maxy'][0]),
+#                 (boundary['maxx'][0], boundary['maxy'][0]),
+#                 (boundary['maxx'][0], boundary['miny'][0]),
+#                 (boundary['minx'][0], boundary['miny'][0]),
+#                 ]
       
 
-    length = resolution
-    wide = resolution
+#     length = resolution
+#     wide = resolution
 
-    cols = list(np.arange(boundary['minx'][0], boundary['maxx'][0] + wide, wide))
-    rows = list(np.arange(boundary['miny'][0], boundary['maxy'][0] + length, length))
+#     cols = list(np.arange(boundary['minx'][0], boundary['maxx'][0] + wide, wide))
+#     rows = list(np.arange(boundary['miny'][0], boundary['maxy'][0] + length, length))
 
-    polygons = []
+#     polygons = []
 
 
-    for x in cols[:-1]:
-        for y in rows[:-1]:
-            newpoly=(Polygon([(x,y), (x+wide, y), (x+wide, y+length), (x, y+length)]))
-            newpolypro=(sh_transform(partial(pyproj.transform, aeqd, wgs84_globe), newpoly))
-            polygons.append(newpolypro)
+#     for x in cols[:-1]:
+#         for y in rows[:-1]:
+#             newpoly=(Polygon([(x,y), (x+wide, y), (x+wide, y+length), (x, y+length)]))
+#             newpolypro=(sh_transform(partial(pyproj.transform, aeqd, wgs84_globe), newpoly))
+#             polygons.append(newpolypro)
             
-    polyGS=gpd.GeoDataFrame(geometry=polygons)
+#     polyGS=gpd.GeoDataFrame(geometry=polygons)
 
-    return polyGS
-# In[217]:
+#     return polyGS
+# # In[217]:
 
 
 def get_boundary(geodataframe):
