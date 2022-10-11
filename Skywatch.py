@@ -1283,7 +1283,7 @@ def get_search_results_json(api_key,searchid,cursor):#Not built yet. Place holde
     
     return results
 
-def calc_price(coords,api_key,start,end,interval,resolution,tasking=False):
+def calc_price(coords,api_key,start,end,cadence,resolution,tasking=False):
     ''' This function takes the included start & end dates, interval, and AOI,
     and returns the max_cost parameter for pipeline creation.
     
@@ -1312,7 +1312,7 @@ def calc_price(coords,api_key,start,end,interval,resolution,tasking=False):
                                                 # coordinates from a regular polygon in GeoJSON format
     updated["start_date"] = start
     updated["end_date"] = end
-    updated["interval"] = interval
+    updated["interval"] = cadence
     updated['tasking']=tasking
     updated['resolution']=resolution
     
@@ -1329,7 +1329,7 @@ def calc_price(coords,api_key,start,end,interval,resolution,tasking=False):
         #return response.json() 
 
 
-def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2, resolution, tasking='False', resolution_low =1.5, resolution_high=8, sources="", min_coverage=70,priorities='"latest","highest_resolution","lowest_cost"',name="Created by Skywatch", outputid='154311a8-582a-11e7-b30d-7291b81e23e1', mosaic='off'):
+def run_pipe_task(coords,api_key,cadence,start,end,gdf, cur_row,tag1,tag2, resolution, tasking='False', resolution_low =1.5, resolution_high=8, sources="", min_coverage=70,priorities='"latest","highest_resolution","lowest_cost"',name="Created by Skywatch", outputid='154311a8-582a-11e7-b30d-7291b81e23e1', mosaic='off'):
     ''' This function takes the template and applies the name and coordinates
     given to it, and then submits using the given api key.
     
@@ -1380,7 +1380,7 @@ def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2, reso
     
     updated["aoi"]["coordinates"] = coords
     updated["tags"] = [] # reset tags in the template
-    updated=["interval"]=interval
+    updated=["interval"]=cadence
     if not tag1:
         pass
     else:
