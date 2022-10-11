@@ -1370,7 +1370,7 @@ def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2, reso
         "resolution_low": 0.5,
         "resolution_high": 0.5,
         "tags": [],
-        "interval":"999d"
+        "interval":"999d",
         "sources": {
             "include": []
             }   
@@ -1382,7 +1382,7 @@ def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2, reso
     
     updated["aoi"]["coordinates"] = coords
     updated["tags"] = [] # reset tags in the template
-    updated=["interval"]=interval
+    updated["interval"]=interval
     if not tag1:
         pass
     else:
