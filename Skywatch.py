@@ -1380,7 +1380,7 @@ def run_pipe_task(coords,api_key,cadence,start,end,gdf, cur_row,tag1,tag2, resol
     
     updated["aoi"]["coordinates"] = coords
     updated["tags"] = [] # reset tags in the template
-    updated=["interval"]=cadence
+    updated["interval"]=cadence
     if not tag1:
         pass
     else:
