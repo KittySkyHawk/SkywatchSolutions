@@ -2920,7 +2920,7 @@ def divider(factorlist,divideby,maxwidth,maxheight):
 def EAPGrid_new(gdf):
     
     #Check the area of the input and if it's >600 split it.
-    gdfarea=sw.aoi_areakm(gdf,'area')
+    gdfarea=aoi_areakm(gdf,'area')
     gdfarea_area=gdfarea['area'][0]
         
     
@@ -2971,8 +2971,8 @@ def EAPGrid_new(gdf):
         gs=gpd.GeoSeries(newppp)
         polygdf=gpd.GeoDataFrame(geometry=gs)
         #print(polygdf.crs)
-        polygdf=sw.aoi_areakm(deepcopy(polygdf),'area')
-        gdf_area=sw.aoi_areakm(deepcopy(gdf),'area')
+        polygdf=aoi_areakm(deepcopy(polygdf),'area')
+        gdf_area=aoi_areakm(deepcopy(gdf),'area')
         area=gdf_area['area'][0]
         bbarea=polygdf['area'][0]
 
@@ -3050,7 +3050,7 @@ def EAPGrid_new(gdf):
                 polyproj.append(newpolypro)  
 
         gdfname=gpd.GeoDataFrame(geometry=polyproj)
-        gdfname=sw.aoi_areakm(deepcopy(gdfname),'area')
+        gdfname=aoi_areakm(deepcopy(gdfname),'area')
         #Totalarea = gdfname['area'].sum()
         #print(Totalarea)
         print(len(gdfname))
