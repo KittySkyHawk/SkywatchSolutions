@@ -16,6 +16,7 @@ import geojson
 import time
 import sys
 from ipywidgets import Button
+import shapely
 #from tkinter import Tk, filedialog
 import math
 #from tkinter import Tk, filedialog
