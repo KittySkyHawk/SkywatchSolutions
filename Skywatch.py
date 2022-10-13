@@ -2801,7 +2801,7 @@ def divider(factorlist,divideby,maxwidth,maxheight):
 
     elif maxwidth/maxheight <=1:
         print('<1')
-        print(len(factorlist)
+        print(len(factorlist))
         while len(factorlist)<=4:
             factorlist=[]
             for i in range(1, divideby+2):
