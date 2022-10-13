@@ -2247,7 +2247,7 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal):
                 count=count+1
             else:
                 count=0
-                while alpha_shape.geom_type=='MultiPolygon' and count <= 3:
+                while alpha_shape.geom_type=='MultiPolygon' and count <= 6:
                         print(type(alpha_shape.geom_type))
                         alpha=alpha/2
                         alpha_shape = alphashape.alphashape(pointlist, alpha)
