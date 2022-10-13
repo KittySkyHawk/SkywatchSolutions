@@ -2737,7 +2737,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
             cur_row_gdf=cloudsortgdf.iloc[[cur_row]]
             #print(cur_row)
             name=f'{idx}_{cur_row_gdf["id"][cur_row]}'
-            fg2=folium.FeatureGroup(name,show=False)
+            fg2=folium.FeatureGroup(name,show=True)
             url=cur_row_gdf['preview'][cur_row]
             boundary=cur_row_gdf.bounds
             #print(boundary)
@@ -2751,7 +2751,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
 
             fg2.add_to(m)
 
-        imagery_group.add_to(m)
+        #imagery_group.add_to(m)
         #m.add_child(imagery_group)
         #magery_group.add_to(m)
         aoi.add_to(m)
