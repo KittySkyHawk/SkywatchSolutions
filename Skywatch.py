@@ -2050,9 +2050,12 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,filepa
         if minarea <=1000000:
             minarea=1
             radius=25  #radius to buffer in iteration (in m)
-            if data_type == 'Large AOI':
+            if len(gdfclean)>=2000:
                 buffer_interval=1
                 radius=75
+            elif len(gdfclean)>=1000 and len(gdfclean) <2000:
+                buffer_interval=0.5
+                radius=50
             else:
                 buffer_interval=0.2
             start_interval=buffer_interval
