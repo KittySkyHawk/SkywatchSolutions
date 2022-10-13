@@ -2932,7 +2932,7 @@ def EAPGrid_new(gdf):
     #Iterate through gdf 
     
     outgdf=gpd.GeoDataFrame()
-    for cur_row in gdf:
+    for cur_row in range(len(gdf)):
         cur_row_gdf=gdf.iloc[[0]]
         #Create Centroid for projection - this assumes that the index of the item is 0 and there is only 1 AOI polygon is being added OR it is being passed a new iloc gdf.
         if cur_row_gdf.geom_type[0] in ['Point','Polygon', 'MultiPolygon']:
