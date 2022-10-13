@@ -2556,7 +2556,19 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
 
     else:
         gdfclean=cleangeometry(deepcopy(gdf))
-        concave_gdf=deepcopy(gdfclean)
+        pointylist=[]
+        for row in gdfclean.itertuples():
+            geom=getattr(row,'geometry')
+            for item in geom.exterior.coords:
+                #print (item)
+                pointylist.append(item)
+        convex=pointylist.convex_hull
+        convexgs=gpd.GeoSeries(convex)
+        convexgdf=gpd.GeoDataFrame(convexgs)
+        
+        
+        
+        concave_gdf=convexgdf
 
     
     #concave_gdf=deepcopy(gdf)
