@@ -2051,7 +2051,7 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail
         if minarea <=1000000:
             minarea=1
             radius=25  #radius to buffer in iteration (in m)
-            if detail==low
+            if detail==low:
                 buffer_interval=1
                 radius=75
             elif detail==high:
