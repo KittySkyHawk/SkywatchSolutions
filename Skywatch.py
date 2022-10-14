@@ -88,7 +88,7 @@ def simply_poly(gdf):
         print(len(points))
         #print(points)
         #print(len(points))
-        simplify_amount=0.00001
+        simplify_amount=0.000005
         count=0
         
         if len(points)<500:
@@ -121,7 +121,7 @@ def simply_poly(gdf):
                 count=count+1
                 
                 # This could be increased to 0.0001 as it used to be.
-                if simplify_amount > 0.00005 or count==50:
+                if simplify_amount > 0.00002 or count==50:
                     simplify_return=('geometery could not be simplified')
                     pass                
                     
