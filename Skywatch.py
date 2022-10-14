@@ -2303,7 +2303,7 @@ def area_group(gdfclean,quote_type,minarea,filepath=''):
         gdfclean=EAProject_Buffer(gdfclean,1000,capstyle=1)
     return gdfclean
 
-def optimize_area_group(gdfclean,quote_type,resolution, minarea,filepath=''):
+def optimize_area_group(gdfclean,quote_type,resolution, minarea,detail,filepath=''):
     
     #New one that buffers automatically to 100km2 and makes groupings (tasking) and 5km2 (archive) and then goes straight to concave
     
@@ -2311,13 +2311,30 @@ def optimize_area_group(gdfclean,quote_type,resolution, minarea,filepath=''):
     gdfclean=aoi_areakm(gdfclean,'optimized_area') 
     
     if quote_type == "Tasking":
-        radius=200  #radius to buffer in iteration (in m)
-        #print(f'Tasking')
-        minarea=40
-        #radius=300  #radius to buffer in iteration (in m)
-        buffer_interval=4
-        start_interval=buffer_interval
-        print(f'Tasking buff int is {buffer_interval}')
+        if detail == 'high':
+            radius=50  #radius to buffer in iteration (in m)
+            #print(f'Tasking')
+            minarea=4
+            #radius=300  #radius to buffer in iteration (in m)
+            buffer_interval=1
+            start_interval=buffer_interval
+            print(f'Tasking buff int is {buffer_interval}')
+        elif detail == 'medium':
+            radius=100  #radius to buffer in iteration (in m)
+            #print(f'Tasking')
+            minarea=20
+            #radius=300  #radius to buffer in iteration (in m)
+            buffer_interval=2
+            start_interval=buffer_interval
+            print(f'Tasking buff int is {buffer_interval}')
+        elif detal=='low':
+            radius=200  #radius to buffer in iteration (in m)
+            #print(f'Tasking')
+            minarea=40
+            #radius=300  #radius to buffer in iteration (in m)
+            buffer_interval=4
+            start_interval=buffer_interval
+            print(f'Tasking buff int is {buffer_interval}')
     
     else:    
     #elif quote_type == "Archive High Res" or quote_type == "Archive Med Res":
