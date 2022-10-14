@@ -2002,7 +2002,7 @@ def corridor_quote(gdf, quote_type,resolution, buffer_type,buffer_amount,):
 
     return gdfbuff
 
-def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,filepath=''):
+def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail,filepath=''):
     dfquote=pd.DataFrame(columns=['State','Number of Features','Total Area','Average Area per feature','Quote Type'])
     #gdfclean=EAProject_Buffer(gdfclean,10,capstyle=1)
     gdfclean=aoi_areakm(gdfclean,'optimized_area') 
@@ -2051,10 +2051,10 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,filepa
         if minarea <=1000000:
             minarea=1
             radius=25  #radius to buffer in iteration (in m)
-            if len(gdfclean)>=2000:
+            if detail==low
                 buffer_interval=1
                 radius=75
-            elif len(gdfclean)>=1000 and len(gdfclean) <2000:
+            elif detail==high:
                 buffer_interval=0.5
                 radius=50
             else:
@@ -2170,7 +2170,7 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,filepa
         
     return [gdfbuff,dfquote]
 
-def concave_optimize(gdfbuffarea,gdfgroupfinal):
+def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
 #gdf_og_points=gpd.GeoDataFrame(columns=['geometry'])
     pointylist=[]
     for row in gdfbuffarea.itertuples():
@@ -2247,20 +2247,38 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal):
                 count=count+1
             else:
                 count=0
-                while alpha_shape.geom_type=='MultiPolygon' and count <= 6:
+                if cluster_force==True:
+                    while alpha_shape.geom_type=='MultiPolygon' and count <= 6:
                         print(type(alpha_shape.geom_type))
                         alpha=alpha/2
                         alpha_shape = alphashape.alphashape(pointlist, alpha)
                         count=count+1
-                else:
-                    if alpha_shape.geom_type=='MultiPolygon':
-                        print(f'submitting as multipolygon')
-                        alphalist=[]
-                        for shape in alpha_shape:
-                            alphalist.append(Polygon(shape))
                     else:
-                        print(f'geom type is {alpha_shape.geom_type}')
-                        pass
+                        if alpha_shape.geom_type=='MultiPolygon':
+                            print(f'submitting as multipolygon')
+                            alphalist=[]
+                            for shape in alpha_shape:
+                                alphalist.append(Polygon(shape))
+                        else:
+                            print(f'geom type is {alpha_shape.geom_type}')
+                            pass
+                        
+                elif cluster_force==False:
+                    while alpha_shape.geom_type=='MultiPolygon' and count <= 3:
+                        print(type(alpha_shape.geom_type))
+                        alpha=alpha/2
+                        alpha_shape = alphashape.alphashape(pointlist, alpha)
+                        count=count+1
+                    else:
+                        if alpha_shape.geom_type=='MultiPolygon':
+                            print(f'submitting as multipolygon')
+                            alphalist=[]
+                            for shape in alpha_shape:
+                                alphalist.append(Polygon(shape))
+                        else:
+                            print(f'geom type is {alpha_shape.geom_type}')
+                            pass
+                    
                     
                 if alpha_shape.geom_type=='Polygon':
                     alphalist.append(alpha_shape)
