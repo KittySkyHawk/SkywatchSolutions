@@ -3207,7 +3207,7 @@ def combine_geom(intersectgdf):
 
 
                                 #print(sum([(cur_row_gdf['area'][cur_row_gdf.index[0]]), (prev_row_gdf['area'][prev_row_gdf.index[0]])]))
-                                merge_area=sw.aoi_areakm(boundary2,'area')
+                                merge_area=aoi_areakm(boundary2,'area')
                                 #print(f'the area is {merge_area.area[maxindex]}')
                                 #merge_area=merge_area.reset_index(drop=True)
                                 mergy=merge_area.is_valid
