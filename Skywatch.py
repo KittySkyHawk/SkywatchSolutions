@@ -3156,7 +3156,7 @@ def combine_geom(intersectgdf,max_area):
         print(f'run {num}')
         if num <=4:
             area_variable1=area_variable1+1
-            area_variable2=area_variable2
+            area_variable2=area_variable2-5
         elif num <=6:
             area_variable1=area_variable1+2
             area_variable2=area_variable2-5
