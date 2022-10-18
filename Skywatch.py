@@ -3193,7 +3193,7 @@ def combine_geom(intersectgdf,max_area):
                     for row2 in newgdf.itertuples():
                         gdf_index2=getattr(row2,"Index")
                         if gdf_index2 not in newgdf.index:
-                            #print('nothing with that index2')
+                            print('nothing with that index2')
                             pass
                         else:
 
@@ -3205,7 +3205,7 @@ def combine_geom(intersectgdf,max_area):
                             #print(overlap)
                             #if the polygons do not match and they have overlap, then move on.
 
-                            if polygon != polygon2 and polarea2 >= area_variable2 and item == True and (polarea+polarea2)<=(max_area+5) and overlap > 0.02:
+                            if polygon != polygon2 and polarea2 >= area_variable2 and item == True and (polarea+polarea2)<=(max_area+5):
                                 overlap=(polygon.intersection(polygon2).area/polygon.area)*100
                                 if overlap >0.02:
                                     print('lets try to merge!')
