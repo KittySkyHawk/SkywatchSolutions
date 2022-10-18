@@ -3120,3 +3120,96 @@ def EAPGrid_new(gdf):
 
     return polygons
     #return polyGS
+    
+def combine_geom(newgdf):
+    newgdf=deepcopy(intersectgdf)
+ 
+    newgdf=newgdf.explode()
+    newgdf=newgdf.reset_index(drop=True)
+    newgdf=newgdf[~newgdf.is_empty]
+    #print(newgdf.index)
+    newgdflist=[]
+    #maxindex=max(newgdf.index)
+    count=0
+    area_variable1=5
+    area_variable2=40
+    for num in range(0,11):
+        print(f'run {num}')
+        if num <=4:
+            area_variable1=area_variable1+1
+            area_variable2=area_variable2
+        elif num <=6:
+            area_variable1=area_variable1+2
+            area_variable2=area_variable2-5
+        else:
+            area_variable1=area_variable1+5
+            area_variable2=area_variable2-5
+
+        #calculate area
+        newgdf=sw.aoi_areakm(newgdf,'area')
+        #sort by area
+        newgdf=newgdf.sort_values('area', axis=0, ascending=True)
+        #reset index§§§§
+
+        newgdf=newgdf.reset_index(drop=True)
+        maxindex=max(newgdf.index)
+        polygdf=gpd.GeoDataFrame(columns=['geometry'])
+
+            #iterate through the gdf
+        for row in newgdf.itertuples():
+            gdf_index1=getattr(row,"Index")
+            if gdf_index1 not in newgdf.index:
+                print('nothing with that index')
+                pass
+            else:
+
+                if getattr(row,'area')<=area_variable1:
+
+                    polygon=getattr(row,'geometry')
+
+                    polarea=getattr(row,'area')
+                    print(f'first area is {polarea}')
+                    #polylist.append(polygon)
+                    #iterate through the gdf a second time to compare rows
+                    for row2 in newgdf.itertuples():
+                        gdf_index2=getattr(row2,"Index")
+                        if gdf_index2 not in newgdf.index:
+                            #print('nothing with that index2')
+                            pass
+                        else:
+
+                            polarea2=getattr(row2,'area')
+                            polygon2=getattr(row2,'geometry')
+                            #print(f'second area is {polarea2}')
+                            item=polygon2.intersects(polygon)
+                            overlap=(polygon.intersection(polygon2).area/polygon.area)*100
+                            print(overlap)
+                            #if the polygons do not match and they have overlap, then move on.
+
+                            if polygon != polygon2 and polarea2 >= area_variable2 and item == True and (polarea+polarea2)<=50 and overlap > 0.05:
+                                print('lets try to merge!')
+                                polygons=[polygon,polygon2]
+                                boundary = gpd.GeoSeries(shapely.ops.unary_union(polygons))
+                                maxindex=maxindex+1
+                                boundary2=gpd.GeoDataFrame(geometry=boundary)
+                                boundary2=boundary2.set_index([[maxindex]])
+
+
+                                #print(sum([(cur_row_gdf['area'][cur_row_gdf.index[0]]), (prev_row_gdf['area'][prev_row_gdf.index[0]])]))
+                                merge_area=sw.aoi_areakm(boundary2,'area')
+                                #print(f'the area is {merge_area.area[maxindex]}')
+                                #merge_area=merge_area.reset_index(drop=True)
+                                mergy=merge_area.is_valid
+                                if mergy[maxindex] == True:
+                                    #print(merge_area['area'])
+                                    newgdf=newgdf.drop(gdf_index1)
+                                    newgdf=newgdf.drop(gdf_index2)
+                                    newgdf=newgdf.append(merge_area)
+
+                                    print('sum is less than 50')
+                                    geoframe=range(len(newgdf))
+                                    break
+                                else:
+                                    pass
+                                
+    return newgdf
