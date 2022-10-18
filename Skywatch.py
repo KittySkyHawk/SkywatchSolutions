@@ -3197,7 +3197,7 @@ def combine_geom(intersectgdf,max_area):
                             print(overlap)
                             #if the polygons do not match and they have overlap, then move on.
 
-                            if polygon != polygon2 and polarea2 >= area_variable2 and item == True and (polarea+polarea2)<=50 and overlap > 0.02:
+                            if polygon != polygon2 and polarea2 >= area_variable2 and item == True and (polarea+polarea2)<=(max_area+5) and overlap > 0.02:
                                 print('lets try to merge!')
                                 polygons=[polygon,polygon2]
                                 boundary = gpd.GeoSeries(shapely.ops.unary_union(polygons))
