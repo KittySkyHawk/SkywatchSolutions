@@ -3113,16 +3113,24 @@ def EAPGrid_new(gdf,max_area):
             #print(type(gdfname))  
             #if len(gdfname)==divideby:
                 #if Totalarea < area:
-            polygons=outgdf.append(gdfname)
-            print(type(polygons))
+            
 
-        
+            gridoverlap=EAProject_Buffer(gdfname,5,3)
+            intersectgs=gridoverlap.intersection(gdf['geometry'][cur_row])
+            intersectgdf=gpd.GeoDataFrame(geometry=intersectgs)
+            intersectgdf=intersectgdf.explode()
+            intersectgdf=intersectgdf.reset_index(drop=True)
+            intersectgdf = intersectgdf[intersectgdf.is_empty != True]
+            combgdf=combine_geom(intersectgdf)
+            
+            outgdf=outgdf.append(combgdf)
+            print(type(outgdf))
 
 
-    return polygons
+    return outgdf
     #return polyGS
     
-def combine_geom(newgdf):
+def combine_geom(intersectgdf):
     newgdf=deepcopy(intersectgdf)
  
     newgdf=newgdf.explode()
@@ -3147,7 +3155,7 @@ def combine_geom(newgdf):
             area_variable2=area_variable2-5
 
         #calculate area
-        newgdf=sw.aoi_areakm(newgdf,'area')
+        newgdf=aoi_areakm(newgdf,'area')
         #sort by area
         newgdf=newgdf.sort_values('area', axis=0, ascending=True)
         #reset index§§§§
