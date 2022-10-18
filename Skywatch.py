@@ -3132,7 +3132,7 @@ def EAPGrid_new(gdf,max_area):
     return outgdf
     #return polyGS
     
-def combine_geom(intersectgdf):
+def combine_geom(intersectgdf,max_area):
     newgdf=deepcopy(intersectgdf)
  
     newgdf=newgdf.explode()
@@ -3143,7 +3143,7 @@ def combine_geom(intersectgdf):
     #maxindex=max(newgdf.index)
     count=0
     area_variable1=5
-    area_variable2=40
+    area_variable2=max_area-5
     for num in range(0,11):
         print(f'run {num}')
         if num <=4:
