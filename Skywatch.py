@@ -3123,7 +3123,7 @@ def EAPGrid_new(gdf,max_area):
             intersectgdf=intersectgdf.explode()
             intersectgdf=intersectgdf.reset_index(drop=True)
             intersectgdf = intersectgdf[intersectgdf.is_empty != True]
-            combgdf=combine_geom(intersectgdf)
+            combgdf=combine_geom(intersectgdf,max_area)
             
             outgdf=outgdf.append(combgdf)
             print(type(outgdf))
