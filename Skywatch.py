@@ -3201,34 +3201,36 @@ def combine_geom(intersectgdf,max_area):
                             polygon2=getattr(row2,'geometry')
                             #print(f'second area is {polarea2}')
                             item=polygon2.intersects(polygon)
-                            overlap=(polygon.intersection(polygon2).area/polygon.area)*100
-                            print(overlap)
+                            
+                            #print(overlap)
                             #if the polygons do not match and they have overlap, then move on.
 
                             if polygon != polygon2 and polarea2 >= area_variable2 and item == True and (polarea+polarea2)<=(max_area+5) and overlap > 0.02:
-                                print('lets try to merge!')
-                                polygons=[polygon,polygon2]
-                                boundary = gpd.GeoSeries(shapely.ops.unary_union(polygons))
-                                maxindex=maxindex+1
-                                boundary2=gpd.GeoDataFrame(geometry=boundary)
-                                boundary2=boundary2.set_index([[maxindex]])
+                                overlap=(polygon.intersection(polygon2).area/polygon.area)*100
+                                if overlap >0.02:
+                                    print('lets try to merge!')
+                                    polygons=[polygon,polygon2]
+                                    boundary = gpd.GeoSeries(shapely.ops.unary_union(polygons))
+                                    maxindex=maxindex+1
+                                    boundary2=gpd.GeoDataFrame(geometry=boundary)
+                                    boundary2=boundary2.set_index([[maxindex]])
 
 
-                                #print(sum([(cur_row_gdf['area'][cur_row_gdf.index[0]]), (prev_row_gdf['area'][prev_row_gdf.index[0]])]))
-                                merge_area=aoi_areakm(boundary2,'area')
-                                #print(f'the area is {merge_area.area[maxindex]}')
-                                #merge_area=merge_area.reset_index(drop=True)
-                                mergy=merge_area.is_valid
-                                if mergy[maxindex] == True:
-                                    #print(merge_area['area'])
-                                    newgdf=newgdf.drop(gdf_index1)
-                                    newgdf=newgdf.drop(gdf_index2)
-                                    newgdf=newgdf.append(merge_area)
+                                    #print(sum([(cur_row_gdf['area'][cur_row_gdf.index[0]]), (prev_row_gdf['area'][prev_row_gdf.index[0]])]))
+                                    merge_area=aoi_areakm(boundary2,'area')
+                                    #print(f'the area is {merge_area.area[maxindex]}')
+                                    #merge_area=merge_area.reset_index(drop=True)
+                                    mergy=merge_area.is_valid
+                                    if mergy[maxindex] == True:
+                                        #print(merge_area['area'])
+                                        newgdf=newgdf.drop(gdf_index1)
+                                        newgdf=newgdf.drop(gdf_index2)
+                                        newgdf=newgdf.append(merge_area)
 
-                                    print('sum is less than 50')
-                                    geoframe=range(len(newgdf))
-                                    break
-                                else:
-                                    pass
+                                        print('sum is less than 50')
+                                        geoframe=range(len(newgdf))
+                                        break
+                                    else:
+                                        pass
                                 
     return newgdf
