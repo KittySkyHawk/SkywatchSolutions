@@ -1168,9 +1168,12 @@ def get_search_results(api_key,searchid):
 
         else:
             resultslist=[1]
+            print(search_results.json())
             return resultslist
+            
     else:
         resultslist=[1]
+        print(search_results.json())
         return resultslist
 def get_search_results_old(api_key,searchid):
     
