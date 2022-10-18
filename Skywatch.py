@@ -2986,7 +2986,7 @@ def EAPGrid_new(gdf,max_area):
         cur_row_area=aoi_areakm(cur_row_gdf,'area')
         cur_row_area=cur_row_area.reset_index(drop=True)
         if cur_row_area.area[0] > max_area:
-            print(f'cur row area is {cur_row_area.area[0]},{max_area}'
+            print(f'cur row area is {cur_row_area.area[0]},{max_area}')
         #Create Centroid for projection - this assumes that the index of the item is 0 and there is only 1 AOI polygon is being added OR it is being passed a new iloc gdf.
             if cur_row_gdf.geom_type[cur_row] in ['Point','Polygon', 'MultiPolygon']:
                 pol2=gdf.centroid[cur_row]
