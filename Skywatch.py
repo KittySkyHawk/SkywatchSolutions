@@ -1896,8 +1896,8 @@ def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='No',fileout='',m
 def create_map(orig_gdf,clean_gdf,popup_column=''):
     #lf.Map(center = (60, -2.2), zoom = 2, min_zoom = 1, max_zoom = 20, 
 #    basemap=lf.basemaps.Esri.WorldImagery)
-
-    start=list(orig_gdf.geometry[0].centroid.coords)
+    indexmin=min(orig_gdf.index)
+    start=list(orig_gdf.geometry[indexmin].centroid.coords)
 
     area=start[0][1],start[0][0]
     print(start[0][1],start[0][0])
@@ -3232,5 +3232,7 @@ def combine_geom(intersectgdf,max_area):
                                         break
                                     else:
                                         pass
+                                    
+    
                                 
     return newgdf
