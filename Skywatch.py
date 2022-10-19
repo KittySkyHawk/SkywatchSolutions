@@ -2863,7 +2863,7 @@ def divider(factorlist,divideby,maxwidth,maxheight):
                     print((divide)%i)
                     factorlist.append(i)
             divideby=divide
-            print(f'new factorlist is {factorlist}'
+            print(f'new factorlist is {factorlist}')
 #         if len(factorlist)==4:
 #             factorsplit=[]
 #             factorsplit.append(factorlist[1])
