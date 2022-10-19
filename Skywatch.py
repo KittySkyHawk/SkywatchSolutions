@@ -2883,8 +2883,8 @@ def divider(factorlist,divideby,maxwidth,maxheight):
             
         else:
             factorsplit=[]
-            factorsplit.append(factorlist[1])
-            factorsplit.append(factorlist[-2])
+            factorsplit.append(factorlist[5])
+            factorsplit.append(factorlist[-6])
 
         height=maxheight/factorsplit[1]
         width=maxwidth/factorsplit[0]
@@ -2927,8 +2927,8 @@ def divider(factorlist,divideby,maxwidth,maxheight):
             
         else:
             factorsplit=[]
-            factorsplit.append(factorlist[1])
-            factorsplit.append(factorlist[-2])
+            factorsplit.append(factorlist[6])
+            factorsplit.append(factorlist[-7])
 
 
         height=maxheight/factorsplit[0]
@@ -2960,6 +2960,14 @@ def divider(factorlist,divideby,maxwidth,maxheight):
             factorsplit=[]
             factorsplit.append(factorlist[3])
             factorsplit.append(factorlist[2])
+           
+        elif len(factorlist)==8:
+            print('factorlist8')
+            factorsplit=[]
+            factorsplit.append(factorlist[4])
+            factorsplit.append(factorlist[3])
+        
+        
             
         else:
             factorsplit=[]
