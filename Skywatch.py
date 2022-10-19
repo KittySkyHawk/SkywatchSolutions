@@ -3216,7 +3216,7 @@ def combine_geom(intersectgdf,max_area):
 
                             if polygon != polygon2 and polarea2 >= area_variable2 and item == True and (polarea+polarea2)<=(max_area+5):
                                 overlap=(polygon.intersection(polygon2).area/polygon.area)*100
-                                if overlap >0.02:
+                                if overlap >0.05:
                                     
                                     print('lets try to merge!')
                                     polygons=[polygon,polygon2]
