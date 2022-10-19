@@ -2853,7 +2853,7 @@ def divider(factorlist,divideby,maxwidth,maxheight):
     elif maxwidth/maxheight <=1:
         print('<1')
         print(len(factorlist))
-        while len(factorlist)<=3:
+        while len(factorlist)<=5:
             factorlist=[]
             for i in range(1, divideby+2):
                 #print(f'i is {i}')
@@ -2863,10 +2863,10 @@ def divider(factorlist,divideby,maxwidth,maxheight):
                     print((divideby)%i)
                     factorlist.append(i)
             divideby=divide
-        if len(factorlist)==4:
-            factorsplit=[]
-            factorsplit.append(factorlist[1])
-            factorsplit.append(factorlist[2])
+#         if len(factorlist)==4:
+#             factorsplit=[]
+#             factorsplit.append(factorlist[1])
+#             factorsplit.append(factorlist[2])
         elif len(factorlist)==6:
             factorsplit=[]
             factorsplit.append(factorlist[2])
@@ -2892,7 +2892,7 @@ def divider(factorlist,divideby,maxwidth,maxheight):
 
     elif maxwidth/maxheight <2:
         print('<2')
-        while len(factorlist)<=5:
+        while len(factorlist)<=7:
             factorlist=[]
             for i in range(1, divideby+2):
                 #print(f'i is {i}')
@@ -2906,10 +2906,10 @@ def divider(factorlist,divideby,maxwidth,maxheight):
 #             factorsplit=[]
 #             factorsplit.append(factorlist[1])
 #             factorsplit.append(factorlist[2])
-        if len(factorlist)==6:
-            factorsplit=[]
-            factorsplit.append(factorlist[3])
-            factorsplit.append(factorlist[2])
+#         if len(factorlist)==6:
+#             factorsplit=[]
+#             factorsplit.append(factorlist[3])
+#             factorsplit.append(factorlist[2])
 
         elif len(factorlist)==8:
             factorsplit=[]
@@ -2938,7 +2938,7 @@ def divider(factorlist,divideby,maxwidth,maxheight):
     elif maxwidth/maxheight <6:
         print('<6')
         print(factorlist)
-        while len(factorlist)<=3:
+        while len(factorlist)<=5:
             factorlist=[]
             for i in range(1, divideby+2):
                 #print(f'i is {i}')
@@ -2948,14 +2948,14 @@ def divider(factorlist,divideby,maxwidth,maxheight):
                     print((divideby)%i)
                     factorlist.append(i)
             divideby=divide
-        if len(factorlist)==4:
-            print(f'factorlist4 {factorlist}')
-            factorsplit=[]
-            factorsplit.append(factorlist[2])
-            factorsplit.append(factorlist[1])
-            print(factorsplit)
+#         if len(factorlist)==4:
+#             print(f'factorlist4 {factorlist}')
+#             factorsplit=[]
+#             factorsplit.append(factorlist[2])
+#             factorsplit.append(factorlist[1])
+#             print(factorsplit)
 
-        elif len(factorlist)==6:
+        if len(factorlist)==6:
             print('factorlist6')
             factorsplit=[]
             factorsplit.append(factorlist[3])
