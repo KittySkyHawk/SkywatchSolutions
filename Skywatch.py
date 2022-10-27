@@ -2604,10 +2604,12 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
         convex=shapely.geometry.MultiPoint(pointylist).convex_hull
         convexgs=gpd.GeoSeries(convex)
         convexgdf=gpd.GeoDataFrame(geometry=convexgs)
+        convexgdf=aoi_areakm(convexgdf,'convex_area')
+        if convexgdf['convex_area'][0] >=100000
+            concave_gdf=deepcopy(gdfclean)
+        else:
         
-        
-        
-        concave_gdf=convexgdf
+            concave_gdf=convexgdf
 
     
     #concave_gdf=deepcopy(gdf)
