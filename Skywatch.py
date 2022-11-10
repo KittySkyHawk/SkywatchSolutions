@@ -2008,6 +2008,9 @@ def corridor_quote(gdf, quote_type,resolution, buffer_type,buffer_amount,):
 def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail,filepath=''):
     dfquote=pd.DataFrame(columns=['State','Number of Features','Total Area','Average Area per feature','Quote Type'])
     #gdfclean=EAProject_Buffer(gdfclean,10,capstyle=1)
+    gdfclean=gdfclean.dissolve()
+    gdfclean=gdfclean.explode()
+    gdfclean=gdfclean.reset_index(drop=True)
     gdfclean=aoi_areakm(gdfclean,'optimized_area') 
     
     bufferedtext='Area of data after geometry cleaning'
@@ -2086,7 +2089,8 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail
         print('quote type does not match options.')
         sys.exit('quote type does not exist')
 
-    print(f'buffer_interval is {buffer_interval}')        
+    print(f'buffer_interval is {buffer_interval}')
+
     gdfbuff=gpd.GeoDataFrame(deepcopy(gdfclean))
 
 
