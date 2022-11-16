@@ -430,6 +430,7 @@ def optimize_area(gdfclean,quote_type,resolution,minarea,data_type='Corridors'):
             buffer_interval=minarea/5
     
     elif quote_type == "Archive" and resolution=="medium":
+        radius=50
         if minarea <1000:
             minarea=0.1
             radius=50  #radius to buffer in iteration (in m)
