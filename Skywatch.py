@@ -2816,7 +2816,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
         aoi.add_to(m)
        # m.add_child(aoi)
         m.keep_in_front(aoi)
-        folium.LayerControl().add_to(m)
+        folium.LayerControl(position='topright', collapsed=False, autoZIndex=False,).add_to(m)
 
         m.save(f'{filepath}/{coverage_resolution}_archive_coverage_html_map.html')
 
