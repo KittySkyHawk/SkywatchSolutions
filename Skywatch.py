@@ -2611,11 +2611,11 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
         convexgdf=gpd.GeoDataFrame(geometry=convexgs)
         convexgdf=aoi_areakm(convexgdf,'convex_area')
     
-    if convexgdf['convex_area'][0] >=100000:
-        concave_gdf=deepcopy(gdfclean)
-    else:
+        if convexgdf['convex_area'][0] >=100000:
+            concave_gdf=deepcopy(gdfclean)
+        else:
 
-        concave_gdf=deepcopy(convexgdf)
+            concave_gdf=deepcopy(convexgdf)
 
     
     #concave_gdf=deepcopy(gdf)
