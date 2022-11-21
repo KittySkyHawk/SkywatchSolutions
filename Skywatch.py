@@ -2750,7 +2750,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
         aoiintersect=aoiintersect.reset_index(drop=True)
         aoiintersect=aoi_areakm(aoiintersect,'intersect_area')
 
-        exportfiles(gdf,aoiintersect,"archive_coverage",name_field='',html_map='No',fileout=filepath,map_name='Archive Coverage')
+        exportfiles(gdf,gdfout,"archive_coverage",name_field='',html_map='No',fileout=filepath,map_name='Archive Coverage')
 
         totalarea=aoiintersect['intersect_area'].sum()
 
