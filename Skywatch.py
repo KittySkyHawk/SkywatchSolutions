@@ -1336,7 +1336,7 @@ def calc_price(coords,api_key,start,end,interval,resolution,tasking=False):
         #return response.json() 
 
 
-def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2, resolution, tasking='False', resolution_low =1.5, resolution_high=8, sources="", min_coverage=70,priorities='"latest","highest_resolution","lowest_cost"',name="Created by Skywatch", outputid='154311a8-582a-11e7-b30d-7291b81e23e1', mosaic='off'):
+def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2, resolution, tasking='False', resolution_low =1.5, resolution_high=8, sources="", min_coverage=70,priorities=["latest","highest_resolution","lowest_cost"],name="Created by Skywatch", outputid='154311a8-582a-11e7-b30d-7291b81e23e1', mosaic='off'):
     ''' This function takes the template and applies the name and coordinates
     given to it, and then submits using the given api key.
     
