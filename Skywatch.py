@@ -1792,12 +1792,12 @@ def cleangeometry(gdf):
         pass
     elif ['Polygon','MultiPolygon'] in uniquelist:
         
-        gdf=aoi_areakm(gdf,'start_area')
-        gdf=remove_donuts(gdf)        
-        simply=simply_poly(gdf)
+        gdf=aoi_areakm(deepcopy(gdf),'start_area')
+        gdf=remove_donuts(deepcopy(gdf))        
+        simply=simply_poly(deepcopy(gdf))
         gdf=simply[0]
         message=simply[1]
-        gdf=aoi_areakm(gdf,'cleaned_area')
+        gdf=aoi_areakm(deepcopy(gdf),'cleaned_area')
         gdf=gdf.reset_index(drop=True)
 
     # Remove donuts from the dataset (interior polygons)
