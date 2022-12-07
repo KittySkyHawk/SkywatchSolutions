@@ -1823,7 +1823,7 @@ def cleangeometry(gdf):
             else:
                 print(f'WARNING: AREA HAS CHANGED from {gdf["start_area"].sum()} to {gdf["cleaned_area"].sum()}')
                 
-        print(message)
+        
             
             # for row in gdf.itertuples():
             #     if getattr(row,'start_area')/getattr(row,'cleaned_area') > 0.95 and getattr(row,'start_area')/getattr(row,'cleaned_area') <1.05: 
@@ -1836,6 +1836,7 @@ def cleangeometry(gdf):
             pass            
              #DonutsError as e:
             #raise Exception('The data was cleaned up, but the area grew too much and needs to be reviewed by the Solutions Engineer') from e
+        print(message)
 
     return gdf
     
