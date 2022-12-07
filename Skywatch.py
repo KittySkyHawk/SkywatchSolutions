@@ -79,6 +79,8 @@ def remove_donuts_old(gdf):
     #return gdf2
 
 def simply_poly(gdf):
+    failed_simplify=[]
+    failcount=0
     for cur_row in range(len(gdf)):
         #print(len(gdf))
         print(f'cur row is {cur_row}')
@@ -145,8 +147,15 @@ def simply_poly(gdf):
             gdf.loc[[cur_row],'simplified']=simplify_return            
         else:
             gdf.insert(loc=1,column="simplified",value=simplify_return)
+            
+        if len(points)<500:
+            pass
+        else:
+            failcount=failcount+1
+          
+    message=f'{failcount} features could not be simplified'
 
-    return gdf
+    return gdf,message
 
         #simplify_list=[str(simplify_amount),simplify_return]
 
@@ -1785,7 +1794,9 @@ def cleangeometry(gdf):
         
         gdf=aoi_areakm(deepcopy(gdf),'start_area')
         gdf=remove_donuts(deepcopy(gdf))        
-        gdf=simply_poly(deepcopy(gdf))
+        simply=simply_poly(deepcopy(gdf))
+        gdf=simply[0]
+        message=simply[1]
         gdf=aoi_areakm(deepcopy(gdf),'cleaned_area')
         gdf=gdf.reset_index(drop=True)
 
@@ -1811,6 +1822,8 @@ def cleangeometry(gdf):
                 pass
             else:
                 print(f'WARNING: AREA HAS CHANGED from {gdf["start_area"].sum()} to {gdf["cleaned_area"].sum()}')
+                
+        print(message)
             
             # for row in gdf.itertuples():
             #     if getattr(row,'start_area')/getattr(row,'cleaned_area') > 0.95 and getattr(row,'start_area')/getattr(row,'cleaned_area') <1.05: 
