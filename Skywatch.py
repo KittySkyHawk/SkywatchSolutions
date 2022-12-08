@@ -2410,6 +2410,16 @@ def optimize_area_group(gdfclean,quote_type,resolution, minarea,detail,filepath=
     
         print("interval too big")
         
+    gdfbuff=gdfbuff.dissolve()
+    gdfbuff=gdfbuff.explode()
+    gdfbuff=gdfbuff.reset_index(drop=True)
+    if quote_type != 'Corridors':
+
+        gdfbuff=remove_donuts(deepcopy(gdfbuff))
+    else:
+        pass
+    gdfbuff=aoi_areakm(gdfbuff,'optimized_area')
+        
     return gdfbuff
 
 def create_html_report(gdf,gdfbuff,quote_type,resolution,data_type,filepath,filename,buffer_amount,totalorigarea,output_chart,final_area,coverage_map,coverage_area):
