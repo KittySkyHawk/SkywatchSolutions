@@ -365,35 +365,74 @@ def load_file(infile):
 def EAProject_Buffer(gdf,radius,capstyle=1):
     bufflist=[]
 
-    #Takes a geodataframe
-    for cur_row in range(len(gdf)):
-    #makes subset geodataframe at cur row
-        pol2=gdf.iloc[[cur_row]]
+#     #Takes a geodataframe
+#     for cur_row in range(len(gdf)):
+#     #makes subset geodataframe at cur row
+#         pol2=gdf.iloc[[cur_row]]
 
-        #gets geometry of the dataframe at the current row.
-        geom=pol2.geometry[cur_row]
-        #for projection
+#         #gets geometry of the dataframe at the current row.
+#         geom=pol2.geometry[cur_row]
+#         #for projection
+#         wgs84_globe = pyproj.Proj(proj='latlong', ellps='WGS84')
+
+#         if geom.geom_type in ['Polygon','MultiPolygon','MultiLineString','LineString']:
+#             _lon, _lat = geom.centroid.coords[0]
+#             #cent=gdfpol.centroid #Note this logic hasn't been tested yet.
+#             #print('poly')
+#         elif geom.geom_type in ['Point']:
+#             #print('point')
+#             _lon, _lat = geom.centroid.coords[0]
+#             #print(pol.coords)
+
+
+#         aeqd = pyproj.Proj(proj='aeqd', ellps='WGS84', datum='WGS84', lat_0=_lat, lon_0=_lon)
+
+#         projpol = sh_transform(partial(pyproj.transform, wgs84_globe, aeqd), geom)
+#         #print(projpol)
+#         buffpol=projpol.buffer(radius,cap_style=capstyle)
+#         temp2=gpd.GeoDataFrame(pol2,geometry=[buffpol])
+#         output=sh_transform(partial(pyproj.transform, aeqd, wgs84_globe),buffpol)
+        # bufflist.append(output)
+
+        
+    for row in gdf.itertuples():
+        print(getattr(row,'Index'))
+    #for cur_row in range(len(gdf)):
+        original_radius=radius
+        #print(cur_row)
+        #cur_row_gdf=gdf.iloc[[cur_row]]
+        
+        geom=getattr(row,'geometry') #cur_row_gdf['geometry'][cur_row]
+        #print(geom)
+        
+        ########### project ######
+        
+#         if 'area' not in gdf.columns:
+#             print('area has not been calculated')
         wgs84_globe = pyproj.Proj(proj='latlong', ellps='WGS84')
 
-        if geom.geom_type in ['Polygon','MultiPolygon','MultiLineString','LineString']:
+        if geom.geom_type in ['Polygon','MultiPolygon']:
             _lon, _lat = geom.centroid.coords[0]
+
             #cent=gdfpol.centroid #Note this logic hasn't been tested yet.
-            #print('poly')
+            print('poly')
         elif geom.geom_type in ['Point']:
             #print('point')
             _lon, _lat = geom.centroid.coords[0]
             #print(pol.coords)
 
+        wgs84_globe = pyproj.Proj(proj='longlat', ellps='WGS84')
 
         aeqd = pyproj.Proj(proj='aeqd', ellps='WGS84', datum='WGS84', lat_0=_lat, lon_0=_lon)
 
         projpol = sh_transform(partial(pyproj.transform, wgs84_globe, aeqd), geom)
-        #print(projpol)
+        
         buffpol=projpol.buffer(radius,cap_style=capstyle)
-        temp2=gpd.GeoDataFrame(pol2,geometry=[buffpol])
+        #temp2=gpd.GeoDataFrame(pol2,geometry=[buffpol])
         output=sh_transform(partial(pyproj.transform, aeqd, wgs84_globe),buffpol)
         # bufflist.append(output)
-        gdf.loc[[cur_row], 'geometry'] = output
+        gdf.at[getattr(row,'Index'),'geometry']= output#gdf.loc[[cur_row],'geometry'] = output
+        #gdf.loc[[cur_row], 'geometry'] = output
 
     return gdf    
 
