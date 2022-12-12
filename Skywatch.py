@@ -2197,6 +2197,7 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
 #gdf_og_points=gpd.GeoDataFrame(columns=['geometry'])
     pointylist=[]
     for row in gdfbuffarea.itertuples():
+        alphalist=[]
         geom=getattr(row,'geometry')
         for item in geom.exterior.coords:
             pointylist.append(Point(item))
@@ -2237,6 +2238,7 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
             #print(row)
             #if getattr()
             point=getattr(row,'geometry')
+            #print(point)
             points=point.coords
             #print (points)
             #print(points[0])
@@ -2247,6 +2249,7 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
         #print(pointlist[0])
         
         if len(pointlist)==0:
+            print('shape had no output points')
             pass
         #elif gdfbuff.at[round(unique),'optimized_area']>=26:
         else:
@@ -2268,9 +2271,28 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
                 alpha=alpha/2
                 alpha_shape = alphashape.alphashape(pointlist, alpha)
                 count=count+1
+
+
             else:
-                count=0
-                if cluster_force==True:
+                alphacover=True
+                while not alpha_shape.contains(point):
+                    print('the concave hull does not contain the original data')
+                    alpha=alpha/2
+                    alpha_shape = alphashape.alphashape(pointlist, alpha)
+                    count=count+1
+                    if count == 10:
+                        alphacover=False
+                        convex=shapely.geometry.MultiPoint(pointlist).convex_hull
+                        alphalist.append(convex)
+                        break
+                    else:
+                        pass
+
+                else:
+                    count=0
+
+                
+                if cluster_force==True and alphacover==True:
                     while alpha_shape.geom_type=='MultiPolygon' and count <= 6:
                         print(type(alpha_shape.geom_type))
                         alpha=alpha/2
@@ -2279,14 +2301,14 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
                     else:
                         if alpha_shape.geom_type=='MultiPolygon':
                             print(f'submitting as multipolygon')
-                            alphalist=[]
+                            
                             for shape in alpha_shape:
                                 alphalist.append(Polygon(shape))
                         else:
                             print(f'geom type is {alpha_shape.geom_type}')
                             pass
                         
-                elif cluster_force==False:
+                elif cluster_force==False and alphacover ==True:
                     while alpha_shape.geom_type=='MultiPolygon' and count <= 3:
                         print(type(alpha_shape.geom_type))
                         alpha=alpha/2
