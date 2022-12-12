@@ -100,7 +100,7 @@ def simply_poly(gdf):
             while len(points) >=500 and count < 51:
 
 
-
+                cur_row_gdf=EAProject_Buffer(cur_row_gdf,10)
                 #print(f'shape area is {cur_row_gdf['area'][0]}')
                 print(f'toobig! there are {len(points)} vertices')
                 gs=cur_row_gdf.geometry
