@@ -411,7 +411,7 @@ def EAProject_Buffer(gdf,radius,capstyle=1):
 #             print('area has not been calculated')
         wgs84_globe = pyproj.Proj(proj='latlong', ellps='WGS84')
 
-        if geom.geom_type in ['Polygon','MultiPolygon']:
+        if geom.geom_type in ['Polygon','MultiPolygon','MultiLineString','LineString']:
             _lon, _lat = geom.centroid.coords[0]
 
             #cent=gdfpol.centroid #Note this logic hasn't been tested yet.
