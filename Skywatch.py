@@ -1828,6 +1828,7 @@ def cleangeometry(gdf):
 
     geom=(gdf.iloc[[0]]).geometry
     if ['LineString','MultiLineString','Point'] in uniquelist:
+        message="Data has no area" 
         pass
     elif ['Polygon','MultiPolygon'] in uniquelist:
         
