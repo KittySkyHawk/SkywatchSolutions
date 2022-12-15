@@ -2009,14 +2009,21 @@ def create_map(orig_gdf,clean_gdf,popup_column=''):
 
 
 def corridor_quote(gdf, quote_type,resolution, buffer_type,buffer_amount,):
+    #Create a list of unique geometry types
     uniquelist=gdf['geometry'].geom_type.unique()
+    
+    #Confirm that all of the data is LineString or MultiLineString
     if['MultiLineString', 'LineString'] in uniquelist:
         print(f'The file contains datatypes {uniquelist}')
     else:
         print(f'This data consists of geometry types {uniquelist} which cannot be used for the corridor analysis.')
         print(f'To proceed, get Line data from the customer')
-              
+        sys.exit('This analysis requires line data')
+    #Clean the data - not sure if this is relevant for line data. clean_data might be better than cleangeometry          
     gdfclean=cleangeometry(deepcopy(gdf))
+    
+    #Series of ifs to define the buffer amount based on resolution
+    
     if quote_type == "Archive" and resolution == "medium":
         if buffer_type == 'radius'and buffer_amount >=50:
             pass
@@ -2028,7 +2035,7 @@ def corridor_quote(gdf, quote_type,resolution, buffer_type,buffer_amount,):
         if buffer_type == 'radius'and buffer_amount >=50:
             pass
         else:
-            buffer_amount=50
+            buffer_amount=150
             print(f'buffer amount was set to 50 as this is the minimum for this quote')
                      
     elif quote_type == "Tasking" and resolution == "high":
@@ -2056,6 +2063,7 @@ def corridor_quote(gdf, quote_type,resolution, buffer_type,buffer_amount,):
         #gdfbuffclean=cleangeometry(gdfbuff)
     elif buffer_type== 'area':
         print('cannot buffer corridors using area. Please set a radius.')
+        sys.exit('cannot buffer corridors using area type')
 
     gdfbuff=optimize_area(deepcopy(gdfbuff), quote_type, resolution, 1000000)
 
