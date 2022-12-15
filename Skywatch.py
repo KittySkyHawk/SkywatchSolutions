@@ -78,7 +78,7 @@ def remove_donuts_old(gdf):
 
     #return gdf2
 
-def simply_poly(gdf):
+def simply_poly(gdf,force='Yes'):
     failed_simplify=[]
     failcount=0
     for cur_row in range(len(gdf)):
@@ -97,10 +97,11 @@ def simply_poly(gdf):
             simplify_return=('geometery did not need to be simplified') 
         
         else:
+            cur_row_gdf=EAProject_Buffer(cur_row_gdf,10)
             while len(points) >=500 and count < 51:
 
 
-                cur_row_gdf=EAProject_Buffer(cur_row_gdf,10)
+                
                 #print(f'shape area is {cur_row_gdf['area'][0]}')
                 print(f'toobig! there are {len(points)} vertices')
                 gs=cur_row_gdf.geometry
@@ -123,9 +124,38 @@ def simply_poly(gdf):
                 count=count+1
                 
                 # This could be increased to 0.0001 as it used to be.
-                if simplify_amount > 0.00002 or count==50:
-                    simplify_return=('geometery could not be simplified')
-                    pass                
+                if force==True and simplify_amount >0.00002:
+                    cur_row_gdf=EAProject_Buffer(cur_row_gdf,10)
+                    while len(points) >=500:
+                   
+                        #print(f'shape area is {cur_row_gdf['area'][0]}')
+                        print(f'toobig! there are {len(points)} vertices')
+                        gs=cur_row_gdf.geometry
+                        #print(type(gs))
+                        simplegs=gs.simplify(simplify_amount)
+                        print(len(simplegs.iloc[0].exterior.coords))
+                        simplegdf=gpd.GeoDataFrame(geometry=simplegs)
+
+                        simple=Polygon(simplegs.iloc[0].exterior.coords)
+                        #print(simple)
+                        #gdf=gpd.GeoDataFrame(gdf)
+                        #len(gdf2)
+                        gdf.loc[[cur_row], 'geometry']= simple
+                        cur_row_gdf.loc[[cur_row],'geometry']=simple
+                        geom=cur_row_gdf.geometry
+                        points=geom.iloc[0].exterior.coords
+                        #simplify_return = (f'vertices reduced to {len(points)} with a simplified amount of {simplify_amount} degrees after {count} iterations. 1 degree is roughtly 111km. 0.0001 degree is 11.1m roughly')
+                        simplify_amount=simplify_amount+0.000005
+                        #print(simplify_amount)
+                        count=count+1
+                    else: 
+                        print('area was simplified but there may be some edge areas missing')
+                    
+                
+                elif force == False and count > 50 and simplify_amount >0.00002:
+                    if simplify_amount > 0.00002 or count==50:
+                        simplify_return=('geometery could not be simplified')
+                        pass                
                     
                 #     envelopegs=deepcopy(cur_row_gdf).geometry.convex_hull
                 #     envelope=Polygon(envelopegs.iloc[0].exterior.coords)
@@ -137,9 +167,7 @@ def simply_poly(gdf):
                     #simplify_return='geometry could not be simplified'
                 if len(points) < 500:
                     simplify_return=(f'vertices reduced to {len(points)} with a simplified amount of {simplify_amount} degrees after {count} iterations. 1 degree is roughtly 111km. 0.0001 degree is 11.1m roughly')
-            
-            
-
+                    
         if not simplify_return:
             simplify_return='it did not need to be simplified'
         
