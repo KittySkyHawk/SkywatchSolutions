@@ -1842,7 +1842,7 @@ def pipeline_retrieval(apikey,searchname,path): #Can adapt easily to do based on
                 
             download_pipeline(pipeline['id'],pipeline['name'],mkdir,apikey)
 
-def cleangeometry(gdf):
+def cleangeometry(gdf,force=True):
     
     gdf=deepcopy(gdf).drop_duplicates(subset=['geometry'], keep='first', inplace=False, ignore_index=True)
     gdf=gdf.reset_index(drop=True)
@@ -1862,7 +1862,7 @@ def cleangeometry(gdf):
         
         gdf=aoi_areakm(deepcopy(gdf),'start_area')
         gdf=remove_donuts(deepcopy(gdf))        
-        simply=simply_poly(deepcopy(gdf))
+        simply=simply_poly(deepcopy(gdf),force)
         gdf=simply[0]
         message=simply[1]
         gdf=aoi_areakm(deepcopy(gdf),'cleaned_area')
