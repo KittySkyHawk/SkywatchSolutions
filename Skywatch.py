@@ -3043,12 +3043,12 @@ def divider(factorlist,divideby,maxwidth,maxheight):
 #             factorsplit=[]
 #             factorsplit.append(factorlist[3])
 #             factorsplit.append(factorlist[2])
-        if len(factorlist)==6:
+        elif len(factorlist)==6:
             factorsplit=[]
             factorsplit.append(factorlist[2])
             factorsplit.append(factorlist[3])
 
-        if len(factorlist)==8:
+        elif len(factorlist)==8:
             factorsplit=[]
             factorsplit.append(factorlist[3])
             factorsplit.append(factorlist[4])
