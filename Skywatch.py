@@ -3120,7 +3120,7 @@ def divider(factorlist,divideby,maxwidth,maxheight):
         
     return [width,height]
 
-def EAPGrid_new(gdf,max_area):
+def EAPGrid_new(gdf,max_area,combinegeom=True):
     
     #Check the area of the input and if it's >600 split it.
        
@@ -3271,9 +3271,12 @@ def EAPGrid_new(gdf,max_area):
             intersectgdf=intersectgdf.explode()
             intersectgdf=intersectgdf.reset_index(drop=True)
             intersectgdf = intersectgdf[intersectgdf.is_empty != True]
-            combgdf=combine_geom(intersectgdf,max_area)
-            
-            outgdf=outgdf.append(combgdf)
+            if combingeom==True:
+                combgdf=combine_geom(intersectgdf,max_area)
+       
+                outgdf=outgdf.append(combgdf)
+            else:
+                outgdf=outgdf.append(intersectgdf)
             print(type(outgdf))
 
 
