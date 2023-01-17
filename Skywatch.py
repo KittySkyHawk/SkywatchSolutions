@@ -1847,6 +1847,7 @@ def cleangeometry(gdf,force=True):
     gdf=deepcopy(gdf).drop_duplicates(subset=['geometry'], keep='first', inplace=False, ignore_index=True)
     gdf=gdf.reset_index(drop=True)
     gdf=clean_data(deepcopy(gdf))
+    gdf=deepcopy(gdf).drop_duplicates(subset=['geometry'], keep='first', inplace=False, ignore_index=True)
     #Reset the index (otherwise will have 2 indices which create problems running the scripts.)
     gdf=gdf.reset_index(drop=True)
     
