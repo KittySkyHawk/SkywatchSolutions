@@ -2695,10 +2695,11 @@ def cleanup(gdfbuff,data_type):
             
     return gdfbuffarea,totalbuffarea
 
-def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,coverage_resolution,percent_coverage,filepath,alpha=12):
+def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,coverage_resolution,percent_coverage,filepath,alpha=12,source='all'):
     searchlist=[]
     faillist=[]
     productidlist=[]
+
     if data_type!='Corridors' and data_type != 'Large AOI':
         try:
             gdfclean=cleangeometry(deepcopy(gdf))
@@ -2789,31 +2790,68 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
                                 low_res=30
                             
                             #if data.get('source') == '' and data.get('result_cloud_cover_percentage') <=50:
-                            if data.get('result_cloud_cover_percentage') <= cloud and data.get('resolution')<= low_res:
+                            
+                            if data.get('source')=='all':
+                                
+                                if data.get('result_cloud_cover_percentage') <= cloud and data.get('resolution')<= low_res:
 
 
-                                #if data.get('result_cloud_cover_percentage')<=10 and data.get('resolution')<=5:
+                                    #if data.get('result_cloud_cover_percentage')<=10 and data.get('resolution')<=5:
 
-                                coords=data.get('location').get('coordinates')
-                                #print(f'the length of the coordinates is {len(coords)}')
-                                if len(coords)==1:
-                                    print(data.get('source'))
-                                    searchlist.append(data)
-                                    print(f'the length of the searchlist is {len(searchlist)}')
+                                    coords=data.get('location').get('coordinates')
+                                    #print(f'the length of the coordinates is {len(coords)}')
+                                    if len(coords)==1:
+                                        print(data.get('source'))
+                                        searchlist.append(data)
+                                        print(f'the length of the searchlist is {len(searchlist)}')
 
 
-                                elif len(coords)!=1:
-                                    print(f'too many coordinates, {len(coords)}')
-                                    #for shape in coords:
-                                    pass
+                                    elif len(coords)!=1:
+                                        print(f'too many coordinates, {len(coords)}')
+                                        #for shape in coords:
+                                        pass
+
+                                    else:
+                                        faillist.append(data)
+                                        print(f'this had results but they were multipolygon')
+
 
                                 else:
-                                    faillist.append(data)
-                                    print(f'this had results but they were multipolygon')
+                                    print('does not meet requirements')
+                            elif data.get('source')!='all':
+                                try:
+                                    if data.get('result_cloud_cover_percentage') <= cloud and data.get('resolution')<= low_res and data.get('source')==source:
 
 
+                                        #if data.get('result_cloud_cover_percentage')<=10 and data.get('resolution')<=5:
+
+                                        coords=data.get('location').get('coordinates')
+                                        #print(f'the length of the coordinates is {len(coords)}')
+                                        if len(coords)==1:
+                                            print(data.get('source'))
+                                            searchlist.append(data)
+                                            print(f'the length of the searchlist is {len(searchlist)}')
+
+
+                                        elif len(coords)!=1:
+                                            print(f'too many coordinates, {len(coords)}')
+                                            #for shape in coords:
+                                            pass
+
+                                        else:
+                                            faillist.append(data)
+                                            print(f'this had results but they were multipolygon')
+                                            
+                                    else:
+                                        print('does not meet requirements')    
+                                except:
+                                    print('source is not valid')
+                                    
                             else:
-                                print('does not meet requirements')
+                                print(f'source was not set its value is {source}')
+                                          
+                            
+                                    
                                     
     #                         except:
     #                             print(f'{data.get('source')},{type(data)}')
