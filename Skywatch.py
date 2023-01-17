@@ -2817,7 +2817,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
 
 
                                 else:
-                                    print('does not meet requirements')
+                                    print(f'does not meet requirements cloud={data.get("result_cloud_cover_percentage")} source = {data.get("source")}')
                             elif data.get('source')!='all':
                                 try:
                                     if data.get('result_cloud_cover_percentage') <= cloud and data.get('resolution')<= low_res and data.get('source')==source:
@@ -2843,7 +2843,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
                                             print(f'this had results but they were multipolygon')
                                             
                                     else:
-                                        print('does not meet requirements')    
+                                        print(f'does not meet requirements cloud={data.get("result_cloud_cover_percentage")} source = {data.get("source")}')    
                                 except:
                                     print('source is not valid')
                                     
