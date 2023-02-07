@@ -2791,7 +2791,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
                             
                             #if data.get('source') == '' and data.get('result_cloud_cover_percentage') <=50:
                             
-                            if data.get('source')=='all':
+                            if source =='all':
                                 
                                 if data.get('result_cloud_cover_percentage') <= cloud and data.get('resolution')<= low_res:
 
@@ -2818,7 +2818,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
 
                                 else:
                                     print(f'does not meet requirements cloud={data.get("result_cloud_cover_percentage")} source = {data.get("source")}')
-                            elif data.get('source')!='all':
+                            elif source !='all':
                                 try:
                                     if data.get('result_cloud_cover_percentage') <= cloud and data.get('resolution')<= low_res and data.get('source')==source:
 
