@@ -390,7 +390,7 @@ def load_file(infile):
 #It creates a centroid for each individual feature and makes a local coordinate system - this means it works over large areas as it
 #iteratively creates EAP for each polygon or point. 
 #It then takes the geometry for the EAP in that loop and buffers it, then transforms it back to wgs84. The geometry gets 
-def EAProject_Buffer(gdf,radius,capstyle=1):
+def EAProject_Buffer(gdf,radius,capstyle=1,joinstyle=1):
     bufflist=[]
 
 #     #Takes a geodataframe
@@ -455,7 +455,7 @@ def EAProject_Buffer(gdf,radius,capstyle=1):
 
         projpol = sh_transform(partial(pyproj.transform, wgs84_globe, aeqd), geom)
         
-        buffpol=projpol.buffer(radius,cap_style=capstyle)
+        buffpol=projpol.buffer(radius,cap_style=capstyle,join_style=joinstyle)
         #temp2=gpd.GeoDataFrame(pol2,geometry=[buffpol])
         output=sh_transform(partial(pyproj.transform, aeqd, wgs84_globe),buffpol)
         # bufflist.append(output)
