@@ -2908,8 +2908,8 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
         aoiintersect=gpd.overlay(gdf, gdfout, how='intersection')
         aoiintersect=aoiintersect.dissolve()
         aoiintersect=aoiintersect.reset_index(drop=True)
-        aoiintersect=aoiintersect.explode()
-        aoiintersect=aoiintersect.reset_index(drop=True)
+        #aoiintersect=aoiintersect.explode()
+        #aoiintersect=aoiintersect.reset_index(drop=True)
         aoiintersect=aoi_areakm(aoiintersect,'intersect_area')
 
         exportfiles(gdf,gdfout,"archive_coverage",name_field='',html_map='No',fileout=filepath,map_name='Archive Coverage')
