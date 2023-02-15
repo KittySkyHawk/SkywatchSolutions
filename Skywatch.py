@@ -2272,6 +2272,7 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail
 
 def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
 #gdf_og_points=gpd.GeoDataFrame(columns=['geometry'])
+    #Convert the gdf into points
     pointylist=[]
     for row in gdfbuffarea.itertuples():
         alphalist=[]
@@ -2279,6 +2280,7 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
         for item in geom.exterior.coords:
             pointylist.append(Point(item))
     print('creating new geodataframes')
+    #Turn points back into a gdf
     gs=gpd.GeoSeries(pointylist)
     gdf_og_points=gpd.GeoDataFrame(geometry=gs)
     gdf_og_points=gdf_og_points.set_crs('EPSG:4326')
@@ -2286,22 +2288,25 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
 
     #for row in gdfarea.itertuples():
         #if 
-
+    #Join the original gdf details back to the points
     joingdf=gpd.sjoin(gdf_og_points,gdfgroupfinal,how="left")
     #print(gdf_og_points.index[0])
     #print(joingdf.columns)
     #print(joingdf.index)
-
+    
+    #Create empty geodataframe
     concave_output=gpd.GeoDataFrame(columns=['geometry'])
-
-    if 'index_right' in joingdf.columns:   
+    
+    #If the spatial joinm worked
+    if 'index_right' in joingdf.columns:
+        #Get list of unique shape ids
         uniquelist=joingdf['index_right'].unique()
         print(f'the uniquelist is {uniquelist}')
         
     else:
         print('index column was not created')
         sys.exit()
-
+    #Get points for each unique shape id
     for unique in uniquelist:
         print(unique)
         pointlist=[]
@@ -2311,6 +2316,7 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
         #if subset['optimized_area',[0]]>=25.5:
         #if unique != nan and gdfbuff.at[round(unique),'optimized_area']>=25.5:
         
+        #Add the points unique to the shape to a new list
         for row in subset.itertuples():
             #print(row)
             #if getattr()
