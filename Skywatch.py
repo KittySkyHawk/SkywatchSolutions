@@ -2395,8 +2395,11 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
                         if alpha_shape.geom_type=='MultiPolygon':
                             print(f'submitting as multipolygon')
                             alphalist=[]
-                            for shape in alpha_shape:
-                                alphalist.append(Polygon(shape))
+                            multi_alpha=gpd.GeoDataFrame(geometry=[alpha_shape])
+                            multi_alpha=multi_alpha.explode()
+                            for shape in multi_alpha.itertuples():
+                                geom=getattr(shape,'geometry')
+                                alphalist.append(geom)
                         else:
                             print(f'geom type is {alpha_shape.geom_type}')
                             pass
