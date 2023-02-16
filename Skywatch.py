@@ -1413,7 +1413,7 @@ def calc_price(coords,api_key,start,end,interval,resolution,tasking=False):
         #return response.json() 
 
 
-def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2, resolution, tasking='False', resolution_low =1.5, resolution_high=8, sources="", min_coverage=70,priorities=["latest","highest_resolution","lowest_cost"],name="Created by Skywatch", outputid='154311a8-582a-11e7-b30d-7291b81e23e1', mosaic='off'):
+def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2,tagbilling, resolution, tasking='False', resolution_low =1.5, resolution_high=8, sources="", min_coverage=70,priorities=["latest","highest_resolution","lowest_cost"],name="Created by Skywatch", outputid='154311a8-582a-11e7-b30d-7291b81e23e1', mosaic='off'):
     ''' This function takes the template and applies the name and coordinates
     given to it, and then submits using the given api key.
     
@@ -1473,6 +1473,11 @@ def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2, reso
         pass
     else: 
         updated["tags"].append({"label":tag2,"value":gdf[tag2][cur_row]})
+    if not tagbilling:
+        pass
+    else:
+        updated["tags"].append({"label":"billing_group","value":tagbilling})
+    
     #updated["tags"].append({"tag2"}) # this gives a tag that is easy to search for
     #updated["tags"].append({"label":"Field","value":"{}".format(gdf['FIELD'][cur_row])})
     updated["tags"].append({"label":"Submitted By","value":"Skywatch"})
