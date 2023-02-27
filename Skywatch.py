@@ -3326,7 +3326,7 @@ def EAPGrid_new(gdf,max_area,combinegeom=True):
                 #if Totalarea < area:
             
 
-            gridoverlap=EAProject_Buffer(gdfname,5,3)
+            gridoverlap=EAProject_Buffer(gdfname,20,3)
             intersectgs=gridoverlap.intersection(cur_row_gdf['geometry'][cur_row])
             intersectgdf=gpd.GeoDataFrame(geometry=intersectgs)
             intersectgdf=intersectgdf.explode()
