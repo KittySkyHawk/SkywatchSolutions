@@ -3199,7 +3199,7 @@ def EAPGrid_new(gdf,max_area,combinegeom=True):
         #Create Centroid for projection - this assumes that the index of the item is 0 and there is only 1 AOI polygon is being added OR it is being passed a new iloc gdf.
             if cur_row_gdf.geom_type[cur_row] in ['Point','Polygon', 'MultiPolygon']:
                 pol2=gdf.centroid[cur_row]
-                print(gdf.centroid[cur_row])
+                #print(gdf.centroid[cur_row])
                 pass
             else:
                 print("not valid geometry")
@@ -3210,7 +3210,7 @@ def EAPGrid_new(gdf,max_area,combinegeom=True):
             aeqd = pyproj.Proj(proj='aeqd', ellps='WGS84', datum='WGS84', lat_0=pol2.y, lon_0=pol2.x)
 
             projpol = sh_transform(partial(pyproj.transform, wgs84_globe, aeqd), cur_row_gdf['geometry'][cur_row]) 
-            print(projpol)
+            #print(projpol)
             temp=gpd.GeoSeries(projpol)
             boundary=temp.bounds
 
@@ -3231,7 +3231,7 @@ def EAPGrid_new(gdf,max_area,combinegeom=True):
 
 
             newppp=(sh_transform(partial(pyproj.transform, aeqd, wgs84_globe), Polygon(poly_geometry)))
-            print(newppp)
+            #print(newppp)
             #poly_geometry=Polygon(newppp)
             #print(poly_geometry)
             gs=gpd.GeoSeries(newppp)
@@ -3338,7 +3338,7 @@ def EAPGrid_new(gdf,max_area,combinegeom=True):
                 outgdf=outgdf.append(combgdf)
             else:
                 outgdf=outgdf.append(intersectgdf)
-            print(type(outgdf))
+            #print(type(outgdf))
 
 
     return outgdf
