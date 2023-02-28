@@ -3181,7 +3181,7 @@ def divider(factorlist,divideby,maxwidth,maxheight):
         
     return [width,height]
 
-def EAPGrid_new(gdf,max_area,combinegeom=True):
+def EAPGrid_new(gdf,max_area,combinegeom=False,overlap=20):
     
     #Check the area of the input and if it's >600 split it.
        
@@ -3326,7 +3326,7 @@ def EAPGrid_new(gdf,max_area,combinegeom=True):
                 #if Totalarea < area:
             
 
-            gridoverlap=EAProject_Buffer(gdfname,20,3,2)
+            gridoverlap=EAProject_Buffer(gdfname,overlap,3,2)
             intersectgs=gridoverlap.intersection(cur_row_gdf['geometry'][cur_row])
             intersectgdf=gpd.GeoDataFrame(geometry=intersectgs)
             intersectgdf=intersectgdf.explode()
