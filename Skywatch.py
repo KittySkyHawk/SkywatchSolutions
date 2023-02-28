@@ -1513,7 +1513,7 @@ def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2,tagbi
         return response.json()
 
 
-def run_pipe_search(api_key,searchid, outputid, search_result, cur_row, gdf, max_cost, mosaic, tag1, tag2, name="Submitted by Pipeline Script"):
+def run_pipe_search(api_key,searchid, outputid, search_result, cur_row, gdf, max_cost, mosaic, tag1, tag2, tagbilling, name="Submitted by Pipeline Script"):
     ''' This function takes the template and applies the name and coordinates
     given to it, and then submits using the given api key.
     
@@ -1556,6 +1556,11 @@ def run_pipe_search(api_key,searchid, outputid, search_result, cur_row, gdf, max
             updated["tags"].append({"label":tag2,"value":gdf[tag2][cur_row]})
         except:
             updated["tags"].append({"label":'tag2',"value":tag2})
+            
+    if not tagbilling:
+        pass
+    else:
+        updated["tags"].append({"label":"billing_group","value":tagbilling})
         #updated["tags"].append({"label":"Location","value":'{}'.format(location)})
     #updated["tags"].append({"label":"Source","value":"{}".format(product)}) # this gives a tag that is easy to search for
     #updated["tags"].append({"label":"Field","value":"{}".format(gdf['population'][cur_row])}) #TanaAg
