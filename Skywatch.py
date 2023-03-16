@@ -2368,15 +2368,16 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
 
             else:
                 alphacover=True
-                while not alpha_shape.contains(point):
+                while not alpha_shape.contains(pointlist):
                     print('the concave hull does not contain the original data')
                     alpha=alpha/2
                     alpha_shape = alphashape.alphashape(pointlist, alpha)
                     count=count+1
-                    if count == 10:
+                    if count == 20:
                         alphacover=False
                         convex=shapely.geometry.MultiPoint(pointlist).convex_hull
                         alphalist.append(convex)
+                        print("submitted convex hull")
                         break
                     else:
                         pass
@@ -2386,26 +2387,31 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
 
                 
                 if cluster_force==True and alphacover==True:
-                    while alpha_shape.geom_type=='MultiPolygon' and count <= 6:
+                    while alpha_shape.geom_type=='MultiPolygon' and count <= 7:
                         print(type(alpha_shape.geom_type))
                         alpha=alpha/2
                         alpha_shape = alphashape.alphashape(pointlist, alpha)
                         count=count+1
                     else:
                         if alpha_shape.geom_type=='MultiPolygon':
-                            print(f'submitting as multipolygon')
+                            print(f'submitting as convex')
+                            convex=shapely.geometry.MultiPoint(pointlist).convex_hull
+                            alphalist.append(convex)
+                            print("submitted convex hull")
                             
-                            multi_alpha=gpd.GeoDataFrame(geometry=[alpha_shape])
-                            multi_alpha=multi_alpha.explode()
-                            for shape in multi_alpha.itertuples():
-                                geom=getattr(shape,'geometry')
-                                alphalist.append(geom)
+                            
+                            
+#                             multi_alpha=gpd.GeoDataFrame(geometry=[alpha_shape])
+#                             multi_alpha=multi_alpha.explode()
+#                             for shape in multi_alpha.itertuples():
+#                                 geom=getattr(shape,'geometry')
+#                                 alphalist.append(geom)
                         else:
                             print(f'geom type is {alpha_shape.geom_type}')
                             pass
                         
                 elif cluster_force==False and alphacover ==True:
-                    while alpha_shape.geom_type=='MultiPolygon' and count <= 3:
+                    while alpha_shape.geom_type=='MultiPolygon' and count <= 4:
                         print(type(alpha_shape.geom_type))
                         alpha=alpha/2
                         alpha_shape = alphashape.alphashape(pointlist, alpha)
