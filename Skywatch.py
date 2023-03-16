@@ -2375,7 +2375,7 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
                     count=count+1
                     if count == 20:
                         alphacover=False
-                        convex=shapely.geometry.MultiPoint(pointlist).convex_hull
+                        convex=shapely.geometry.MultiPoint(point).convex_hull
                         alphalist.append(convex)
                         print("submitted convex hull")
                         break
@@ -2395,7 +2395,7 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
                     else:
                         if alpha_shape.geom_type=='MultiPolygon':
                             print(f'submitting as convex')
-                            convex=shapely.geometry.MultiPoint(pointlist).convex_hull
+                            convex=shapely.geometry.MultiPoint(point).convex_hull
                             alphalist.append(convex)
                             print("submitted convex hull")
                             
