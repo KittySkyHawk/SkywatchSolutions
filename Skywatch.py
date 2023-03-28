@@ -2078,17 +2078,17 @@ def corridor_quote(gdf, quote_type,resolution, buffer_type,buffer_amount,):
             print(f'buffer amount was set to 50 as this is the minimum for this quote')
                      
     elif quote_type == "Tasking" and resolution == "high":
-        if buffer_type == 'radius'and buffer_amount >=250:
+        if buffer_type == 'radius'and buffer_amount >=500:
             pass
         else:
-            buffer_amount=250
+            buffer_amount=500
             print(f'buffer amount was set to {buffer_amount} as this is the minimum for this quote')
     elif quote_type == "Tasking" and resolution == "very_high":
         if buffer_type == 'radius'and buffer_amount >=1000:
             pass
         else:
             buffer_amount=1000
-            print(f'buffer amount was set to 250 as this is the minimum for this quote')
+            #print(f'buffer amount was set to 250 as this is the minimum for this quote')
     else:
         print('quote type not valid')
         exit()
