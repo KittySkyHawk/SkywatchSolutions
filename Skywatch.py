@@ -2723,7 +2723,7 @@ def cleanup(gdfbuff,data_type):
             
     return gdfbuffarea,totalbuffarea
 
-def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,coverage_resolution,percent_coverage,filepath,alpha=12,source='all'):
+def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,coverage_resolution,percent_coverage,filepath,alpha=12,source='all',clean=True):
     searchlist=[]
     faillist=[]
     productidlist=[]
@@ -2752,7 +2752,11 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
             concave_gdf=deepcopy(gdf)
 
     else:
-        gdfclean=cleangeometry(deepcopy(gdf))
+        if clean==True:
+            
+            gdfclean=cleangeometry(deepcopy(gdf))
+        else:
+            gdfclean=deepcopy(gdf)
         pointylist=[]
         for row in gdfclean.itertuples():
             geom=getattr(row,'geometry')
@@ -2766,9 +2770,11 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
     
         if convexgdf['convex_area'][0] >=100000:
             concave_gdf=deepcopy(gdfclean)
+            print('convex hull was too big, using cleaned gdf')
         else:
 
             concave_gdf=deepcopy(convexgdf)
+            print('running on original data')
 
     
     #concave_gdf=deepcopy(gdf)
