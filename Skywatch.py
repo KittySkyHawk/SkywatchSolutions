@@ -2757,6 +2757,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
             gdfclean=cleangeometry(deepcopy(gdf))
         else:
             gdfclean=deepcopy(gdf)
+            print('will not clean data')
         pointylist=[]
         for row in gdfclean.itertuples():
             geom=getattr(row,'geometry')
@@ -2774,6 +2775,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
         else:
 
             concave_gdf=deepcopy(convexgdf)
+            
             print('running on original data')
 
     
