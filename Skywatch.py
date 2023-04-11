@@ -1407,7 +1407,7 @@ def calc_price(coords,api_key,start,end,interval,resolution,tasking=False):
     response = requests.request("POST", url, headers=headers, data = payload)
     #if response.status_code == 200:
     print(response)
-    print(response.json)
+    print(response.json())
     return response.json()["data"]["max_cost"]
    # else:
         #return response.json() 
