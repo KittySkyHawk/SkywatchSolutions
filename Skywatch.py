@@ -1941,7 +1941,7 @@ def importfiles(file=''):
         print(message)
         return message
 
-def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='No',fileout='',map_name="Archive"):
+def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='No',fileout='',map_name="Archive",ind_geojson=10):
     if fileout=='':
         tkinter.Tk().withdraw() # prevents an empty tkinter window from appearing
         fileout = filedialog.askdirectory()
@@ -1955,7 +1955,7 @@ def exportfiles(gdf,gdfclean,filename,name_field = '',html_map='No',fileout='',m
     #If you need to output to multiple geojsons, then use this function. 
     #If it's a single feature then it doesn't matter which is used.
 
-    if len(gdfclean)<10 and len(gdfclean)!= 1:
+    if len(gdfclean)<ind_geojson and len(gdfclean)!= 1:
     #No Inputs
         #filename=filename.rsplit('.',1)[0]
         filepath=f"{fileout}/{map_name}_{filename}"
