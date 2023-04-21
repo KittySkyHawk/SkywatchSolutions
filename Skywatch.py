@@ -2108,11 +2108,14 @@ def corridor_quote(gdf, quote_type,resolution, buffer_type,buffer_amount,):
 
     return gdfbuff
 
-def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail,filepath=''):
+def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail,filepath='',merge=True):
     dfquote=pd.DataFrame(columns=['State','Number of Features','Total Area','Average Area per feature','Quote Type'])
-    #gdfclean=EAProject_Buffer(gdfclean,10,capstyle=1)
-    gdfclean=gdfclean.dissolve()
-    gdfclean=gdfclean.explode()
+    gdfclean=EAProject_Buffer(gdfclean,10,capstyle=1)
+    if merge==True:
+        gdfclean=gdfclean.dissolve()
+        gdfclean=gdfclean.explode()
+    else: 
+        pass
     gdfclean=gdfclean.reset_index(drop=True)
     gdfclean=aoi_areakm(gdfclean,'optimized_area') 
     
@@ -2205,8 +2208,12 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail
         print(f'minimum area is {min(gdfbuff["optimized_area"].values)}')
         if min(gdfbuff["optimized_area"].values) < buffer_interval:
             gdfbuff=EAProject_BuffersSubset(deepcopy(gdfbuff),radius,buffer_interval,minarea)
-            gdfbuff=gdfbuff.dissolve()
-            gdfbuff=gdfbuff.explode()
+            if merge ==True:
+                gdfbuff=gdfbuff.dissolve()
+                gdfbuff=gdfbuff.explode()
+            else:
+                pass
+                
             gdfbuff=gdfbuff.reset_index(drop=True)
             if quote_type != 'Corridors':
                 
