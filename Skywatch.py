@@ -2132,7 +2132,7 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail
     if quote_type == "Tasking":
         radius=200  #radius to buffer in iteration (in m)
         print(f'Tasking')
-        if minarea <25000000:
+        if minarea <=25000000:
             minarea=25
             if detail=='low':
                 buffer_interval=10
