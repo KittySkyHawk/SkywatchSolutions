@@ -2384,7 +2384,8 @@ def concave_optimize(gdfbuffarea,gdfgroupfinal,cluster_force=True):
 
             else:
                 alphacover=True
-                while not alpha_shape.contains(pointlist):
+                multipoints=shapely.MultiPoint(pointlist)
+                while not alpha_shape.contains(multipoints):
                     print('the concave hull does not contain the original data')
                     alpha=alpha/2
                     alpha_shape = alphashape.alphashape(pointlist, alpha)
