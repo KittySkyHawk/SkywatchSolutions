@@ -2502,6 +2502,32 @@ def optimize_area_group(gdfclean,quote_type,resolution, minarea,detail,filepath=
             buffer_interval=4
             start_interval=buffer_interval
             print(f'Tasking buff int is {buffer_interval}')
+    elif quote_type == "Tasking_LonePoly":
+        if detail == 'high':
+            radius=100  #radius to buffer in iteration (in m)
+            #print(f'Tasking')
+            minarea=8
+            #radius=300  #radius to buffer in iteration (in m)
+            buffer_interval=2
+            start_interval=buffer_interval
+            print(f'Tasking buff int is {buffer_interval}')
+        elif detail == 'medium':
+            radius=500 #radius to buffer in iteration (in m)
+            #print(f'Tasking')
+            minarea=40
+            #radius=300  #radius to buffer in iteration (in m)
+            buffer_interval=4
+            start_interval=buffer_interval
+            print(f'Tasking buff int is {buffer_interval}')
+        elif detail=='low':
+            radius=1000  #radius to buffer in iteration (in m)
+            #print(f'Tasking')
+            minarea=80
+            #radius=300  #radius to buffer in iteration (in m)
+            buffer_interval=8
+            start_interval=buffer_interval
+            print(f'Tasking buff int is {buffer_interval}')
+    
     
     else:    
     #elif quote_type == "Archive High Res" or quote_type == "Archive Med Res":
