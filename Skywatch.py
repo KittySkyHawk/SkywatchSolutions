@@ -2134,25 +2134,34 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail
         print(f'Tasking')
         if minarea <25000000:
             minarea=25
-            radius=200  #radius to buffer in iteration (in m)
-            buffer_interval=1
-            start_interval=buffer_interval
-            print(f'Tasking buff int is {buffer_interval}')
-        else:
-            minarea=minarea/1000000
-            #buffer_interval=minarea/
-            if minarea%5==0:
+            if detail=='low':
+                buffer_interval=10
+                radius=200
+            elif detail=='medium':
                 buffer_interval=5
-            elif minarea%3==0:
-                buffer_interval=3
-            elif minarea%2==0:
-                buffer_interval=2
-            elif minarea%1==0:
+                radius=100
+            elif detail=='high':
                 buffer_interval=1
-            else:
-                print('area must be a whole number')
-                exit()
+                radius=50
             start_interval=buffer_interval
+            print(buffer_interval)
+        elif minarea >25000000:
+            minarea=minarea/1000000
+            if detail=='low':
+                buffer_interval=minarea/2.5
+                radius=500
+            elif detail=='medium':
+                buffer_interval=minarea/5
+                radius=200
+            elif detail=='high':
+                buffer_interval=1
+                radius=50
+            start_interval=buffer_interval
+            print(buffer_interval)
+            start_interval=buffer_interval
+        else: 
+            print('minarea was not accepted')
+            exit()
         #minarea=25# minimum area to hit (in km2)
         
     #else:    
