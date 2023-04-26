@@ -2135,8 +2135,8 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail
         if minarea <=25000000:
             minarea=25
             if detail=='low':
-                buffer_interval=10
-                radius=200
+                buffer_interval=5
+                radius=250
             elif detail=='medium':
                 buffer_interval=5
                 radius=100
@@ -2148,7 +2148,7 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail
         elif minarea >25000000:
             minarea=minarea/1000000
             if detail=='low':
-                buffer_interval=minarea/2.5
+                buffer_interval=minarea/5
                 radius=500
             elif detail=='medium':
                 buffer_interval=minarea/5
@@ -2174,7 +2174,7 @@ def optimize_area_report(gdfclean,quote_type,data_type,resolution,minarea,detail
             radius=25  #radius to buffer in iteration (in m)
             if detail=='low':
                 buffer_interval=1
-                radius=75
+                radius=100
             elif detail=='medium':
                 buffer_interval=0.5
                 radius=50
