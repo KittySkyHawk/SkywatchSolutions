@@ -2047,7 +2047,7 @@ def create_map(orig_gdf,clean_gdf,popup_column=''):
     return m
 
 
-def corridor_quote(gdf, quote_type,resolution, buffer_type,buffer_amount,):
+def corridor_quote(gdf, quote_type,resolution, buffer_type,buffer_amount,custom_buffer=False):
     #Create a list of unique geometry types
     uniquelist=gdf['geometry'].geom_type.unique()
     
@@ -2063,32 +2063,34 @@ def corridor_quote(gdf, quote_type,resolution, buffer_type,buffer_amount,):
     
     #Series of ifs to define the buffer amount based on resolution
     
-    if quote_type == "Archive" and resolution == "medium":
-        if buffer_type == 'radius'and buffer_amount >=50:
+    if quote_type == "Archive" and resolution == "medium" and custom_buffer == False:
+        if buffer_type == 'radius'and buffer_amount >=250:
             pass
         else:
-            buffer_amount=50
-            print(f'buffer amount was set to 50 as this is the minimum for this quote')
+            buffer_amount=250
+            print(f'buffer amount was set to 250 as this is the minimum for this quote')
         
-    elif quote_type == "Archive" and (resolution == "high" or resolution == "very_high"):
-        if buffer_type == 'radius'and buffer_amount >=50:
+    elif quote_type == "Archive" and (resolution == "high" or resolution == "very_high") and custom_buffer==False:
+        if buffer_type == 'radius'and buffer_amount >=250:
             pass
         else:
-            buffer_amount=150
+            buffer_amount=250
             print(f'buffer amount was set to 50 as this is the minimum for this quote')
                      
-    elif quote_type == "Tasking" and resolution == "high":
+    elif quote_type == "Tasking" and resolution == "high" and custom_buffer == False:
         if buffer_type == 'radius'and buffer_amount >=500:
             pass
         else:
             buffer_amount=500
             print(f'buffer amount was set to {buffer_amount} as this is the minimum for this quote')
-    elif quote_type == "Tasking" and resolution == "very_high":
+    elif quote_type == "Tasking" and resolution == "very_high" and custom_buffer == False:
         if buffer_type == 'radius'and buffer_amount >=1000:
             pass
         else:
             buffer_amount=1000
             #print(f'buffer amount was set to 250 as this is the minimum for this quote')
+    elif custom_buffer == True:
+        buffer_amount=buffer_amount
     else:
         print('quote type not valid')
         exit()
