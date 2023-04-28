@@ -3524,7 +3524,7 @@ def import_files_errors(file):
 
         filepath=file.rsplit('/',1)[0]
         filename=file.rsplit('/',1)[-1]
-        gdf=sw.load_file(file)
+        gdf=load_file(file)
         coordsys=gdf.crs
         gdf.set_crs('EPSG:4326')
         print(f"File loaded and projection set to WGS1984.")
