@@ -3507,3 +3507,29 @@ def combine_geom(intersectgdf,max_area):
     
                                 
     return newgdf
+
+def import_files_errors(file)
+    out=sw.importfiles(file)
+    print(f'len of out is {len(out)}')
+    if len(out)!=58:
+
+        gdf=out[0]
+        file=out[1]
+        filepath=file.rsplit('/',1)[0]
+        filename=file.rsplit('/',1)[-1]
+        print(len(out))
+        print('double check and see if this worked by loading in the map')
+
+    else:
+
+        filepath=file.rsplit('/',1)[0]
+        filename=file.rsplit('/',1)[-1]
+        gdf=sw.load_file(file)
+        coordsys=gdf.crs
+        gdf.set_crs('EPSG:4326')
+        print(f"File loaded and projection set to WGS1984.")
+        print(f"The data says it's projection was {coordsys}.")
+        print(f"Check the data and confirm that the coordinates decimal degrees")
+        print(gdf.iloc[[0]].geometry[0])
+    return gdf, filepath, filename
+
