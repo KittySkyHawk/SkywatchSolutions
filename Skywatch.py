@@ -3508,7 +3508,7 @@ def combine_geom(intersectgdf,max_area):
                                 
     return newgdf
 
-def import_files_errors(file)
+def import_files_errors(file):
     out=sw.importfiles(file)
     print(f'len of out is {len(out)}')
     if len(out)!=58:
