@@ -3533,7 +3533,7 @@ def import_files_errors(file):
         print(gdf.iloc[[0]].geometry[0])
     return gdf, filepath, filename
 
-def combine_geom_new(grid,minarea):
+def combine_geom_new(grid,minarea,combine_overlap):
     
     for row in grid.itertuples():
         print(f'length of grid is {len(grid)}')
@@ -3579,7 +3579,7 @@ def combine_geom_new(grid,minarea):
                             totalarea=polygon.area+polygon2.area
                             overlap=(intersection/totalarea)*100
                             print(overlap)
-                            if overlap >0.4:
+                            if overlap >combine_overlap:
                                 print(f'lets try to merge! 1. Overlap is {overlap}')
                                 polygons=[polygon,polygon2]
                                 boundary = gpd.GeoSeries(shapely.ops.unary_union(polygons))
@@ -3602,7 +3602,7 @@ def combine_geom_new(grid,minarea):
                                 geoframe=range(len(grid))
                                 merged='Yes'
                                 count=0
-                                break
+                                
                             else:
 
                                 pass
@@ -3614,6 +3614,8 @@ def combine_geom_new(grid,minarea):
         else:        
             print('nothing with that index')
             pass
+        
+    return 
             
                 #gdfout=gdfout.append(grid
 
