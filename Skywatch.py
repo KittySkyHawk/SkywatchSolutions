@@ -3615,7 +3615,7 @@ def combine_geom_new(grid,minarea,combine_overlap):
             print('nothing with that index')
             pass
         
-    return 
+    return grid
             
                 #gdfout=gdfout.append(grid
 
