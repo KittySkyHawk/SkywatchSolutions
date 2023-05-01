@@ -3534,6 +3534,7 @@ def import_files_errors(file):
     return gdf, filepath, filename
 
 def combine_geom_new(grid,minarea):
+    grid=grid.reset_index(drop=True)
     for row in grid.itertuples():
         print(f'length of grid is {len(grid)}')
     
