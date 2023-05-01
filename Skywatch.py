@@ -3533,3 +3533,86 @@ def import_files_errors(file):
         print(gdf.iloc[[0]].geometry[0])
     return gdf, filepath, filename
 
+def combine_geom_new(grid,minarea):
+    for row in grid.itertuples():
+        print(f'length of grid is {len(grid)}')
+    
+        indexy=getattr(row,'Index')
+        
+        #gdf_index1=getattr(row,"Index")
+        ### CONFIRM THAT INDEX IS IN THE DATAFRAME
+        if indexy in grid.index:
+            maxindex=max(grid.index)
+            ### CREATE A DATAFRAME FROM CURRENT ROW
+            cur_row_gdf=grid.loc[[indexy]]
+            ### CALCULATE AREA OF CURRENT ROW
+            cur_row_gdf=sw.aoi_areakm(cur_row_gdf,'area')
+
+            ### IF THE CURRENT ROW AREA AT INDEX IS < THE MINAREA PROCEED
+            if cur_row_gdf['area'][indexy]<=minarea:
+                print('The area is too small')                   
+                print(f'area is {cur_row_gdf["area"][indexy]}')
+                ### GET THE POLYGON
+                polygon=cur_row_gdf['geometry'][indexy]
+                ### SORT THE GRID GEODATAFRAME BY AREA - This allows to combine the smallest areas first
+                grid_sort=deepcopy(grid).sort_values('area', axis=0, ascending=True)
+                
+                ### ITERATE THROUGH THE SORTED LIST AND FIND OVERLAPPING RESULTS
+                for row2 in grid_sort.itertuples():
+
+                    gdf_index2=getattr(row2,"Index")
+                    if gdf_index2 not in grid_sort.index:
+                        print('nothing with that index 2')
+                        
+                        pass
+                    
+                    else:
+                        polarea2=getattr(row2,'area')
+                        polygon2=getattr(row2,'geometry')
+
+                        #print(f'second area is {polarea2}')
+                        item=polygon2.intersects(polygon) 
+                            
+                        if polygon != polygon2 and item==True:
+                            intersection = polygon.intersection(polygon2).area
+                            totalarea=polygon.area+polygon2.area
+                            overlap=(intersection/totalarea)*100
+                            print(overlap)
+                            if overlap >0.4:
+                                print(f'lets try to merge! 1. Overlap is {overlap}')
+                                polygons=[polygon,polygon2]
+                                boundary = gpd.GeoSeries(shapely.ops.unary_union(polygons))
+                                maxindex=maxindex+1
+                                boundary2=gpd.GeoDataFrame(columns=['geometry'],geometry=boundary)
+
+                                boundary2=boundary2.set_index([[maxindex]])
+                                #print(boundary2)
+                                #print(maxindex)
+                                merge_area=sw.aoi_areakm(boundary2,'area')
+                                merge_area=merge_area.set_index([[maxindex]])
+
+                                grid=grid.drop(indexy)
+                                grid=grid.drop(gdf_index2)
+                                grid=grid.append(merge_area)
+                                maxindex=max(grid.index)
+                                #grid=grid.reset_index(drop=True)
+
+                                print('sum is less than 50')
+                                geoframe=range(len(grid))
+                                merged='Yes'
+                                count=0
+                                break
+                            else:
+
+                                pass
+    
+            else:
+                print('area big enough')
+                count=count+1#     pass
+
+        else:        
+            print('nothing with that index')
+            pass
+            
+                #gdfout=gdfout.append(grid
+
