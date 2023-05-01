@@ -3547,7 +3547,7 @@ def combine_geom_new(grid,minarea,combine_overlap):
             ### CREATE A DATAFRAME FROM CURRENT ROW
             cur_row_gdf=grid.loc[[indexy]]
             ### CALCULATE AREA OF CURRENT ROW
-            cur_row_gdf=sw.aoi_areakm(cur_row_gdf,'area')
+            cur_row_gdf=aoi_areakm(cur_row_gdf,'area')
 
             ### IF THE CURRENT ROW AREA AT INDEX IS < THE MINAREA PROCEED
             if cur_row_gdf['area'][indexy]<=minarea:
@@ -3589,7 +3589,7 @@ def combine_geom_new(grid,minarea,combine_overlap):
                                 boundary2=boundary2.set_index([[maxindex]])
                                 #print(boundary2)
                                 #print(maxindex)
-                                merge_area=sw.aoi_areakm(boundary2,'area')
+                                merge_area=aoi_areakm(boundary2,'area')
                                 merge_area=merge_area.set_index([[maxindex]])
 
                                 grid=grid.drop(indexy)
