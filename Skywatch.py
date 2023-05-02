@@ -1511,7 +1511,13 @@ def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2,tagbi
     
     response = requests.request("POST", url, headers=headers, data = payload)
     if response.status_code == 201:
-        return response.json()["data"]["id"]
+        try:
+            print(response.status_code)
+            return response.json()["data"]["id"]
+        except:
+            print('not successful')
+            print(response)
+            print(response.json())
     else:
         return response.json()
 
