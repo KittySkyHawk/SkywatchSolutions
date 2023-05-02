@@ -3258,14 +3258,17 @@ def EAPGrid_new(gdf,max_area,combinegeom=False,overlap=20):
     outgdf=gpd.GeoDataFrame()
     for cur_row in range(len(gdf)):
         cur_row_gdf=gdf.iloc[[cur_row]]
+        print('cur_row_gdf created')
         try: 
+            print('trying to calc area')
             cur_row_area=aoi_areakm(cur_row_gdf,'area')
+            print('resetting index)'
             cur_row_area=cur_row_area.reset_index(drop=True)
         except Exception as e:
             print(f'could not calculate current rows ({cur_row}) area')
             print(e)
             exit()
-
+        print('checking area against max_area')
         if cur_row_area['area'][0] > max_area:
             print(f'cur row area is {cur_row_area["area"][0]},{max_area}')
         #Create Centroid for projection - this assumes that the index of the item is 0 and there is only 1 AOI polygon is being added OR it is being passed a new iloc gdf.
