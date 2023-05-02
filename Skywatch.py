@@ -3262,7 +3262,7 @@ def EAPGrid_new(gdf,max_area,combinegeom=False,overlap=20):
         try: 
             print('trying to calc area')
             cur_row_area=aoi_areakm(cur_row_gdf,'area')
-            print('resetting index)'
+            print('resetting index')
             cur_row_area=cur_row_area.reset_index(drop=True)
         except Exception as e:
             print(f'could not calculate current rows ({cur_row}) area')
