@@ -1487,7 +1487,8 @@ def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2,tagbi
     updated["start_date"] = start
     updated["end_date"] = end
     updated["name"]=name
-    if sources:
+
+    if sources!="":
         updated["sources"]["include"]=[sources]
     else:
         updated.pop('sources')
