@@ -1515,6 +1515,9 @@ def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2,tagbi
     }
     
     response = requests.request("POST", url, headers=headers, data = payload)
+    while response.status_code==429:
+        time.sleep(1)
+        response = requests.request("POST", url, headers=headers, data = payload)
     if response.status_code == 201:
         try:
             print(response.status_code)
