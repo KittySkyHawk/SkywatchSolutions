@@ -3247,7 +3247,7 @@ def divider(factorlist,divideby,maxwidth,maxheight):
         
     return [width,height]
 
-def EAPGrid_new(gdf,max_area,combinegeom=False,overlap=20):
+def EAPGrid_new(gdf,grid_area,max_area,combinegeom=False,overlap=20):
     
     #Check the area of the input and if it's >600 split it.
        
@@ -3322,7 +3322,7 @@ def EAPGrid_new(gdf,max_area,combinegeom=False,overlap=20):
 
             print(f'bounding area = {bbarea}')
 
-            divideby=int(math.ceil(bbarea/max_area)) 
+            divideby=int(math.ceil(bbarea/grid_area)) 
 
             print(f'divideby is {divideby}')
 
