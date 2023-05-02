@@ -1481,7 +1481,9 @@ def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2,tagbi
     #updated["tags"].append({"tag2"}) # this gives a tag that is easy to search for
     #updated["tags"].append({"label":"Field","value":"{}".format(gdf['FIELD'][cur_row])})
     updated["tags"].append({"label":"Submitted By","value":"Skywatch"})
+    print('tags succeeded')
     updated["max_cost"] = calc_price(coords,api_key,start,end,interval,resolution,tasking)
+    print('cost succeeded')
     updated["start_date"] = start
     updated["end_date"] = end
     updated["name"]=name
@@ -1493,13 +1495,14 @@ def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2,tagbi
     updated["resolution_high"]=resolution_high
     updated["min_aoi_coverage_percentage"]=min_coverage
     updated["result_delivery"]["priorities"]=priorities
+    print('priorities succeeded')
     updated["output"]["id"]= outputid
     if mosaic == 'off':
         updated["output"]["mosaic"] = 'off'
     elif mosaic == 'on':
         updated["output"]["mosaic"]= { "type": "stitched" }
     
-
+    print('submitting order')
     payload = json.dumps(updated)
     headers = {
       'x-api-key': api_key,
