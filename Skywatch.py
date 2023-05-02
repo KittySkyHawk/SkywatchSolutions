@@ -3258,7 +3258,9 @@ def EAPGrid_new(gdf,max_area,combinegeom=False,overlap=20):
     outgdf=gpd.GeoDataFrame()
     for cur_row in range(len(gdf)):
         cur_row_gdf=gdf.iloc[[cur_row]]
+        print(cur_row_gdf)
         cur_row_area=aoi_areakm(cur_row_gdf,'area')
+        print(f'current row area is {cur_row_area}')
         cur_row_area=cur_row_area.reset_index(drop=True)
         if cur_row_area['area'][0] > max_area:
             print(f'cur row area is {cur_row_area["area"][0]},{max_area}')
