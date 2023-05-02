@@ -1404,7 +1404,11 @@ def calc_price(coords,api_key,start,end,interval,resolution,tasking=False):
       'x-api-key': api_key,
       'Content-Type': 'application/json'
     }
+   
     response = requests.request("POST", url, headers=headers, data = payload)
+    while response.status_code==429:
+        response = requests.request("POST", url, headers=headers, data = payload)
+        
     #if response.status_code == 200:
     print(response)
     print(response.json())
@@ -1489,7 +1493,7 @@ def run_pipe_task(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2,tagbi
     updated["name"]=name
 
     if sources!="":
-        updated["sources"]["include"]=[sources]
+        updated["sources"]["include"]=sources
     else:
         updated.pop('sources')
     updated["resolution_low"]=resolution_low
