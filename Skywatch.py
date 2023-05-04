@@ -3646,7 +3646,7 @@ def combine_geom_new(grid,minarea,combine_overlap):
             
                 #gdfout=gdfout.append(grid
 
-def interval_calculator(interval,date_range):        
+def interval_calculator(interval_set,date_range):        
     diff_days=(date_range[1]-date_range[0]).days
     diff_days=diff_days+1
     og_days=diff_days
