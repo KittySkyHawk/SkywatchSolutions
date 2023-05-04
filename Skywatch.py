@@ -3646,3 +3646,83 @@ def combine_geom_new(grid,minarea,combine_overlap):
             
                 #gdfout=gdfout.append(grid
 
+def interval_calculator(interval)        
+    diff_days=(date_range[1]-date_range[0]).days
+    diff_days=diff_days+1
+    og_days=diff_days
+    print(f'total number of days {diff_days}')
+    og_interval=interval_set
+
+    if 'x' in interval_set:
+        times=int(interval_set.replace('x',''))
+        split=1
+        while split != 0:
+            split=diff_days%times
+            #print(f'split is {split}')
+            if split != 0:
+                diff_days=diff_days+1
+
+        else:
+            print(f'total length increased to {diff_days}')
+            print(f'the original length increased by {diff_days-og_days} so the final interval will be {diff_days-og_days} short')
+            interval=diff_days/times
+            interval_length=f'{interval}d'
+            print(f'interval length is {interval_length}')
+
+    elif 'd' in interval_set:
+        print('d in interval')
+        interval_set = (interval_set.split('('))[-1]
+        #print(interval_set)
+        interval_set = (interval_set.split('d'))[0]
+        interval_length = int(interval_set)
+        print(interval_set)
+        times = math.ceil(diff_days/interval_length)
+        interval=f'{interval_length}d'
+
+        print(f'times is {times}')
+        split=1
+        #print(f'split is {split}')
+
+
+    elif interval_set=='single capture':
+        interval = '999d'
+        interval_length=999
+        times=1
+
+
+    #interval_ranges = date_range[1]+(interval_length).days
+
+    start_dates=[date_range[0].strftime('%Y-%m-%d')]
+    end_dates=[]
+    interval_lengths=[]
+    start_date=date_range[0]
+    date_ranged=[]
+    for i in (range(times)):
+        end_date=start_date+datetime.timedelta(days=interval_length-1)
+        if end_date > date_range[1]:
+            end_date=date_range[1]
+        new_interval= (end_date-start_date).days+1
+        end_dates.append(end_date.strftime('%Y-%m-%d'))
+        start_date=start_date+datetime.timedelta(days=interval_length)
+        if start_date > date_range[1]:
+            pass
+        else:
+
+            start_dates.append(start_date.strftime('%Y-%m-%d'))
+
+        interval_lengths.append(new_interval)
+
+    #end_dates.append(date_range[1].strftime('%Y-%m-%d'))
+    #print(start_dates)
+    for item in range(len(start_dates)):
+        date_ranged.append([start_dates[item],end_dates[item]])
+
+    print(date_ranged)
+    print(interval_lengths)
+    print(f'number of intervals is {len(interval_lengths)}')
+
+    interval_set = og_interval
+    start_date=date_range[0].strftime('%Y-%m-%d')
+    end_date=date_range[1].strftime('%Y-%m-%d')
+    
+    return diff_days, interval, interval_lengths, start_date, end_date
