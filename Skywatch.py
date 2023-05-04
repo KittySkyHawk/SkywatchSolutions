@@ -3666,9 +3666,9 @@ def interval_calculator(interval_set,date_range):
         else:
             print(f'total length increased to {diff_days}')
             print(f'the original length increased by {diff_days-og_days} so the final interval will be {diff_days-og_days} short')
-            interval=diff_days/times
-            interval_length=f'{interval}d'
-            print(f'interval length is {interval_length}')
+            interval_length=diff_days/times
+            interval=f'{interval_length}d'
+            print(f'interval length is {interval}')
 
     elif 'd' in interval_set:
         print('d in interval')
