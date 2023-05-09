@@ -2620,7 +2620,7 @@ def create_html_report(gdf,gdfbuff,quote_type,resolution,data_type,filepath,file
     if resolution == "medium":
         printres="Medium Resolution"
     if resolution=="low"
-        printres="Low Resolution
+        printres="Low Resolution"
     
     if 'Archive' in quote_type:
         page_title_text=f'Archive Quote for {filename}'
