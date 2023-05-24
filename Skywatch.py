@@ -2517,9 +2517,17 @@ def optimize_area_group(gdfclean,quote_type,resolution, minarea,detail,filepath=
         elif detail=='low':
             radius=500  #radius to buffer in iteration (in m)
             #print(f'Tasking')
-            minarea=40
+            minarea=60
             #radius=300  #radius to buffer in iteration (in m)
             buffer_interval=4
+            start_interval=buffer_interval
+            print(f'Tasking buff int is {buffer_interval}')
+        elif detail=='very_low':
+            radius=2  #radius to buffer in iteration (in m)
+            #print(f'Tasking')
+            minarea=144
+            #radius=300  #radius to buffer in iteration (in m)
+            buffer_interval=12
             start_interval=buffer_interval
             print(f'Tasking buff int is {buffer_interval}')
     elif quote_type == "Tasking_LonePoly":
@@ -2545,6 +2553,14 @@ def optimize_area_group(gdfclean,quote_type,resolution, minarea,detail,filepath=
             minarea=80
             #radius=300  #radius to buffer in iteration (in m)
             buffer_interval=8
+            start_interval=buffer_interval
+            print(f'Tasking buff int is {buffer_interval}')
+        elif detail=='very_low':
+            radius=1000  #radius to buffer in iteration (in m)
+            #print(f'Tasking')
+            minarea=200     
+            #radius=300  #radius to buffer in iteration (in m)
+            buffer_interval=20
             start_interval=buffer_interval
             print(f'Tasking buff int is {buffer_interval}')
     
