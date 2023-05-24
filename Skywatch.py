@@ -2515,7 +2515,7 @@ def optimize_area_group(gdfclean,quote_type,resolution, minarea,detail,filepath=
             start_interval=buffer_interval
             print(f'Tasking buff int is {buffer_interval}')
         elif detail=='low':
-            radius=500  #radius to buffer in iteration (in m)
+            radius=1000  #radius to buffer in iteration (in m)
             #print(f'Tasking')
             minarea=60
             #radius=300  #radius to buffer in iteration (in m)
@@ -2523,7 +2523,7 @@ def optimize_area_group(gdfclean,quote_type,resolution, minarea,detail,filepath=
             start_interval=buffer_interval
             print(f'Tasking buff int is {buffer_interval}')
         elif detail=='very_low':
-            radius=2  #radius to buffer in iteration (in m)
+            radius=5000  #radius to buffer in iteration (in m)
             #print(f'Tasking')
             minarea=144
             #radius=300  #radius to buffer in iteration (in m)
@@ -2556,7 +2556,7 @@ def optimize_area_group(gdfclean,quote_type,resolution, minarea,detail,filepath=
             start_interval=buffer_interval
             print(f'Tasking buff int is {buffer_interval}')
         elif detail=='very_low':
-            radius=1000  #radius to buffer in iteration (in m)
+            radius=5000  #radius to buffer in iteration (in m)
             #print(f'Tasking')
             minarea=200     
             #radius=300  #radius to buffer in iteration (in m)
