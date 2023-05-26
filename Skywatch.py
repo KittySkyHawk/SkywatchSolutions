@@ -1144,11 +1144,11 @@ def create_search(location,start_date,end_date,api_key,resolution,coverage):
     # POST the search
     post_response = requests.request("POST", url, headers=headers, data = json.dumps(template))
 
-    while post_response.status_code == "429": # watch out for clobbering the API
+    while post_response.status_code == 429: # watch out for clobbering the API
         print("Process being throttled - scale back!") # tell the user
         time.sleep(2)
         post_response = requests.request("POST", url, headers=headers, data = json.dumps(template))
-    if post_response.status_code == "400":
+    if post_response.status_code == 400:
         print(response.json()) # This shouldn't happen, but it'll tell you if it gets rejected. Should probably handle 500s too.
     
     body = post_response.json()
@@ -1175,7 +1175,7 @@ def get_search_results(api_key,searchid):
     
 
     try:
-        while search_results["status"] == [{'message': 'Search is still running. Check back later for results'}] or search_results.status_code == "429": # if results aren't ready or getting throttled
+        while search_results["status"] == [{'message': 'Search is still running. Check back later for results'}] or search_results.status_code == 429: # if results aren't ready or getting throttled
             
             search_results = requests.request("GET", get_url, headers=headers, data = get_payload).json()
             time.sleep(2)
@@ -1219,7 +1219,7 @@ def get_search_results(api_key,searchid):
                         pass
 
                 # try:
-                #     while search_results["status"] == [{'message': 'Search is still running. Check back later for results'}] or search_results.status_code == "429": # if results aren't ready or getting throttled
+                #     while search_results["status"] == [{'message': 'Search is still running. Check back later for results'}] or search_results.status_code == 429: # if results aren't ready or getting throttled
                 #         time.sleep(2)
                 #         search_results = requests.request("GET", get_url, headers=headers, data = get_payload,params={"sort":"desc","cursor":cursor}).json()
 
@@ -1273,7 +1273,7 @@ def get_search_results_old(api_key,searchid):
     search_results = requests.request("GET", get_url, headers=headers,data = get_payload).json() # GET the results
     
     try:
-        while search_results["status"] == [{'message': 'Search is still running. Check back later for results'}] or search_results.status_code == "429": # if results aren't ready or getting throttled
+        while search_results["status"] == [{'message': 'Search is still running. Check back later for results'}] or search_results.status_code == 429: # if results aren't ready or getting throttled
             
             search_results = requests.request("GET", get_url, headers=headers, data = get_payload).json()
     
@@ -1304,7 +1304,7 @@ def get_search_results_old(api_key,searchid):
                 #print(search_results)
                 #print(search_results.get('pagination',None))
                 try:
-                    while search_results["status"] == [{'message': 'Search is still running. Check back later for results'}] or search_results.status_code == "429": # if results aren't ready or getting throttled
+                    while search_results["status"] == [{'message': 'Search is still running. Check back later for results'}] or search_results.status_code == 429: # if results aren't ready or getting throttled
                         time.sleep(2)
                         search_results = requests.request("GET", get_url, headers=headers, data = get_payload,params={"sort":"desc","cursor":cursor}).json()
 
@@ -1358,7 +1358,7 @@ def get_search_results_json(api_key,searchid,cursor):#Not built yet. Place holde
     resultslist
     
     try:
-        while results["status"] == [{'message': 'Search is still running. Check back later for results'}] or search_results.status_code == "429": # if results aren't ready or getting throttled
+        while results["status"] == [{'message': 'Search is still running. Check back later for results'}] or search_results.status_code == 429: # if results aren't ready or getting throttled
             time.sleep(2)
             search_results = requests.request("GET", get_url, params=params, headers=headers, data = get_payload)
             results = search_results.json()
