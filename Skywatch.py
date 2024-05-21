@@ -1283,7 +1283,7 @@ def get_search_results_json(api_key,searchid,cursor):#Not built yet. Place holde
     
     return results
 
-def calc_price(coords,api_key,start,end,cadence,resolution,tasking=False):
+def calc_price(coords,api_key,start,end,cadence,resolution,source="",tasking=False):
     ''' This function takes the included start & end dates, interval, and AOI,
     and returns the max_cost parameter for pipeline creation.
     
@@ -1302,7 +1302,8 @@ def calc_price(coords,api_key,start,end,cadence,resolution,tasking=False):
         ]
     },
     "resolution": "high",
-    "tasking": False
+    "tasking": False,
+    "source":source
     }
     
     
@@ -1315,6 +1316,7 @@ def calc_price(coords,api_key,start,end,cadence,resolution,tasking=False):
     updated["interval"] = cadence
     updated['tasking']=tasking
     updated['resolution']=resolution
+    updated['source']=source
     
     payload = json.dumps(updated)
     headers = {
@@ -1392,7 +1394,7 @@ def run_pipe_task(coords,api_key,cadence,start,end,gdf, cur_row,tag1,tag2, resol
     #updated["tags"].append({"tag2"}) # this gives a tag that is easy to search for
     #updated["tags"].append({"label":"Field","value":"{}".format(gdf['FIELD'][cur_row])})
     updated["tags"].append({"label":"Submitted By","value":"Skywatch"})
-    updated["max_cost"] = calc_price(coords,api_key,start,end,interval,resolution,tasking)
+    updated["max_cost"] = calc_price(coords,api_key,start,end,interval,resolution,sources,tasking)
     updated["start_date"] = start
     updated["end_date"] = end
     updated["name"]=name
@@ -1626,7 +1628,7 @@ def run_pipe_test(coords,api_key,interval,start,end,gdf, cur_row,tag1,tag2, reso
     #updated["tags"].append({"tag2"}) # this gives a tag that is easy to search for
     #updated["tags"].append({"label":"Field","value":"{}".format(gdf['FIELD'][cur_row])})
     updated["tags"].append({"label":"Submitted By","value":"Skywatch"})
-    updated["max_cost"] = calc_price(coords,api_key,start,end,interval,resolution,tasking)
+    updated["max_cost"] = calc_price(coords,api_key,start,end,interval,resolution,source,tasking)
     updated["start_date"] = start
     updated["end_date"] = end
     updated["name"]=name
