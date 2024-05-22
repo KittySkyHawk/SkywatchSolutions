@@ -1149,7 +1149,7 @@ def create_search(location,start_date,end_date,api_key,resolution,coverage):
         time.sleep(2)
         post_response = requests.request("POST", url, headers=headers, data = json.dumps(template))
     if post_response.status_code == 400:
-        print(response.json()) # This shouldn't happen, but it'll tell you if it gets rejected. Should probably handle 500s too.
+        print(post_response.json()) # This shouldn't happen, but it'll tell you if it gets rejected. Should probably handle 500s too.
     
     body = post_response.json()
     
