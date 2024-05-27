@@ -1387,7 +1387,6 @@ def calc_price(coords,api_key,start,end,interval,resolution,tasking=False,source
     },
     "resolution": "high",
     "tasking": False,
-    "source":""
     }
     
     
@@ -1400,7 +1399,13 @@ def calc_price(coords,api_key,start,end,interval,resolution,tasking=False,source
     updated["interval"] = interval
     updated['tasking']=tasking
     updated['resolution']=resolution
-    updated['source']=source
+
+    if source != "":
+        updated.append("source")=source
+
+    else:
+        pass
+        
     
     payload = json.dumps(updated)
     headers = {
