@@ -1387,7 +1387,7 @@ def calc_price(coords,api_key,start,end,interval,resolution,tasking=False,source
     },
     "resolution": "high",
     "tasking": False,
-    "source":
+    "source":""
     }
     
     
