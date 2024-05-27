@@ -1367,7 +1367,7 @@ def get_search_results_json(api_key,searchid,cursor):#Not built yet. Place holde
     
     return results
 
-def calc_price(coords,api_key,start,end,interval,resolution,tasking=False):
+def calc_price(coords,api_key,start,end,interval,resolution,tasking=False,source=""):
     ''' This function takes the included start & end dates, interval, and AOI,
     and returns the max_cost parameter for pipeline creation.
     
@@ -1386,7 +1386,8 @@ def calc_price(coords,api_key,start,end,interval,resolution,tasking=False):
         ]
     },
     "resolution": "high",
-    "tasking": False
+    "tasking": False,
+    "source":
     }
     
     
@@ -1399,6 +1400,7 @@ def calc_price(coords,api_key,start,end,interval,resolution,tasking=False):
     updated["interval"] = interval
     updated['tasking']=tasking
     updated['resolution']=resolution
+    updated['source']=source
     
     payload = json.dumps(updated)
     headers = {
