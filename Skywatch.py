@@ -1401,7 +1401,7 @@ def calc_price(coords,api_key,start,end,interval,resolution,tasking=False,source
     updated['resolution']=resolution
 
     if source != "":
-        updated.append("source")=source
+        updated.append["source"]=source
 
     else:
         pass
