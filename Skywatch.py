@@ -3001,7 +3001,7 @@ def archive_coverage(gdf,start_date,end_date,api_key,low_res,cloud,data_type,cov
     if len(searchlist)>=1:
         print(len(searchlist))
         for data in searchlist:
-            #print(data.get('geometry'))
+            print(data)
             
     #         for item in fc.get('features'):
     #         item=item.get('geometry')
